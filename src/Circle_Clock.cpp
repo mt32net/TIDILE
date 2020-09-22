@@ -20,18 +20,14 @@ void CircleClock::displayTime(ClockTime time) {
 
     clear();
 
-    //Serial.println("In dispaly method..");
-
-    // Hours
-    for (int i = 0; i < mapToLEDs(time.hours, 24); i++) {
-        this->leds[i] = this->configuration->colorHours.toCRGB();
+    // Minutes
+    for (int i = 0; i < mapToLEDs(time.minutes, 60); i++) {
+        this->leds[i] = this->configuration->colorMinutes.toCRGB();
         //this->leds[i] = CRGB::Blue;
     }
 
-    //Serial.println("Printed Hours");
-
-    // Minutes
-    this->leds[mapToLEDs(time.minutes, 60)] = this->configuration->colorMinutes.toCRGB();
+    // Hours
+    this->leds[mapToLEDs(time.hours, 24)] = this->configuration->colorHours.toCRGB();
 };
 
 void CircleClock::displayEnv(ClockEnv * env) {
@@ -41,6 +37,6 @@ void CircleClock::displayEnv(ClockEnv * env) {
 void CircleClock::displayCustom(int progress, CRGB color, int duration) {
     clear();
     for (int i = 0; i < mapToLEDs(progress, 99); i++) {
-        this->leds[i] = this->configuration->colorHours.toCRGB();
+        this->leds[i] = color;
     }
 }

@@ -11,6 +11,7 @@ private:
     ClockConfig *configuration;
     int numberLEDs;
     int mapToLEDs(int value, int max);
+    void clear();
 public:
     CircleClock(CRGB leds[NUM_LEDS], int numberLEDs, ClockConfig *configuration);
     void displayTime(ClockTime time);
@@ -18,5 +19,4 @@ public:
     ///@param progress value between 0 and 99
     ///@param duration in ms
     void displayCustom(int progress, CRGB color, int duration);
-    void clear();
 };

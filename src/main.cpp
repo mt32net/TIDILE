@@ -108,10 +108,11 @@ void loop() {
   circle->displayTime(time);
   FastLED.show();
   if (config.blinkingEnabled && time.seconds != lastSec) {
-    FastLED.setBrightness(0.25 * config.brightness);
+    FastLED.setBrightness(BLINK_BRIGHTNESS * config.brightness);
     FastLED.show();
     delay(100);
     FastLED.setBrightness(config.brightness);
+    FastLED.show();
   }
   lastSec = time.seconds;
 }
