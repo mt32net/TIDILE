@@ -12,3 +12,11 @@
 //#define displayHumidity
 //#define displayTemperature
 //#define displayPressure
+#pragma endregion
+
+#pragma region sensors
+//#define lightSensor
+//#define temperatureSensor
+//#define humiditySensor
+//#define pressureSensor
+#pragma endregion
