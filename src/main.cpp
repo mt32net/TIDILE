@@ -4,10 +4,11 @@
 #include <FastLED.h>
 #include "Circle_Clock.hpp"
 #include <time.h>
+#include "ClockTime.h"
 
 #include "definements.h"
 
-// Dump
+// Time config
 const char* ntpServer = "pool.ntp.org";
 const long  gmtOffset_sec = 3600;
 const int   daylightOffset_sec = 3600;
@@ -54,7 +55,7 @@ void setup() {
   startupLEDs(leds);
 }
 
-void printLocalTime()
+ClockTime printLocalTime()
 {
   struct tm timeinfo;
   if(!getLocalTime(&timeinfo)){
@@ -62,6 +63,11 @@ void printLocalTime()
     return;
   }
   Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
+  return ClockTime {
+    seconds: timeinfo.tm_sec,
+    minutes: timeinfo.tm_min,
+    hours: timeinfo.tm_hour
+  };
 }
 
 void loop() {
