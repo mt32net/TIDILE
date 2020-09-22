@@ -45,6 +45,8 @@ struct ClockData
   Color colorSeconds = {};
   Color colorHumidity = {};
   bool nightTimeLight = true;
+  uint16_t displayOffBegin = 0; //(13:30 -> 1330, 06:24 -> 624)
+  uint16_t displayOffEnd = 600;
 
   ClockData deserialize(int startPos)
   {
