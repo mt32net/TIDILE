@@ -47,7 +47,10 @@ void setup() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 
-  FastLED.addLeds<NEOPIXEL, 5>(leds, NUM_LEDS);
+  // Time
+  configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+
+  FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
   startupLEDs(leds);
 }
 
