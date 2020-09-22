@@ -1,5 +1,4 @@
-#ifndef CLOCK_TIME_DEF
-#define CLOCK_TIME_DEF
+#pragma once
 
 struct ClockTime {
     unsigned int seconds;
@@ -12,5 +11,3 @@ struct ClockEnv {
     unsigned int pressure;
     unsigned int temperature;
 };
-
-#endif
