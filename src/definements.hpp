@@ -12,4 +12,3 @@
 //#define displayHumidity
 //#define displayTemperature
 //#define displayPressure
-#endif
