@@ -5,4 +5,6 @@ void writeToEEPROM(int key, String value)
 {
 }
 
-void readStringFromEEPROM()
+void readStringFromEEPROM() {
+    
+}
