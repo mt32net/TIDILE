@@ -15,16 +15,25 @@ struct Color
   byte green = 0;
   byte blue = 0;
 
-  Color deserialize(int adress)
+  void deserialize(int* startPosAdress)
   {
     #if defined(useEEPROM)
-    red = EEPROM.read()
+    red = (byte) EEPROM.read(*startPosAdress);
+    green = (byte) EEPROM.read(*startPosAdress+1);
+    blue = (byte) EEPROM.read(*startPosAdress+2);
     #endif
-    return {};
+    (*startPosAdress) += 3;
   }
 
-  void serialize(Color color, int startPos, int *endPos)
+  void serialize(int* startPos)
   {
+    #if defined(useEEPROM)
+    EEPROM.write(*startPos, (byte) red);
+    EEPROM.write(*startPos+1, (byte) green);
+    EEPROM.write(*startPos+2, (byte) blue);
+    #endif
+
+    (*startPos) += 3;
   }
 };
 
