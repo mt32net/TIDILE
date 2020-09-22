@@ -43,10 +43,8 @@ struct ClockData
   Color colorHours = {};
   Color colorMinutes = {};
   Color colorSeconds = {};
-
-#ifdef displayHumidity
-  Color humidity = {};
-#endif
+  Color colorHumidity = {};
+  bool nightTimeLight = true;
 
   ClockData deserialize(int startPos)
   {
