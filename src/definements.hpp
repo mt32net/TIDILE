@@ -26,7 +26,15 @@
 #pragma endregion
 
 #pragma region  Time config
-#define ntpServer (char*) "pool.ntp.org"
-#define gmtOffset_sec (long) 3600
-#define daylightOffset_sec (const int) 3600
+#define ntpServer "pool.ntp.org"
+#pragma endregion
+
+#pragma region UIkeywords
+#define COLORHOURKEYWORD "{{colorHourKeyword}}"
+#define COLORMINUTEKEYWORD "{{colorMinuteKeyword}}"
+#define BLINKINGENABLEDKEYWORD "{{blinkingEnabledKeyword}}"
+#define BRIGHTNESSKEYWORD "{{brightnessKeyword}}"
+#define COLORTEMPERATUREKEYWORD "{{colorTemperatureKeyword}}"
+#define COLORPRESSUREKEYWORD "{{colorPressureKeyword}}"
+#define COLORHUMIDITYKEYWORD "{{colorHumidityKeyword}}"
 #pragma endregion

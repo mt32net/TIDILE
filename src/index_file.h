@@ -1,7 +1,7 @@
 const char index_html[] = R"rawliteral(
 <html>
 <head>
-  <title>Circle Clock Interface</title>
+  <title>TIDILE Interface</title>
 </head>
 <style>
   * {
@@ -25,30 +25,32 @@ const char index_html[] = R"rawliteral(
 </style>
 <body>
   <h1>
-    Circle Clock Interface
+    TIDILE Interface
   </h1>
   <h3>Colors Time</h3>
   <form action="/colors">
     <label for="cl_h">Hours</label>
-    <input id="cl_h" type="color" name="color_hour">
+    <input id="cl_h" type="color" name="color_hour" value="{{colorHourKeyword}}">
     <label>Minutes</label>
-    <input type="color" name="color_min">
+    <input type="color" name="color_min" value="{{colorMinuteKeyword}}" width="auto">
     <input type="submit" value="Set Color">
   </form>
-  <h3>Blinking</h3>
+  <h3>Blinking & Brightness</h3>
   <form action="/blink">
     <lable>Enabled</lable>
-    <input type="checkbox" name="enabled">
-    <input type="submit" value="Set Blinking">
+    <input type="checkbox" name="enabled" value="{{blinkingEnabledKeyword}}">
+    <lable>Brightness</label>
+    <input type="number" name="brightness" min="0" max="255" value="{{brightnessKeyword}}">
+    <input type="submit" value="Set Blinking & Brightness">
   </form>
   <h3>Enviroment Colors</h3>
   <form>
     <label>Temperature</label>
-    <input type="color" name="color_temp">
+    <input type="color" name="color_temp" value="{{colorTemperatureKeyword}}">
     <label>Pressure</label>
-    <input type="color" name="color_press">
+    <input type="color" name="color_press" value="{{colorPressureKeyword}}">
     <label>Humidity</label>
-    <input type="color" name="color_hum">
+    <input type="color" name="color_hum" value="{{colorHumidityKeyword}}">
     <input type="submit" value="Set Colors">
   </form>
 </body>

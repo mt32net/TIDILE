@@ -1,14 +1,10 @@
 #pragma once
-
+#include "definements.hpp"
 #include "ClockConfig.hpp"
 #include "TIDILE.hpp"
 #include "ESPAsyncWebServer.h"
 
 class Handler {
-    private:
-        ClockConfig* config;
-        TIDILE* tidile;
-        Color hexToColor(String input);
     public:
 		Handler(ClockConfig *config, TIDILE *tidile);
 		void onColors(AsyncWebServerRequest *request);
@@ -18,4 +14,10 @@ class Handler {
         void onBlink(AsyncWebServerRequest *request);
         //void onEnv(AsyncWebServerRequest *request);
         //void onTimes(AsyncWebServerRequest *request);
+    private:
+        ClockConfig* config;
+        TIDILE* tidile;
+        int* adressPos = 0;
+        Color hexToColor(String input);
+        String colorToHEX(Color color);
 };
