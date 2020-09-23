@@ -5,7 +5,7 @@
 #include "ClockConfig.hpp"
 #include "definements.hpp"
 
-class CircleClock
+class TIDILE
 {
 private:
     CRGB *leds;
@@ -14,7 +14,7 @@ private:
     int mapToLEDs(int value, int max);
     void clear();
 public:
-    CircleClock();
+    TIDILE();
     void setup(CRGB leds[NUM_LEDS], int numberLEDs, ClockConfig *configuration);
     void displayTime(ClockTime time);
     void displayEnv(ClockEnv *env);

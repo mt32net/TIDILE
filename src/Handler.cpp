@@ -1,9 +1,9 @@
 #include "Handler.hpp"
 #include "index_file.h"
 
-Handler::Handler(ClockConfig * config, CircleClock *clock) {
+Handler::Handler(ClockConfig * config, TIDILE *tidile) {
     this->config = config;
-    this->clock = clock;
+    this->tidile = tidile;
 };
 
 void Handler::onColors(AsyncWebServerRequest *request) {
@@ -25,7 +25,7 @@ void Handler::onBlink(AsyncWebServerRequest *request) {
 void Handler::onCustom(AsyncWebServerRequest *request) {
     int duration = request->getParam("duration")->value().toInt();
     int progress = request->getParam("progress")->value().toInt();
-    this->clock->displayCustom(progress, CRGB::Aquamarine, duration);
+    this->tidile->displayCustom(progress, CRGB::Aquamarine, duration);
     request->redirect("/");
 };
 
