@@ -3,13 +3,6 @@
 #include <FastLED.h>
 #include "definements.hpp"
 #include <Preferences.h>
-#if defined(useSDCard)
-#include <SPI.h>
-#include <SD.h>
-#endif
-#if defined(useEEPROM)
-#include <EEPROM.h>
-#endif
 
 struct Color
 {
@@ -97,24 +90,20 @@ struct ClockConfig
   void serialize(Preferences* preferences)
   {
 #if defined(useEEPROM)
-    EEPROM.write(startPos, displaySeconds);
-    startPos += 1;
+    preferences->putBool("displaySeconds", displaySeconds);
 
-    startPos = colorHours.serialize(startPos);
-    startPos = colorMinutes.serialize(startPos);
-    startPos = colorSeconds.serialize(startPos);
+    colorHours.serialize(preferences, "hours");
+    colorMinutes.serialize(preferences, "minutes");
+    colorSeconds.serialize(preferences, "seconds");
 
-    startPos = colorHumidity.serialize(startPos);
-    startPos = colorTemperature.serialize(startPos);
-    startPos = colorPressure.serialize(startPos);
+    colorHumidity.serialize(preferences, "humidity");
+    colorTemperature.serialize(preferences, "temperature");
+    colorPressure.serialize(preferences, "pressure");
 
-    EEPROM.write(startPos, nightTimeLight);
-    startPos += 1;
-    EEPROM.write(startPos, displayOffBegin);
-    startPos += 1;
-    EEPROM.write(startPos, displayOffEnd);
-    startPos += 1;
-    EEPROM.write(startPos, brightness);
+    preferences->putBool("nightTimeLight", nightTimeLight);
+    preferences->putInt("displayOffBegin", displayOffBegin);
+    preferences->putInt("displayOffEnd", displayOffEnd);
+    preferences->putInt("brightness", brightness);
 #endif
   }
 };
