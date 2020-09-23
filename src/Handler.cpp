@@ -7,7 +7,6 @@ Handler::Handler(ClockConfig * config, CircleClock *clock) {
 };
 
 void Handler::onColors(AsyncWebServerRequest *request) {
-
     this->config->colorMinutes = hexToColor(request->getParam("color_min")->value());
     this->config->colorHours = hexToColor(request->getParam("color_hour")->value());
     request->redirect("/");
