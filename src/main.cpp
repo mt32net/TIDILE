@@ -2,7 +2,7 @@
 #include <FastLED.h>
 #include <WiFi.h>
 #include <FastLED.h>
-#include "Circle_Clock.hpp"
+#include "TIDILE.hpp"
 #include "ClockTime.h"
 #include "ClockConfig.hpp"
 #include "Handler.hpp"
@@ -10,12 +10,12 @@
 
 CRGB leds[NUM_LEDS];
 ClockConfig config;
-CircleClock circle;
+TIDILE tidile;
 
 int lastSec = 0;
 
 // Webserver
-Handler handler(&config, &circle);
+Handler handler(&config, &tidile);
 Webserver webserver;
 AsyncWebServer server(HTTP_ENDPOINT_PORT);
 
@@ -76,7 +76,7 @@ void setup()
   config.colorHours = Color((byte)0xFF, (byte)0x00, (byte)0x00);
   config.colorMinutes = Color((byte)0x00, (byte)0xFF, (byte)0x00);
 
-  circle.setup(leds, NUM_LEDS, &config);
+  tidile.setup(leds, NUM_LEDS, &config);
   webserver.setup(&handler, &server);
 }
 
@@ -101,7 +101,7 @@ ClockTime getNTPTime()
 void loop()
 {
   ClockTime time = getNTPTime();
-  circle.displayTime(time);
+  tidile.displayTime(time);
   if (config.blinkingEnabled && time.seconds != lastSec)
   {
     FastLED.setBrightness(BLINK_BRIGHTNESS * config.brightness);

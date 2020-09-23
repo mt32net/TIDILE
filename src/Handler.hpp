@@ -1,16 +1,16 @@
 #pragma once
 
 #include "ClockConfig.hpp"
-#include "Circle_Clock.hpp"
+#include "TIDILE.hpp"
 #include "ESPAsyncWebServer.h"
 
 class Handler {
     private:
         ClockConfig* config;
-        CircleClock* clock;
+        TIDILE* tidile;
         Color hexToColor(String input);
     public:
-		Handler(ClockConfig *config, CircleClock *clock);
+		Handler(ClockConfig *config, TIDILE *tidile);
 		void onColors(AsyncWebServerRequest *request);
         void onIndex(AsyncWebServerRequest *request);
         void onCustom(AsyncWebServerRequest *request);
