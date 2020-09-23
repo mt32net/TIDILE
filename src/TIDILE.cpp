@@ -8,7 +8,6 @@ void TIDILE::setup(CRGB leds[NUM_LEDS], int numberLEDs, ClockConfig *configurati
     this->leds = leds;
     this->numberLEDs = numberLEDs;
     this->configuration = configuration;
-    
 }
 
 int TIDILE::mapToLEDs(int value, int max) {
