@@ -30,9 +30,9 @@ const char index_html[] = R"rawliteral(
   <h3>Colors Time</h3>
   <form action="/colors">
     <label for="cl_h">Hours</label>
-    <input id="cl_h" type="color" name="color_hour">
+    <input id="cl_h" type="color" name="color_hour" value="{{colorHourKeyword}}">
     <label>Minutes</label>
-    <input type="color" name="color_min">
+    <input type="color" name="color_min" value="{{colorMinuteKeyword}}">
     <input type="submit" value="Set Color">
   </form>
   <h3>Blinking</h3>

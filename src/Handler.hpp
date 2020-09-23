@@ -9,6 +9,7 @@ class Handler {
         ClockConfig* config;
         TIDILE* tidile;
         Color hexToColor(String input);
+        String colorToHEX(Color color);
     public:
 		Handler(ClockConfig *config, TIDILE *tidile);
 		void onColors(AsyncWebServerRequest *request);

@@ -30,7 +30,10 @@ void Handler::onCustom(AsyncWebServerRequest *request) {
 };
 
 void Handler::onIndex(AsyncWebServerRequest *request) {
-    request->send(200, "text/html", index_html);
+    String html = index_html;
+    html.replace(COLORHOURKEYWORD, colorToHEX(this->config->colorHours));
+    html.replace(COLORMINUTEKEYWORD, colorToHEX(this->config->colorMinutes));
+    request->send(200, "text/html", html);
 };
 
 // Thank you stack overflow!
@@ -40,4 +43,8 @@ Color Handler::hexToColor(String input) {
     int g = (rgb >> 8) & 0xFF;
     int b = rgb & 0xFF;
     return Color(r, g, b);
+}
+
+String Handler::colorToHEX(Color color){
+    return "#" + String(color.red, HEX) + String(color.green, HEX) + String(color.blue, HEX);
 }

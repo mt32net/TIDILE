@@ -30,3 +30,8 @@
 #define gmtOffset_sec (long) 3600
 #define daylightOffset_sec (const int) 3600
 #pragma endregion
+
+#pragma region UIkeywords
+#define COLORHOURKEYWORD "{{colorHourKeyword}}"
+#define COLORMINUTEKEYWORD "{{colorMinuteKeyword}}"
+#pragma endregion
