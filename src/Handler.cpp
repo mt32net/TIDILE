@@ -10,7 +10,7 @@ void Handler::onColors(AsyncWebServerRequest *request) {
 
     this->config->colorMinutes = hexToColor(request->getParam("color_min")->value());
     this->config->colorHours = hexToColor(request->getParam("color_hour")->value());
-    request->send(200);
+    request->redirect("/");
 };
 
 
@@ -20,14 +20,14 @@ void Handler::onBlink(AsyncWebServerRequest *request) {
         if (request->getParam("enabled")->value().equals("on")) en = true;
     }
     this->config->blinkingEnabled = en;
-    request->send(200);
+    request->redirect("/");
 };
 
 void Handler::onCustom(AsyncWebServerRequest *request) {
     int duration = request->getParam("duration")->value().toInt();
     int progress = request->getParam("progress")->value().toInt();
     this->clock->displayCustom(progress, CRGB::Aquamarine, duration);
-    request->send(200);
+    request->redirect("/");
 };
 
 void Handler::onIndex(AsyncWebServerRequest *request) {
