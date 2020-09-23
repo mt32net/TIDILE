@@ -25,7 +25,7 @@ void Handler::onBlink(AsyncWebServerRequest *request) {
         this->config->brightness = request->getParam("brightness")->value().toInt();
     }
     if (request->hasParam("show_seconds")) {
-        if (request->getParam("show_secs")->value().equals("on")) showSecs = true;
+        if (request->getParam("show_seconds")->value().equals("on")) showSecs = true;
     }
     this->config->blinkingEnabled = en;
     this->config->displaySeconds = showSecs;
