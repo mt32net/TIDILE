@@ -1,6 +1,6 @@
 #pragma once
 
-#define NUM_LEDS 144
+#define NUM_LEDS 49
 #define LED_PIN 5
 #define BLINK_BRIGHTNESS 0.7
 

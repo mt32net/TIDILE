@@ -41,8 +41,6 @@ void setup()
   Serial.begin(115200);
   delay(10);
 
-  startupLEDs(leds, 16);
-
 #pragma region Connecting to WiFi
   WiFi.begin();
   delay(2000);
@@ -73,6 +71,8 @@ void setup()
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
   FastLED.setBrightness(config.brightness);
 
+  startupLEDs(leds, 16);
+
   config.colorHours = Color((byte)0xFF, (byte)0x00, (byte)0x00);
   config.colorMinutes = Color((byte)0x00, (byte)0xFF, (byte)0x00);
 
@@ -102,15 +102,14 @@ void loop()
 {
   ClockTime time = getNTPTime();
   circle.displayTime(time);
-  FastLED.show();
   if (config.blinkingEnabled && time.seconds != lastSec)
   {
     FastLED.setBrightness(BLINK_BRIGHTNESS * config.brightness);
     FastLED.show();
     delay(100);
-    FastLED.setBrightness(config.brightness);
-    FastLED.show();
   }
+  FastLED.setBrightness(config.brightness);
+  FastLED.show();
   lastSec = time.seconds;
 }
 #pragma endregion
