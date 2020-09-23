@@ -6,7 +6,7 @@
 
 class Handler {
     public:
-		Handler(ClockConfig *config, TIDILE *tidile);
+		Handler(ClockConfig *config, TIDILE *tidile, Preferences* preferneces);
 		void onColors(AsyncWebServerRequest *request);
         void onIndex(AsyncWebServerRequest *request);
         void onCustom(AsyncWebServerRequest *request);
@@ -17,7 +17,7 @@ class Handler {
     private:
         ClockConfig* config;
         TIDILE* tidile;
-        int* adressPos = 0;
+        Preferences* preferences;
         Color hexToColor(String input);
         String colorToHEX(Color color);
 };

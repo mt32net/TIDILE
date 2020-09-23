@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include <FastLED.h>
 #include "definements.hpp"
+#include <Preferences.h>
 #if defined(useSDCard)
 #include <SPI.h>
 #include <SD.h>
@@ -28,28 +29,25 @@ struct Color
   }
 
   ///deserializes this Color from startPosition into this object
-  ///@param startPosAdress the start of the memory location
-  int deserialize(int startPosAdress)
+  ///@param preferences is the preference object
+  void deserialize(Preferences* preferences, String name)
   {
 #if defined(useEEPROM)
-    red = (byte)EEPROM.read(startPosAdress);
-    green = (byte)EEPROM.read(startPosAdress + 1);
-    blue = (byte)EEPROM.read(startPosAdress + 2);
+    red = preferences->getInt((name + String("_red")).c_str());
+    green = preferences->getInt((name + String("_green")).c_str());
+    blue = preferences->getInt((name + String("_blue")).c_str());
 #endif
-    return startPosAdress + 3;
   }
 
   ///serializes this Color object into the given storage container
-  ///@param startPos is the given adress location the object is going to be saved to
-  int serialize(int startPos)
+  ///@param preferences is the preference object
+  void serialize(Preferences* preferences, String name)
   {
 #if defined(useEEPROM)
-    EEPROM.write(startPos, (byte)red);
-    EEPROM.write(startPos + 1, (byte)green);
-    EEPROM.write(startPos + 2, (byte)blue);
+    preferences->putInt((name + String("_red")).c_str(), red);
+    preferences->putInt((name + String("_green")).c_str(), green);
+    preferences->putInt((name + String("_blue")).c_str(), blue);
 #endif
-
-    return startPos += 3;
   }
 
   CRGB toCRGB()
@@ -74,34 +72,29 @@ struct ClockConfig
   boolean blinkingEnabled = false;
 
   ///deserializes this ClockConfig from startPosition into this object
-  ///@param startPos the start of the memory location
-  int deserialize(int startPos)
+  ///@param preferences is the preference object
+  void deserialize(Preferences* preferences)
   {
 #if defined(useEEPROM)
-    displaySeconds = (bool)EEPROM.read(startPos);
-    startPos += 1;
-    startPos = colorHours.deserialize(startPos);
-    startPos = colorMinutes.deserialize(startPos);
-    startPos = colorSeconds.deserialize(startPos);
+    displaySeconds = preferences->getBool("displaySeconds");
+    colorHours.deserialize(preferences, "hours");
+    colorMinutes.deserialize(preferences, "minutes");
+    colorSeconds.deserialize(preferences, "seconds");
 
-    startPos = colorHumidity.deserialize(startPos);
-    startPos = colorTemperature.deserialize(startPos);
-    startPos = colorPressure.deserialize(startPos);
+    colorHumidity.deserialize(preferences, "humidity");
+    colorTemperature.deserialize(preferences, "temperature");
+    colorPressure.deserialize(preferences, "pressure");
 
-    nightTimeLight = EEPROM.read(startPos);
-    startPos += 1;
-    displayOffBegin = EEPROM.read(startPos);
-    startPos += 1;
-    displayOffEnd = EEPROM.read(startPos);
-    startPos += 1;
-    brightness = EEPROM.read(startPos);
-    return startPos + 1;
+    nightTimeLight = preferences->getBool("nightTimeLight");
+    displayOffBegin = preferences->getInt("displayOffBegin");
+    displayOffEnd = preferences->getInt("displayOffEnd");
+    brightness = preferences->getInt("brightness");
 #endif
   }
 
   ///serializes this ClockConfig object into the given storage container
-  ///@param startPos is the given adress location the object is going to be saved to
-  int serialize(int startPos)
+  ///@param preferences is the preference object
+  void serialize(Preferences* preferences)
   {
 #if defined(useEEPROM)
     EEPROM.write(startPos, displaySeconds);
@@ -122,33 +115,6 @@ struct ClockConfig
     EEPROM.write(startPos, displayOffEnd);
     startPos += 1;
     EEPROM.write(startPos, brightness);
-
-    return startPos + 1;
 #endif
   }
-
-  ///serializes this ClockConfig object into the given storage container
-  ///@param startPos is the given adress location the object is going to be saved to
-  void serialize()
-  {
-    startPos = 0;
-    EEPROM.write(0, 1);
-    startPos = 1;
-    serialize(startPos);
-  }
-
-  ///deserializes this ClockConfig from startPosition into this object
-  ///@param startPos the start of the memory location
-  void deserialize()
-  {
-    startPos = 0;
-    if (EEPROM.read(0))
-    {
-      startPos = 1;
-      serialize(startPos);
-    }
-  }
-
-private:
-  int startPos = 0;
 };

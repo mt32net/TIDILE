@@ -1,16 +1,17 @@
 #include "Handler.hpp"
 #include "index_file.h"
 
-Handler::Handler(ClockConfig * config, TIDILE *tidile) {
+Handler::Handler(ClockConfig * config, TIDILE *tidile, Preferences* references) {
     this->config = config;
     this->tidile = tidile;
+    this->preferences = preferences;
 };
 
 void Handler::onColors(AsyncWebServerRequest *request) {
     this->config->colorMinutes = hexToColor(request->getParam("color_min")->value());
     this->config->colorHours = hexToColor(request->getParam("color_hour")->value());
     request->redirect("/");
-    this->config->serialize();
+    this->config->serialize(preferences);
 };
 
 
@@ -24,7 +25,7 @@ void Handler::onBlink(AsyncWebServerRequest *request) {
     }
     this->config->blinkingEnabled = en;
     request->redirect("/");
-    this->config->serialize();
+    this->config->serialize(preferences);
 };
 
 void Handler::onCustom(AsyncWebServerRequest *request) {
@@ -38,7 +39,7 @@ void Handler::onIndex(AsyncWebServerRequest *request) {
     String html = index_html;
     html.replace(COLORHOURKEYWORD, colorToHEX(this->config->colorHours));
     html.replace(COLORMINUTEKEYWORD, colorToHEX(this->config->colorMinutes));
-    html.replace(BLINKINGENABLEDKEYWORD, String(this->config->blinkingEnabled));
+    html.replace(BLINKINGENABLEDKEYWORD, (this->config->blinkingEnabled)? "checked" : "");
     html.replace(BRIGHTNESSKEYWORD, String(this->config->brightness));
     html.replace(COLORTEMPERATUREKEYWORD, colorToHEX(this->config->colorTemperature));
     html.replace(COLORPRESSUREKEYWORD, colorToHEX(this->config->colorPressure));
