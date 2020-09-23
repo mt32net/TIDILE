@@ -75,8 +75,8 @@ void setup()
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
   FastLED.setBrightness(config.brightness);
 
-  config.colorHours = Color((byte)0xFF, (byte)0x00, (byte)0x00);
-  config.colorMinutes = Color((byte)0x00, (byte)0xFF, (byte)0x00);
+  config.colorHours = Color((byte)0x00, (byte)0xFF, (byte)0xFF);
+  config.colorMinutes = Color((byte)0xFF, (byte)0xFF, (byte)0x00);
 
   tidile.setup(leds, NUM_LEDS, &config);
   webserver.setup(&handler, &server);
@@ -113,6 +113,9 @@ void loop()
     FastLED.setBrightness(BLINK_BRIGHTNESS * config.brightness);
     FastLED.show();
     delay(100);
+    //for (int i = 0; i < NUM_LEDS; i++) {
+    //  leds[i].fadeToBlackBy(0xFF);
+    //}
   }
   FastLED.setBrightness(config.brightness);
   FastLED.show();

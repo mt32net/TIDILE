@@ -36,10 +36,6 @@ void TIDILE::displayTime(ClockTime time) {
     // Hours
     this->leds[mapToLEDs(time.hours, 24)] = this->configuration->colorHours.toCRGB();
 
-
-    // Seconds
-    //if (mapToLEDs(time.seconds, 60) <= mapToLEDs(time.hours, 24)) {
-
 };
 
 void TIDILE::displayEnv(ClockEnv * env) {
