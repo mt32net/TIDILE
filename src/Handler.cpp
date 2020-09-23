@@ -33,6 +33,7 @@ void Handler::onIndex(AsyncWebServerRequest *request) {
     request->send(200, "text/html", index_html);
 };
 
+// Thank you stack overflow!
 Color Handler::hexToColor(String input) {
     long rgb = strtol(input.c_str() + 1, 0, 16); // parse as Hex, skipping the leading '#'
     int r = (rgb >> 16) & 0xFF;

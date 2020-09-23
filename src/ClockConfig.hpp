@@ -69,7 +69,7 @@ struct ClockConfig
   uint16_t displayOffBegin = 0; //(13:30 -> 1330, 06:24 -> 624)
   uint16_t displayOffEnd = 600;
   uint8_t brightness = 100;
-  boolean blinkingEnabled = true;
+  boolean blinkingEnabled = false;
 
   ///deserializes this ClockConfig from startPosition into this object
   ///@param startPos the start of the memory location
