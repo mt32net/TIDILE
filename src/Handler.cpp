@@ -16,13 +16,18 @@ void Handler::onColors(AsyncWebServerRequest *request) {
 
 void Handler::onBlink(AsyncWebServerRequest *request) {
     boolean en = false;
+    bool showSecs = false;
     if (request->hasParam("enabled")) {
         if (request->getParam("enabled")->value().equals("on")) en = true;
     }
     if (request->hasParam("brightness")) {
         this->config->brightness = request->getParam("brightness")->value().toInt();
     }
+    if (request->hasParam("show_seconds")) {
+        if (request->getParam("show_secs")->value().equals("on")) showSecs = true;
+    }
     this->config->blinkingEnabled = en;
+    this->config->displaySeconds = showSecs;
     request->redirect("/");
     this->config->serialize();
 };
