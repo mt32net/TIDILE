@@ -25,22 +25,18 @@ struct Color
   ///@param preferences is the preference object
   void deserialize(Preferences* preferences, String name)
   {
-#if defined(useEEPROM)
-    red = preferences->getInt((name + String("_red")).c_str());
-    green = preferences->getInt((name + String("_green")).c_str());
-    blue = preferences->getInt((name + String("_blue")).c_str());
-#endif
+    red = preferences->getInt((name + String("_r")).c_str());
+    green = preferences->getInt((name + String("_g")).c_str());
+    blue = preferences->getInt((name + String("_b")).c_str());
   }
 
   ///serializes this Color object into the given storage container
   ///@param preferences is the preference object
   void serialize(Preferences* preferences, String name)
   {
-#if defined(useEEPROM)
-    preferences->putInt((name + String("_red")).c_str(), red);
-    preferences->putInt((name + String("_green")).c_str(), green);
-    preferences->putInt((name + String("_blue")).c_str(), blue);
-#endif
+    preferences->putInt((name + String("_r")).c_str(), red);
+    preferences->putInt((name + String("_g")).c_str(), green);
+    preferences->putInt((name + String("_b")).c_str(), blue);
   }
 
   CRGB toCRGB()
@@ -68,42 +64,43 @@ struct ClockConfig
   ///@param preferences is the preference object
   void deserialize(Preferences* preferences)
   {
-#if defined(useEEPROM)
-    displaySeconds = preferences->getBool("displaySeconds");
+    preferences->begin("tidilePrefs");
+    displaySeconds = preferences->getBool("displSecs");
     colorHours.deserialize(preferences, "hours");
     colorMinutes.deserialize(preferences, "minutes");
     colorSeconds.deserialize(preferences, "seconds");
 
-    colorHumidity.deserialize(preferences, "humidity");
-    colorTemperature.deserialize(preferences, "temperature");
+    colorHumidity.deserialize(preferences, "humid");
+    colorTemperature.deserialize(preferences, "temper");
     colorPressure.deserialize(preferences, "pressure");
 
-    nightTimeLight = preferences->getBool("nightTimeLight");
-    displayOffBegin = preferences->getInt("displayOffBegin");
-    displayOffEnd = preferences->getInt("displayOffEnd");
+    nightTimeLight = preferences->getBool("nightLight");
+    displayOffBegin = preferences->getInt("displOffBegin");
+    displayOffEnd = preferences->getInt("displOffEnd");
     brightness = preferences->getInt("brightness");
-#endif
+    preferences->end();
   }
 
   ///serializes this ClockConfig object into the given storage container
   ///@param preferences is the preference object
   void serialize(Preferences* preferences)
   {
-#if defined(useEEPROM)
-    preferences->putBool("displaySeconds", displaySeconds);
+    /*preferences->begin("tidilePrefs");
+    preferences->putBool("displSecs", displaySeconds);
 
     colorHours.serialize(preferences, "hours");
     colorMinutes.serialize(preferences, "minutes");
     colorSeconds.serialize(preferences, "seconds");
 
-    colorHumidity.serialize(preferences, "humidity");
-    colorTemperature.serialize(preferences, "temperature");
+    colorHumidity.serialize(preferences, "humid");
+    colorTemperature.serialize(preferences, "temper");
     colorPressure.serialize(preferences, "pressure");
 
-    preferences->putBool("nightTimeLight", nightTimeLight);
-    preferences->putInt("displayOffBegin", displayOffBegin);
-    preferences->putInt("displayOffEnd", displayOffEnd);
+    preferences->putBool("nightLight", nightTimeLight);
+    preferences->putInt("displOffBegin", displayOffBegin);
+    preferences->putInt("displOffEnd", displayOffEnd);
     preferences->putInt("brightness", brightness);
-#endif
+
+    preferences->end();*/
   }
 };

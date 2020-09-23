@@ -69,7 +69,7 @@ void setup()
   // Time
   configTime(3600, 3600, ntpServer);
 
-  preferences.begin("tidile_prefernces");
+  //preferences.begin("tidilePrefs", false);
 
   //register leds
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
@@ -82,7 +82,8 @@ void setup()
   webserver.setup(&handler, &server);
   
   startupLEDs(leds, 16);
-  config.deserialize(&preferences);
+  //preferences.clear();
+  //config.deserialize(&preferences);
 }
 
 ClockTime getNTPTime()
