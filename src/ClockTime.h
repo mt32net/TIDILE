@@ -1,9 +1,9 @@
 #pragma once
 
 struct ClockTime {
-    unsigned int seconds;
-    unsigned int minutes;
-    unsigned int hours;
+    int seconds;
+    int minutes;
+    int hours;
 };
 
 struct ClockEnv {

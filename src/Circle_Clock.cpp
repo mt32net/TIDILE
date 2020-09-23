@@ -1,10 +1,16 @@
 #include "Circle_Clock.hpp"
 
-CircleClock::CircleClock(CRGB * leds, int numberLEDs, ClockConfig * configuration) {
+CircleClock::CircleClock() {
+    
+}
+
+void CircleClock::setup(CRGB leds[NUM_LEDS], int numberLEDs, ClockConfig *configuration){
     this->leds = leds;
     this->numberLEDs = numberLEDs;
     this->configuration = configuration;
-};
+    // Time
+    configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+}
 
 int CircleClock::mapToLEDs(int value, int max) {
     return map(value, 0, max, 0, this->numberLEDs);

@@ -1,5 +1,6 @@
 #pragma once
 #include <FastLED.h>
+#include <time.h>
 #include "ClockTime.h"
 #include "ClockConfig.hpp"
 #include "definements.hpp"
@@ -13,7 +14,8 @@ private:
     int mapToLEDs(int value, int max);
     void clear();
 public:
-    CircleClock(CRGB leds[NUM_LEDS], int numberLEDs, ClockConfig *configuration);
+    CircleClock();
+    void setup(CRGB leds[NUM_LEDS], int numberLEDs, ClockConfig *configuration);
     void displayTime(ClockTime time);
     void displayEnv(ClockEnv *env);
     ///@param progress value between 0 and 99
