@@ -49,6 +49,7 @@ void Handler::onIndex(AsyncWebServerRequest *request) {
     html.replace(COLORTEMPERATUREKEYWORD, colorToHEX(this->config->colorTemperature));
     html.replace(COLORPRESSUREKEYWORD, colorToHEX(this->config->colorPressure));
     html.replace(COLORHUMIDITYKEYWORD, colorToHEX(this->config->colorHumidity));
+    html.replace(COLORHUMIDITYKEYWORD, (this->config->displaySeconds)? "checked" : "");
     request->send(200, "text/html", html);
 };
 

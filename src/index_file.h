@@ -39,6 +39,7 @@ const char index_html[] = R"rawliteral(
   <form action="/blink">
     <lable>Enabled</lable>
     <input type="checkbox" name="enabled" {{blinkingEnabledKeyword}}>
+    <input type="checkbox" name="show_seconds" {{secondsEnabledKeyword}}>
     <lable>Brightness</label>
     <input type="number" name="brightness" min="0" max="255" value="{{brightnessKeyword}}">
     <input type="submit" value="Set Blinking & Brightness">

@@ -37,4 +37,5 @@
 #define COLORTEMPERATUREKEYWORD "{{colorTemperatureKeyword}}"
 #define COLORPRESSUREKEYWORD "{{colorPressureKeyword}}"
 #define COLORHUMIDITYKEYWORD "{{colorHumidityKeyword}}"
+#define SHOWSECONDSKEYWORD "{{secondsEnabledKeyword}}"
 #pragma endregion
