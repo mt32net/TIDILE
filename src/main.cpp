@@ -2,6 +2,7 @@
 #include <FastLED.h>
 #include <WiFi.h>
 #include <FastLED.h>
+#include <time.h>
 #include "TIDILE.hpp"
 #include "ClockTime.h"
 #include "ClockConfig.hpp"
@@ -65,19 +66,20 @@ void setup()
 #pragma endregion
 
   // Time
-  configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+  configTime(3600, 3600, ntpServer);
 
   //register leds
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
   FastLED.setBrightness(config.brightness);
-
-  startupLEDs(leds, 16);
 
   config.colorHours = Color((byte)0xFF, (byte)0x00, (byte)0x00);
   config.colorMinutes = Color((byte)0x00, (byte)0xFF, (byte)0x00);
 
   tidile.setup(leds, NUM_LEDS, &config);
   webserver.setup(&handler, &server);
+  
+  startupLEDs(leds, 16);
+  config.deserialize();
 }
 
 ClockTime getNTPTime()

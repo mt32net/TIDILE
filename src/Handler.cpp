@@ -10,6 +10,7 @@ void Handler::onColors(AsyncWebServerRequest *request) {
     this->config->colorMinutes = hexToColor(request->getParam("color_min")->value());
     this->config->colorHours = hexToColor(request->getParam("color_hour")->value());
     request->redirect("/");
+    this->config->serialize();
 };
 
 
@@ -18,8 +19,12 @@ void Handler::onBlink(AsyncWebServerRequest *request) {
     if (request->hasParam("enabled")) {
         if (request->getParam("enabled")->value().equals("on")) en = true;
     }
+    if (request->hasParam("brightness")) {
+        this->config->brightness = request->getParam("brightness")->value().toInt();
+    }
     this->config->blinkingEnabled = en;
     request->redirect("/");
+    this->config->serialize();
 };
 
 void Handler::onCustom(AsyncWebServerRequest *request) {
@@ -33,6 +38,11 @@ void Handler::onIndex(AsyncWebServerRequest *request) {
     String html = index_html;
     html.replace(COLORHOURKEYWORD, colorToHEX(this->config->colorHours));
     html.replace(COLORMINUTEKEYWORD, colorToHEX(this->config->colorMinutes));
+    html.replace(BLINKINGENABLEDKEYWORD, String(this->config->blinkingEnabled));
+    html.replace(BRIGHTNESSKEYWORD, String(this->config->brightness));
+    html.replace(COLORTEMPERATUREKEYWORD, colorToHEX(this->config->colorTemperature));
+    html.replace(COLORPRESSUREKEYWORD, colorToHEX(this->config->colorPressure));
+    html.replace(COLORHUMIDITYKEYWORD, colorToHEX(this->config->colorHumidity));
     request->send(200, "text/html", html);
 };
 
@@ -46,5 +56,11 @@ Color Handler::hexToColor(String input) {
 }
 
 String Handler::colorToHEX(Color color){
-    return "#" + String(color.red, HEX) + String(color.green, HEX) + String(color.blue, HEX);
+    String red = String(color.red, HEX);
+    if(red.length() == 1) red = "0" + red;
+    String green = String(color.green, HEX);
+    if(green.length() == 1) green = "0" + green;
+    String blue = String(color.blue, HEX);
+    if(blue.length() == 1) blue = "0" + blue;
+    return "#" + red + green + blue;
 }
