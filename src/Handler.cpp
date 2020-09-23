@@ -1,5 +1,5 @@
 #include "Handler.hpp"
-
+#include "index_file.h"
 
 Handler::Handler(ClockConfig * config, CircleClock *clock) {
     this->config = config;
@@ -23,7 +23,7 @@ void Handler::onColors(AsyncWebServerRequest *request) {
 
 void Handler::onBlink(AsyncWebServerRequest *request) {
     boolean en = false;
-    if (request->getParam("enabled")->value().toInt() > 0) en = true;
+    if (request->getParam("enabled")->value().equals("on")) en = true;
     this->config->blinkingEnabled = en;
     request->send(200);
 };
@@ -33,4 +33,8 @@ void Handler::onCustom(AsyncWebServerRequest *request) {
     int progress = request->getParam("progress")->value().toInt();
     this->clock->displayCustom(progress, CRGB::Aquamarine, duration);
     request->send(200);
+};
+
+void Handler::onIndex(AsyncWebServerRequest *request) {
+    request->send(200, "text/html", index_html);
 };

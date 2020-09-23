@@ -11,6 +11,7 @@ class Handler {
     public:
 		Handler(ClockConfig *config, CircleClock *clock);
 		void onColors(AsyncWebServerRequest *request);
+        void onIndex(AsyncWebServerRequest *request);
         void onCustom(AsyncWebServerRequest *request);
         //void onEnvColors(AsyncWebServerRequest *request);
         void onBlink(AsyncWebServerRequest *request);

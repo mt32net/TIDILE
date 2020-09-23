@@ -77,12 +77,13 @@ void setup() {
   circle = c;
 
   // HTTP
-  server.on("/colors", HTTP_PUT, [](AsyncWebServerRequest *request){handler->onColors(request);});
+  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){handler->onIndex(request);});
+  server.on("/colors", HTTP_POST, [](AsyncWebServerRequest *request){handler->onColors(request);});
   server.on("/display", HTTP_POST, [](AsyncWebServerRequest *request){handler->onCustom(request);});
-  //server.on("/envcolors", HTTP_PUT, [](AsyncWebServerRequest *request){handler->onEnvColors(request);});
-  server.on("/blink", HTTP_PUT, [](AsyncWebServerRequest *request){handler->onBlink(request);});
+  //server.on("/envcolors", HTTP_POST, [](AsyncWebServerRequest *request){handler->onEnvColors(request);});
+  server.on("/blink", HTTP_POST, [](AsyncWebServerRequest *request){handler->onBlink(request);});
   //server.on("/env", HTTP_POST, [](AsyncWebServerRequest *request){handler->onEnv(request);});
-  //server.on("/times", HTTP_PUT, [](AsyncWebServerRequest *request){handler->onTimes(request);});
+  //server.on("/times", HTTP_POST, [](AsyncWebServerRequest *request){handler->onTimes(request);});
 
   server.onNotFound([](AsyncWebServerRequest *request){request->send(404);});
   server.begin();
