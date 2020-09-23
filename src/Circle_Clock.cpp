@@ -8,8 +8,7 @@ void CircleClock::setup(CRGB leds[NUM_LEDS], int numberLEDs, ClockConfig *config
     this->leds = leds;
     this->numberLEDs = numberLEDs;
     this->configuration = configuration;
-    // Time
-    configTime(gmtOffset_sec, daylightOffset_sec, ntpServer);
+    
 }
 
 int CircleClock::mapToLEDs(int value, int max) {
