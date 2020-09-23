@@ -8,6 +8,7 @@ class Handler {
     private:
         ClockConfig* config;
         CircleClock* clock;
+        Color hexToColor(String input);
     public:
 		Handler(ClockConfig *config, CircleClock *clock);
 		void onColors(AsyncWebServerRequest *request);

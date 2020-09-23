@@ -28,7 +28,7 @@ const char index_html[] = R"rawliteral(
     Circle Clock Interface
   </h1>
   <h3>Colors Time</h3>
-  <form method="post">
+  <form action="/colors">
     <label for="cl_h">Hours</label>
     <input id="cl_h" type="color" name="color_hour">
     <label>Minutes</label>
@@ -36,7 +36,7 @@ const char index_html[] = R"rawliteral(
     <input type="submit" value="Set Color">
   </form>
   <h3>Blinking</h3>
-  <form action="/blink" method="post">
+  <form action="/blink">
     <lable>Enabled</lable>
     <input type="checkbox" name="enabled">
     <input type="submit" value="Set Blinking">
