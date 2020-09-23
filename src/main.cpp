@@ -12,11 +12,12 @@
 CRGB leds[NUM_LEDS];
 ClockConfig config;
 TIDILE tidile;
+Preferences preferences;
 
 int lastSec = 0;
 
 // Webserver
-Handler handler(&config, &tidile);
+Handler handler(&config, &tidile, &preferences);
 Webserver webserver;
 AsyncWebServer server(HTTP_ENDPOINT_PORT);
 
@@ -68,6 +69,8 @@ void setup()
   // Time
   configTime(3600, 3600, ntpServer);
 
+  preferences.begin("tidile_prefernces");
+
   //register leds
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
   FastLED.setBrightness(config.brightness);
@@ -79,7 +82,7 @@ void setup()
   webserver.setup(&handler, &server);
   
   startupLEDs(leds, 16);
-  config.deserialize();
+  config.deserialize(&preferences);
 }
 
 ClockTime getNTPTime()
