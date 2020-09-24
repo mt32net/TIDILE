@@ -1,5 +1,5 @@
 #include "Handler.hpp"
-#include "index_file.h"
+#include "index_file.hpp"
 
 Handler::Handler(ClockConfig * config, TIDILE *tidile, Preferences* references) {
     this->config = config;

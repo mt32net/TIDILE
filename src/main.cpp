@@ -4,10 +4,11 @@
 #include <FastLED.h>
 #include <time.h>
 #include "TIDILE.hpp"
-#include "ClockTime.h"
+#include "ClockInfo.hpp"
 #include "ClockConfig.hpp"
 #include "Handler.hpp"
 #include "Webserver.hpp"
+#include "config.h"
 
 CRGB leds[NUM_LEDS];
 ClockConfig config;

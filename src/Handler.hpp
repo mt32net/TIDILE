@@ -1,5 +1,6 @@
 #pragma once
 #include "definements.hpp"
+#include "config.h"
 #include "ClockConfig.hpp"
 #include "TIDILE.hpp"
 #include "ESPAsyncWebServer.h"

@@ -1,11 +1,5 @@
 #pragma once
 
-#define NUM_LEDS 49
-#define LED_PIN 5
-#define BLINK_BRIGHTNESS 0.7
-
-#define HTTP_ENDPOINT_PORT 80
-
 #pragma region used storage container
 //the only uncommented definement should be the one you`re storing the data in
 #define useEEPROM

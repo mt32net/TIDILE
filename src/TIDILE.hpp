@@ -1,8 +1,9 @@
 #pragma once
 #include <FastLED.h>
-#include "ClockTime.h"
+#include "ClockInfo.hpp"
 #include "ClockConfig.hpp"
 #include "definements.hpp"
+#include "config.h"
 
 class TIDILE
 {
