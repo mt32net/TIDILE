@@ -1,5 +1,7 @@
 #pragma once
 
+#define HTTP_ENDPOINT_PORT 80
+
 #pragma region used storage container
 //the only uncommented definement should be the one you`re storing the data in
 #define useEEPROM
