@@ -1,3 +1,16 @@
+#pragma once
+
+#pragma region UIkeywords
+#define COLORHOURKEYWORD "{{colorHourKeyword}}"
+#define COLORMINUTEKEYWORD "{{colorMinuteKeyword}}"
+#define BLINKINGENABLEDKEYWORD "{{blinkingEnabledKeyword}}"
+#define BRIGHTNESSKEYWORD "{{brightnessKeyword}}"
+#define COLORTEMPERATUREKEYWORD "{{colorTemperatureKeyword}}"
+#define COLORPRESSUREKEYWORD "{{colorPressureKeyword}}"
+#define COLORHUMIDITYKEYWORD "{{colorHumidityKeyword}}"
+#define SHOWSECONDSKEYWORD "{{secondsEnabledKeyword}}"
+#pragma endregion
+
 const char index_html[] = R"rawliteral(
 <html>
 <head>
