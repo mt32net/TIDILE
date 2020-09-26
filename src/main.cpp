@@ -115,7 +115,7 @@ void setup()
   webserver.setup(&handler, &server);
   Helper.getTime();
 
-#ifndef fastStartup
+#ifndef FASTSTARTUP
   startupLEDs(leds, 16);
 #endif
 }

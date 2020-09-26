@@ -14,7 +14,6 @@ public:
     String timeIntToTimeString(int timeInt);
     int timeStringToTimeInt(String timeString);
     ClockTime getTime();
-
 private:
     int timeTries = 0;
 };

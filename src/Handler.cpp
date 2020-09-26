@@ -47,6 +47,7 @@ void Handler::onIndex(AsyncWebServerRequest *request) {
     String html = index_html;
     html.replace(COLORHOURKEYWORD, Helper.colorToHex(this->config->colorHours));
     html.replace(COLORMINUTEKEYWORD, Helper.colorToHex(this->config->colorMinutes));
+    html.replace(COLORSECONDSKEYWORD, Helper.colorToHex(this->config->colorSeconds));
     html.replace(BLINKINGENABLEDKEYWORD, (this->config->blinkingEnabled)? "checked" : "");
     html.replace(BRIGHTNESSKEYWORD, String(this->config->brightness));
     html.replace(COLORTEMPERATUREKEYWORD, Helper.colorToHex(this->config->colorTemperature));
@@ -64,4 +65,5 @@ void Handler::onNightTime(AsyncWebServerRequest *request){
     if (request->hasParam("end_time")) {
         this->config->nightTimeEnd = Helper.timeStringToTimeInt(request->getParam("end_time")->value());
     }
+    request->redirect("/");
 }

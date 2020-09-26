@@ -5,7 +5,7 @@
 #define LED_PIN 5
 #define BLINK_BRIGHTNESS 0.7
 
-//#define fastStartup //uncomment when the startup animation shouldn´t be displayed each startup
+//#define FASTSTARTUP //uncomment when the startup animation shouldn´t be displayed each startup
 
 // Touch Pin
 #define THRESHOLD 25

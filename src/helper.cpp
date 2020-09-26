@@ -7,7 +7,7 @@ HelperClass::HelperClass(){
 }
 
 String HelperClass::timeIntToTimeString(int timeInt){
-    String time = String(timeInt);
+    String time = (timeInt <= 999) ? "0" + String(timeInt) : String(timeInt);
     return time.substring(0, 2) + ":" + time.substring(2, 4);
 }
 
