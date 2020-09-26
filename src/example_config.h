@@ -5,9 +5,12 @@
 #define LED_PIN 5
 #define BLINK_BRIGHTNESS 0.7
 
+//#define fastStartup //uncomment when the startup animation shouldn´t be displayed each startup
+
 // Touch Pin
 #define THRESHOLD 25
 #define SMOOTH_LOOPS 50
+#define TOUCH_PIN 4
 
 #pragma region display settings
 //#define DISPLAY_TEMPERATURE

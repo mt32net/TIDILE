@@ -1,13 +1,13 @@
 #pragma once
 #include "definements.hpp"
-#include "config.h"
 #include "ClockConfig.hpp"
 #include "TIDILE.hpp"
 #include "ESPAsyncWebServer.h"
+#include "helper.hpp"
 
 class Handler {
     public:
-		Handler(ClockConfig *config, TIDILE *tidile, Preferences* preferneces);
+		Handler(ClockConfig *config, TIDILE *tidile, Preferences* preferences);
 		void onColors(AsyncWebServerRequest *request);
         void onIndex(AsyncWebServerRequest *request);
         void onCustom(AsyncWebServerRequest *request);
@@ -20,8 +20,5 @@ class Handler {
         ClockConfig* config;
         TIDILE* tidile;
         Preferences* preferences;
-        Color hexToColor(String input);
-        String colorToHex(Color color);
-        String timeIntToTimeString(int timeInt);
-        int timeStringToTimeInt(String timeString);
+        
 };

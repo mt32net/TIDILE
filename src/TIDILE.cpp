@@ -8,6 +8,8 @@ void TIDILE::setup(CRGB leds[NUM_LEDS], int numberLEDs, ClockConfig *configurati
     this->leds = leds;
     this->numberLEDs = numberLEDs;
     this->configuration = configuration;
+
+    configTime(3600, 3600, ntpServer);
 }
 
 int TIDILE::mapToLEDs(int value, int max) {
@@ -20,7 +22,8 @@ void TIDILE::clear() {
     }
 }
 
-void TIDILE::displayTime(ClockTime time) {
+ClockTime TIDILE::displayTime() {
+    ClockTime time = Helper.getTime();
 
     clear();
 
@@ -35,7 +38,7 @@ void TIDILE::displayTime(ClockTime time) {
     
     // Hours
     this->leds[mapToLEDs(time.hours, 24)] = this->configuration->colorHours.toCRGB();
-
+    return time;
 }
 
 void TIDILE::displayEnv(ClockEnv env) {
@@ -58,4 +61,8 @@ void TIDILE::displayCustom(int progress, CRGB color, int duration) {
     for (int i = 0; i < mapToLEDs(progress, 99); i++) {
         this->leds[i] = color;
     }
+}
+
+bool TIDILE::inTimeWindow(ClockTime time){
+    return (String(time.hours) + String(time.minutes)).toInt() > configuration->nightTimeBegin || (String(time.hours) + String(time.minutes)).toInt() < configuration->nightTimeEnd;
 }

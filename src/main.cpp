@@ -1,10 +1,8 @@
 #include <Arduino.h>
 #include <FastLED.h>
 #include <WiFi.h>
-#include <time.h>
 #include "TIDILE.hpp"
-#include "ClockInfo.hpp"
-#include "ClockConfig.hpp"
+#include "helper.hpp"
 #include "Handler.hpp"
 #include "Webserver.hpp"
 #include "definements.hpp"
@@ -51,44 +49,21 @@ void startupLEDs(CRGB *leds, int delayEach)
 }
 #pragma endregion
 
-#pragma region get NPT Time
-ClockTime getTime()
-{
-  struct tm timeinfo;
-  if (!getLocalTime(&timeinfo))
-  {
-    Serial.println("Failed to obtain time");
-    return ClockTime{0, 0, 0, 0, 0, 0};
-  }
-  //Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
-  return ClockTime{
-    seconds : timeinfo.tm_sec,
-    minutes : timeinfo.tm_min,
-    hours : timeinfo.tm_hour,
-    day : timeinfo.tm_mday,
-    month : timeinfo.tm_mon,
-    year : timeinfo.tm_year
-  };
-}
-#pragma endregion
-
 ClockEnv getEnv()
 {
   return ClockEnv{
-    #ifdef BME280
+#ifdef BME280
     temperature : bmp.readTemperature(),
     pressure : bmp.readPressure() / 100
-    #endif
+#endif
   };
 }
-
 
 #pragma region setup
 void setup()
 {
-
   Serial.begin(115200);
-  delay(10);
+  delay(100);
 
 #pragma region Connecting to WiFi
   WiFi.begin();
@@ -117,9 +92,6 @@ void setup()
   Serial.println(WiFi.localIP());
 #pragma endregion
 
-  // Time
-  configTime(3600, 3600, ntpServer);
-
 #if defined(LIGHT_SENSOR) || defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
   Wire.begin();
 #ifdef HUMIDITY_SENSOR
@@ -133,21 +105,19 @@ void setup()
 #endif
 #endif
 
+  config.deserialize(&preferences);
+
   //register leds
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
   FastLED.setBrightness(config.brightness);
 
-  config.colorHours = Color((byte)0x00, (byte)0xFF, (byte)0xFF);
-  config.colorMinutes = Color((byte)0xFF, (byte)0xFF, (byte)0x00);
-  config.colorTemperature = Color((byte)0xFF, (byte)0x00, (byte)0x00);
-  config.colorPressure = Color((byte)0x00, (byte)0xFF, (byte)0x00);
-
   tidile.setup(leds, NUM_LEDS, &config);
   webserver.setup(&handler, &server);
+  Helper.getTime();
 
-  config.deserialize(&preferences);
-  loop();
+#ifndef fastStartup
   startupLEDs(leds, 16);
+#endif
 }
 #pragma endregion
 
@@ -156,8 +126,8 @@ int loopI = 0;
 int average = 30;
 void loop()
 {
-  ClockTime time = getTime();
-  tidile.displayTime(time);
+  ClockTime time = tidile.displayTime();
+#pragma region blinking seconds
   if (config.blinkingEnabled && time.seconds != lastSec)
   {
     FastLED.setBrightness(BLINK_BRIGHTNESS * config.brightness);
@@ -166,7 +136,9 @@ void loop()
   }
   FastLED.setBrightness(config.brightness);
   FastLED.show();
+#pragma endregion
 
+#pragma region touch pin handler
 #if defined(DISPLAY_HUMIDIY) || defined(DISPLAY_TEMPERATURE) || defined(DISPLAY_PRESSURE)
   if (loopI >= SMOOTH_LOOPS)
   {
@@ -179,11 +151,13 @@ void loop()
     loopI = 0;
     average = 0;
   }
-  else average += touchRead(4);
+  else
+    average += touchRead(TOUCH_PIN);
 #endif
 
   // Set variables
   lastSec = time.seconds;
   loopI++;
+#pragma endregion
 }
 #pragma endregion

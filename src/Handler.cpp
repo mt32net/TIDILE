@@ -8,16 +8,16 @@ Handler::Handler(ClockConfig * config, TIDILE *tidile, Preferences* preferences)
 }
 
 void Handler::onColors(AsyncWebServerRequest *request) {
-    this->config->colorMinutes = hexToColor(request->getParam("color_min")->value());
-    this->config->colorHours = hexToColor(request->getParam("color_hour")->value());
-    this->config->colorSeconds = hexToColor(request->getParam("color_sec")->value());
+    this->config->colorMinutes = Helper.hexToColor(request->getParam("color_min")->value());
+    this->config->colorHours = Helper.hexToColor(request->getParam("color_hour")->value());
+    this->config->colorSeconds = Helper.hexToColor(request->getParam("color_sec")->value());
     request->redirect("/");
     this->config->serialize(preferences);
 }
 
 void Handler::onEnvColors(AsyncWebServerRequest *request) {
-    this->config->colorTemperature = hexToColor(request->getParam("color_temp")->value());
-    this->config->colorPressure = hexToColor(request->getParam("color_press")->value());
+    this->config->colorTemperature = Helper.hexToColor(request->getParam("color_temp")->value());
+    this->config->colorPressure = Helper.hexToColor(request->getParam("color_press")->value());
     request->redirect("/");
     this->config->serialize(preferences);
 }
@@ -45,52 +45,23 @@ void Handler::onCustom(AsyncWebServerRequest *request) {
 
 void Handler::onIndex(AsyncWebServerRequest *request) {
     String html = index_html;
-    html.replace(COLORHOURKEYWORD, colorToHex(this->config->colorHours));
-    html.replace(COLORMINUTEKEYWORD, colorToHex(this->config->colorMinutes));
+    html.replace(COLORHOURKEYWORD, Helper.colorToHex(this->config->colorHours));
+    html.replace(COLORMINUTEKEYWORD, Helper.colorToHex(this->config->colorMinutes));
     html.replace(BLINKINGENABLEDKEYWORD, (this->config->blinkingEnabled)? "checked" : "");
     html.replace(BRIGHTNESSKEYWORD, String(this->config->brightness));
-    html.replace(COLORTEMPERATUREKEYWORD, colorToHex(this->config->colorTemperature));
-    html.replace(COLORPRESSUREKEYWORD, colorToHex(this->config->colorPressure));
+    html.replace(COLORTEMPERATUREKEYWORD, Helper.colorToHex(this->config->colorTemperature));
+    html.replace(COLORPRESSUREKEYWORD, Helper.colorToHex(this->config->colorPressure));
     html.replace(SHOWSECONDSKEYWORD, (this->config->displaySeconds)? "checked" : "");
-    html.replace(NIGHTTIMESTARTKEYWORD, timeIntToTimeString(this->config->nightTimeBegin));
-    html.replace(NIGHTTIMEENDKEYWORD, timeIntToTimeString(this->config->nightTimeEnd));
+    html.replace(NIGHTTIMESTARTKEYWORD, Helper.timeIntToTimeString(this->config->nightTimeBegin));
+    html.replace(NIGHTTIMEENDKEYWORD, Helper.timeIntToTimeString(this->config->nightTimeEnd));
     request->send(200, "text/html", html);
 }
 
 void Handler::onNightTime(AsyncWebServerRequest *request){
     if (request->hasParam("begin_time")) {
-        this->config->nightTimeBegin = timeStringToTimeInt(request->getParam("begin_time")->value());
+        this->config->nightTimeBegin = Helper.timeStringToTimeInt(request->getParam("begin_time")->value());
     }
     if (request->hasParam("end_time")) {
-        this->config->nightTimeEnd = timeStringToTimeInt(request->getParam("end_time")->value());
+        this->config->nightTimeEnd = Helper.timeStringToTimeInt(request->getParam("end_time")->value());
     }
-}
-
-String Handler::timeIntToTimeString(int timeInt){
-    String time = String(timeInt);
-    return time.substring(0, 2) + ":" + time.substring(2, 4);
-}
-
-int Handler::timeStringToTimeInt(String timeString){
-    timeString.remove(2,1);
-    return timeString.toInt();
-}
-
-// Thank you stack overflow!
-Color Handler::hexToColor(String input) {
-    long rgb = strtol(input.c_str() + 1, 0, 16); // parse as Hex, skipping the leading '#'
-    int r = (rgb >> 16) & 0xFF;
-    int g = (rgb >> 8) & 0xFF;
-    int b = rgb & 0xFF;
-    return Color(r, g, b);
-}
-
-String Handler::colorToHex(Color color){
-    String red = String(color.red, HEX);
-    if(red.length() == 1) red = "0" + red;
-    String green = String(color.green, HEX);
-    if(green.length() == 1) green = "0" + green;
-    String blue = String(color.blue, HEX);
-    if(blue.length() == 1) blue = "0" + blue;
-    return "#" + red + green + blue;
 }
