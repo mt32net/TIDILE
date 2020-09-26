@@ -36,7 +36,7 @@ void TIDILE::displayTime(ClockTime time) {
     // Hours
     this->leds[mapToLEDs(time.hours, 24)] = this->configuration->colorHours.toCRGB();
 
-};
+}
 
 void TIDILE::displayEnv(ClockEnv env) {
     clear();

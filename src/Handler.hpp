@@ -13,6 +13,7 @@ class Handler {
         void onCustom(AsyncWebServerRequest *request);
         void onEnvColors(AsyncWebServerRequest *request);
         void onBlink(AsyncWebServerRequest *request);
+        void onNightTime(AsyncWebServerRequest *request);
         //void onEnv(AsyncWebServerRequest *request);
         //void onTimes(AsyncWebServerRequest *request);
     private:
@@ -21,4 +22,6 @@ class Handler {
         Preferences* preferences;
         Color hexToColor(String input);
         String colorToHex(Color color);
+        String timeIntToTimeString(int timeInt);
+        int timeStringToTimeInt(String timeString);
 };

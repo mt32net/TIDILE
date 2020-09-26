@@ -55,8 +55,8 @@ struct ClockConfig
   Color colorTemperature = Color();
   Color colorPressure = Color();
   bool nightTimeLight = true;
-  uint16_t displayOffBegin = 0; //(13:30 -> 1330, 06:24 -> 624)
-  uint16_t displayOffEnd = 600;
+  uint16_t nightTimeBegin = 0; //(13:30 -> 1330, 06:24 -> 624)
+  uint16_t nightTimeEnd = 600;
   uint8_t brightness = 60;
   boolean blinkingEnabled = false;
 
@@ -75,8 +75,8 @@ struct ClockConfig
     colorPressure.deserialize(preferences, "pressure");
 
     nightTimeLight = preferences->getBool("nightLight");
-    displayOffBegin = preferences->getInt("displOffBegin");
-    displayOffEnd = preferences->getInt("displOffEnd");
+    nightTimeBegin = preferences->getInt("nightTimeBegin");
+    nightTimeEnd = preferences->getInt("nightTimeEnd");
     brightness = preferences->getInt("brightness");
     preferences->end();
   }
@@ -97,8 +97,8 @@ struct ClockConfig
     colorPressure.serialize(preferences, "pressure");
 
     preferences->putBool("nightLight", nightTimeLight);
-    preferences->putInt("displOffBegin", displayOffBegin);
-    preferences->putInt("displOffEnd", displayOffEnd);
+    preferences->putInt("nightTimeBegin", nightTimeBegin);
+    preferences->putInt("nightTimeEnd", nightTimeEnd);
     preferences->putInt("brightness", brightness);
     preferences->end();
   }
