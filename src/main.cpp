@@ -118,6 +118,8 @@ void setup()
 
   config.colorHours = Color((byte)0x00, (byte)0xFF, (byte)0xFF);
   config.colorMinutes = Color((byte)0xFF, (byte)0xFF, (byte)0x00);
+  config.colorTemperature = Color((byte)0xFF, (byte)0x00, (byte)0x00);
+  config.colorPressure = Color((byte)0x00, (byte)0xFF, (byte)0x00);
 
   tidile.setup(leds, NUM_LEDS, &config);
   webserver.setup(&handler, &server);
