@@ -38,8 +38,19 @@ void TIDILE::displayTime(ClockTime time) {
 
 };
 
-void TIDILE::displayEnv(ClockEnv * env) {
-    // TODO
+void TIDILE::displayEnv(ClockEnv env) {
+    clear();
+    for (int i = 0; i < mapToLEDs(env.temperature, 50); i++) {
+        this->leds[i] = configuration->colorTemperature.toCRGB();
+    }
+    FastLED.show();
+    delay(2000);
+    clear();
+    for (int i = 0; i < mapToLEDs(env.pressure, 10000); i++) {
+        this->leds[i] = configuration->colorPressure.toCRGB();
+    }
+    FastLED.show();
+    delay(2000);
 }
 
 void TIDILE::displayCustom(int progress, CRGB color, int duration) {
