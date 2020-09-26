@@ -17,7 +17,7 @@ public:
     TIDILE();
     void setup(CRGB leds[NUM_LEDS], int numberLEDs, ClockConfig *configuration);
     void displayTime(ClockTime time);
-    void displayEnv(ClockEnv *env);
+    void displayEnv(ClockEnv env);
     ///@param progress value between 0 and 99
     ///@param duration in ms
     void displayCustom(int progress, CRGB color, int duration);
