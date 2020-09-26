@@ -2,20 +2,24 @@
 #include <FastLED.h>
 #include <WiFi.h>
 #include <time.h>
-#include <Wire.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BME280.h>
 #include "TIDILE.hpp"
 #include "ClockInfo.hpp"
 #include "ClockConfig.hpp"
 #include "Handler.hpp"
 #include "Webserver.hpp"
-#include "config.hpp"
+#include "definements.hpp"
+#if defined(lightSensor) || defined(temperatureSensor) || defined(humiditySensor) || defined(pressureSensor)
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME280.h>
+#endif
 
 //#define BMP_SDA 21
 //#define BMP_SCL 22
 
+#if defined(humiditySensor) && defined(bme280)
 Adafruit_BME280 bmp; // I2C
+#endif
 
 CRGB leds[NUM_LEDS];
 ClockConfig config;
@@ -66,14 +70,18 @@ ClockTime getTime()
     year : timeinfo.tm_year
   };
 }
+#pragma endregion
 
-ClockEnv getEnv() {
-  return ClockEnv {
-    temperature: bmp.readTemperature(),
-    pressure: bmp.readPressure()/100
+ClockEnv getEnv()
+{
+  return ClockEnv{
+    #ifdef bme280
+    temperature : bmp.readTemperature(),
+    pressure : bmp.readPressure() / 100
+    #endif
   };
 }
-#pragma endregion
+
 
 #pragma region setup
 void setup()
@@ -98,7 +106,8 @@ void setup()
       Serial.print(".");
       Serial.println(WiFi.smartConfigDone());
       tries++;
-      if(tries > 5) ESP.restart();
+      if (tries > 5)
+        ESP.restart();
     }
   }
 
@@ -111,13 +120,18 @@ void setup()
   // Time
   configTime(3600, 3600, ntpServer);
 
+#if defined(lightSensor) || defined(temperatureSensor) || defined(humiditySensor) || defined(pressureSensor)
   Wire.begin();
+#ifdef humiditySensor
   // BMP280
   bool ok = bmp.begin(0x76);
-  if (!ok) {  
+  if (!ok)
+  {
     Serial.println("Could not find a valid BMP280!");
     //while (1);
   }
+#endif
+#endif
 
   //register leds
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
@@ -130,8 +144,9 @@ void setup()
 
   tidile.setup(leds, NUM_LEDS, &config);
   webserver.setup(&handler, &server);
-  
+
   config.deserialize(&preferences);
+  loop();
   startupLEDs(leds, 16);
 }
 #pragma endregion
@@ -150,6 +165,7 @@ void loop()
   FastLED.setBrightness(config.brightness);
   FastLED.show();
 
+#if defined(displayHumidity) || defined(displayTemperature) || defined(displayPressure)
   // ENV
   //printEnv();
   if (touchRead(4) < 20)
@@ -158,6 +174,7 @@ void loop()
     tidile.displayEnv(getEnv());
     delay(2000);
   }
+#endif
 
   // Set variables
   lastSec = time.seconds;
