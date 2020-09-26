@@ -25,7 +25,7 @@ const char index_html[] = R"rawliteral(
   }
   form {
     display: grid;
-    grid-template-columns: 10rem auto;
+    grid-template-columns: 50% 50%;
     gap: 0.7rem;
   }
   input {
@@ -75,9 +75,10 @@ const char index_html[] = R"rawliteral(
     <input type="checkbox" name="enabled" {{blinkingEnabledKeyword}}>
     <label>Show Seconds</label>
     <input type="checkbox" name="show_seconds" {{secondsEnabledKeyword}}>
-    <lable for="bright">Brightness</label>
+    <lable for="bright">Brightness</lable>
     <div>
-      <input id="bright" type="number" name="brightness" min="0" max="255" value="{{brightnessKeyword}}">
+      <input id="bright" type="number" name="brightness" min="0" max="255" value="2">
+      <br>
       <small>Enter a value between 0 and 255 to set the LED brightness (Caution: Higher brightness results in a higher energy consumption. e.g. with 144 LEDS in use and the brightness set to 200 the power consumption is around 2 amps</small>
     </div>
     <input type="submit" value="Set Blinking & Brightness">
