@@ -10,6 +10,7 @@ Handler::Handler(ClockConfig * config, TIDILE *tidile, Preferences* preferences)
 void Handler::onColors(AsyncWebServerRequest *request) {
     this->config->colorMinutes = hexToColor(request->getParam("color_min")->value());
     this->config->colorHours = hexToColor(request->getParam("color_hour")->value());
+    this->config->colorSeconds = hexToColor(request->getParam("color_sec")->value());
     request->redirect("/");
     this->config->serialize(preferences);
 };
