@@ -8,7 +8,7 @@
 #include "Handler.hpp"
 #include "Webserver.hpp"
 #include "definements.hpp"
-#if defined(lightSensor) || defined(temperatureSensor) || defined(humiditySensor) || defined(pressureSensor)
+#if defined(LIGHT_SENSOR) || defined(//#define TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
@@ -17,7 +17,7 @@
 //#define BMP_SDA 21
 //#define BMP_SCL 22
 
-#if defined(humiditySensor) && defined(bme280)
+#if defined(HUMIDITY_SENSOR) && defined(BME280)
 Adafruit_BME280 bmp; // I2C
 #endif
 
@@ -75,7 +75,7 @@ ClockTime getTime()
 ClockEnv getEnv()
 {
   return ClockEnv{
-    #ifdef bme280
+    #ifdef BME280
     temperature : bmp.readTemperature(),
     pressure : bmp.readPressure() / 100
     #endif
@@ -120,9 +120,9 @@ void setup()
   // Time
   configTime(3600, 3600, ntpServer);
 
-#if defined(lightSensor) || defined(temperatureSensor) || defined(humiditySensor) || defined(pressureSensor)
+#if defined(LIGHT_SENSOR) || defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
   Wire.begin();
-#ifdef humiditySensor
+#ifdef HUMIDITY_SENSOR
   // BMP280
   bool ok = bmp.begin(0x76);
   if (!ok)
@@ -165,7 +165,7 @@ void loop()
   FastLED.setBrightness(config.brightness);
   FastLED.show();
 
-#if defined(displayHumidity) || defined(displayTemperature) || defined(displayPressure)
+#if defined(DISPLAY_HUMIDIY) || defined(DISPLAY_TEMPERATURE) || defined(DISPLAY_PRESSURE)
   // ENV
   //printEnv();
   if (touchRead(4) < 20)
