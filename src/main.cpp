@@ -8,7 +8,7 @@
 #include "Handler.hpp"
 #include "Webserver.hpp"
 #include "definements.hpp"
-#if defined(LIGHT_SENSOR) || defined(//#define TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
+#if defined(LIGHT_SENSOR) || defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>

@@ -3,6 +3,7 @@
 #pragma region UIkeywords
 #define COLORHOURKEYWORD "{{colorHourKeyword}}"
 #define COLORMINUTEKEYWORD "{{colorMinuteKeyword}}"
+#define COLORSECONDSKEYWORD "{{colorSecondKeyword}}"
 #define BLINKINGENABLEDKEYWORD "{{blinkingEnabledKeyword}}"
 #define BRIGHTNESSKEYWORD "{{brightnessKeyword}}"
 #define COLORTEMPERATUREKEYWORD "{{colorTemperatureKeyword}}"
