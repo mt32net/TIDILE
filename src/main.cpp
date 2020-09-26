@@ -17,7 +17,7 @@
 //#define BMP_SDA 21
 //#define BMP_SCL 22
 
-#ifdef humiditySensor
+#if defined(humiditySensor) && defined(bme280)
 Adafruit_BME280 bmp; // I2C
 #endif
 
@@ -70,15 +70,18 @@ ClockTime getTime()
     year : timeinfo.tm_year
   };
 }
+#pragma endregion
 
 ClockEnv getEnv()
 {
   return ClockEnv{
+    #ifdef bme280
     temperature : bmp.readTemperature(),
     pressure : bmp.readPressure() / 100
+    #endif
   };
 }
-#pragma endregion
+
 
 #pragma region setup
 void setup()
