@@ -29,6 +29,7 @@ Handler handler(&config, &tidile, &preferences);
 Webserver webserver;
 AsyncWebServer server(HTTP_ENDPOINT_PORT);
 
+#pragma region startup animation
 void startupLEDs(CRGB *leds, int delayEach)
 {
   for (int i = 0; i < NUM_LEDS; i++)
@@ -44,7 +45,9 @@ void startupLEDs(CRGB *leds, int delayEach)
     delay(delayEach);
   }
 }
+#pragma endregion
 
+#pragma region get NPT Time
 ClockTime getTime()
 {
   struct tm timeinfo;
@@ -70,6 +73,7 @@ ClockEnv getEnv() {
     pressure: bmp.readPressure()/100
   };
 }
+#pragma endregion
 
 #pragma region setup
 void setup()
@@ -127,9 +131,8 @@ void setup()
   tidile.setup(leds, NUM_LEDS, &config);
   webserver.setup(&handler, &server);
   
+  config.deserialize(&preferences);
   startupLEDs(leds, 16);
-  //preferences.clear();
-  //config.deserialize(&preferences);
 }
 #pragma endregion
 
