@@ -83,6 +83,7 @@ void setup()
 
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
   tidile.setup(leds, NUM_LEDS, &server);
+  Helper.getTime();
 }
 
 int loopI = 0;

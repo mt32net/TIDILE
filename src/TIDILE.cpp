@@ -32,10 +32,7 @@ int TIDILE::mapToLEDs(int value, int max)
 
 void TIDILE::clear()
 {
-    for (int i = 0; i < this->numberLEDs; i++)
-    {
-        this->leds[i] = CRGB::Black;
-    }
+    FastLED.showColor(CRGB::Black);
 }
 
 void TIDILE::displayTime()
@@ -67,8 +64,9 @@ void TIDILE::displayTime()
             delay(100);
         }
         FastLED.setBrightness(configuration.brightness);
-        FastLED.show();
+        
     }
+    FastLED.show();
 }
 
 void TIDILE::displayEnv(ClockEnv env)
