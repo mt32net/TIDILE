@@ -11,7 +11,7 @@ class Handler {
 		void onColors(AsyncWebServerRequest *request);
         void onIndex(AsyncWebServerRequest *request);
         void onCustom(AsyncWebServerRequest *request);
-        //void onEnvColors(AsyncWebServerRequest *request);
+        void onEnvColors(AsyncWebServerRequest *request);
         void onBlink(AsyncWebServerRequest *request);
         //void onEnv(AsyncWebServerRequest *request);
         //void onTimes(AsyncWebServerRequest *request);

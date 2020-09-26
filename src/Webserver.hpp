@@ -19,7 +19,7 @@ public:
         server->on("/", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onIndex(request); });
         server->on("/colors", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onColors(request); });
         server->on("/display", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onCustom(request); });
-        //server->on("/envcolors", HTTP_GET, [handler](AsyncWebServerRequest *request){handler->onEnvColors(request);});
+        server->on("/envcolors", HTTP_GET, [handler](AsyncWebServerRequest *request){ handler->onEnvColors(request); });
         server->on("/blink", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onBlink(request); });
         //server->on("/env", HTTP_GET, [handler](AsyncWebServerRequest *request){handler->onEnv(request);});
         //server->on("/times", HTTP_GET, [handler](AsyncWebServerRequest *request){handler->onTimes(request);});

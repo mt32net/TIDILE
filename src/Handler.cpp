@@ -14,6 +14,12 @@ void Handler::onColors(AsyncWebServerRequest *request) {
     this->config->serialize(preferences);
 };
 
+void Handler::onEnvColors(AsyncWebServerRequest *request) {
+    this->config->colorTemperature = hexToColor(request->getParam("color_temp")->value());
+    this->config->colorPressure = hexToColor(request->getParam("color_press")->value());
+    request->redirect("/");
+    this->config->serialize(preferences);
+};
 
 void Handler::onBlink(AsyncWebServerRequest *request) {
     boolean en = false;
