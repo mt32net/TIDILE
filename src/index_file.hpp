@@ -25,7 +25,7 @@ const char index_html[] = R"rawliteral(
   }
   form {
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: auto 1fr;
     gap: 0.7rem;
   }
   input {
