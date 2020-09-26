@@ -47,6 +47,7 @@ void Handler::onIndex(AsyncWebServerRequest *request) {
     String html = index_html;
     html.replace(COLORHOURKEYWORD, Helper.colorToHex(this->config->colorHours));
     html.replace(COLORMINUTEKEYWORD, Helper.colorToHex(this->config->colorMinutes));
+    html.replace(COLORSECONDSKEYWORD, Helper.colorToHex(this->config->colorSeconds));
     html.replace(BLINKINGENABLEDKEYWORD, (this->config->blinkingEnabled)? "checked" : "");
     html.replace(BRIGHTNESSKEYWORD, String(this->config->brightness));
     html.replace(COLORTEMPERATUREKEYWORD, Helper.colorToHex(this->config->colorTemperature));
@@ -54,6 +55,7 @@ void Handler::onIndex(AsyncWebServerRequest *request) {
     html.replace(SHOWSECONDSKEYWORD, (this->config->displaySeconds)? "checked" : "");
     html.replace(NIGHTTIMESTARTKEYWORD, Helper.timeIntToTimeString(this->config->nightTimeBegin));
     html.replace(NIGHTTIMEENDKEYWORD, Helper.timeIntToTimeString(this->config->nightTimeEnd));
+    html.replace(NIGHTTIMEENABLEDKEYWORD, (this->config->nightTimeLight)? "checked" : "");
     request->send(200, "text/html", html);
 }
 
@@ -64,4 +66,8 @@ void Handler::onNightTime(AsyncWebServerRequest *request){
     if (request->hasParam("end_time")) {
         this->config->nightTimeEnd = Helper.timeStringToTimeInt(request->getParam("end_time")->value());
     }
+    if (request->hasParam("time_enabled")) {
+        this->config->nightTimeLight = request->getParam("time_enabled")->value().equals("on");
+    }
+    request->redirect("/");
 }
