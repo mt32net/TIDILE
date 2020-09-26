@@ -64,7 +64,7 @@ struct ClockConfig
   ///@param preferences is the preference object
   void deserialize(Preferences* preferences)
   {
-    preferences->begin("tidilePrefs");
+    preferences->begin("prefs");
     displaySeconds = preferences->getBool("displSecs");
     colorHours.deserialize(preferences, "hours");
     colorMinutes.deserialize(preferences, "minutes");
