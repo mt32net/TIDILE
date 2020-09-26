@@ -153,7 +153,7 @@ void setup()
 
 #pragma region loop
 int loopI = 0;
-int average = 0;
+int average = 30;
 void loop()
 {
   ClockTime time = getTime();
