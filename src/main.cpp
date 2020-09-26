@@ -146,11 +146,11 @@ void loop()
       tidile.displayEnv(getEnv());
     }
 #endif
-    lightAvg = lightAvg / SMOOTH_LOOPS;
+    /*lightAvg = lightAvg / SMOOTH_LOOPS;
     Serial.println(lightAvg);
     // brighnest * (photo in % * influence in %)
     double lightPercent = (double)map(lightAvg, 0, 4095, 0, 100) / (double)100;
-    FastLED.setBrightness(config.brightness * ((( + MIN_LIGHT_PERCENT) * ((double)config.lightInfluence / (double)100)));
+    FastLED.setBrightness(config.brightness * ((((lightPercent > MIN_LIGHT_PERCENT) ? lightPercent : MIN_LIGHT_PERCENT) * ((double)config.lightInfluence / (double)100))));*/
 
     loopI = 0;
     touchAverage = 0;

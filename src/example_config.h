@@ -19,6 +19,7 @@
 // in ms
 #define ENV_DISPLAY_TIME 2000
 #define PHOTORESISTOR_PIN 36
+#define MIN_LIGHT_PERCENT 10
 #pragma endregion
 
 #pragma region sensors

@@ -43,7 +43,7 @@ ClockTime TIDILE::displayTime()
 
         // Seconds
         if (configuration->displaySeconds)
-            this->leds[mapToLEDs(time.seconds, 60)] = this->configuration->colorSeconds.toCRGB();
+            this->leds[mapToLEDs(time.seconds, 60)] = (configuration->dimmSeconds)? this->configuration->colorMinutes.toCRGB().subtractFromRGB(0xBB) : this->configuration->colorSeconds.toCRGB();
 
         // Hours
         this->leds[mapToLEDs(time.hours, 24)] = this->configuration->colorHours.toCRGB();

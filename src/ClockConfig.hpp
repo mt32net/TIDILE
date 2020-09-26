@@ -59,7 +59,8 @@ struct ClockConfig
   uint16_t nightTimeBegin = 0; //(13:30 -> 1330, 06:24 -> 624)
   uint16_t nightTimeEnd = 600;
   uint8_t brightness = 60;
-  boolean blinkingEnabled = false;
+  bool blinkingEnabled = false;
+  bool dimmSeconds = false;
 
   ///deserializes this ClockConfig from startPosition into this object
   ///@param preferences is the preference object
@@ -70,6 +71,7 @@ struct ClockConfig
     colorHours.deserialize(preferences, "hours");
     colorMinutes.deserialize(preferences, "minutes");
     colorSeconds.deserialize(preferences, "seconds");
+    dimmSeconds = preferences->getBool("dimmSecs");
 
     colorHumidity.deserialize(preferences, "humid");
     colorTemperature.deserialize(preferences, "temper");
@@ -92,6 +94,7 @@ struct ClockConfig
     colorHours.serialize(preferences, "hours");
     colorMinutes.serialize(preferences, "minutes");
     colorSeconds.serialize(preferences, "seconds");
+    preferences->putBool("dimmSecs", dimmSeconds);
 
     colorHumidity.serialize(preferences, "humid");
     colorTemperature.serialize(preferences, "temper");
