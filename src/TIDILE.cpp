@@ -4,13 +4,25 @@ TIDILE::TIDILE()
 {
 }
 
-void TIDILE::setup(CRGB leds[NUM_LEDS], int numberLEDs, ClockConfig *configuration)
+void TIDILE::setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer* server)
 {
     this->leds = leds;
     this->numberLEDs = numberLEDs;
-    this->configuration = configuration;
+    this->server = server;
 
     configTime(3600, 3600, ntpServer);
+
+    configuration.deserialize(&preferences);
+    handler.setup(&configuration, this, &preferences);
+    webserver.setup(&handler, server);
+
+    FastLED.setBrightness(configuration.brightness);
+
+    Helper.getTime();
+
+    #ifndef FASTSTARTUP
+        startupLEDs(leds, 16);
+    #endif
 }
 
 int TIDILE::mapToLEDs(int value, int max)
@@ -26,7 +38,7 @@ void TIDILE::clear()
     }
 }
 
-ClockTime TIDILE::displayTime()
+void TIDILE::displayTime()
 {
     ClockTime time = Helper.getTime();
 
@@ -37,18 +49,25 @@ ClockTime TIDILE::displayTime()
         // Minutes
         for (int i = 0; i < mapToLEDs(time.minutes, 60); i++)
         {
-            this->leds[i] = this->configuration->colorMinutes.toCRGB();
+            this->leds[i] = configuration.colorMinutes.toCRGB();
             //this->leds[i] = CRGB::Blue;
         }
 
         // Seconds
-        if (configuration->displaySeconds)
-            this->leds[mapToLEDs(time.seconds, 60)] = (configuration->dimmSeconds)? this->configuration->colorMinutes.toCRGB().subtractFromRGB(0xBB) : this->configuration->colorSeconds.toCRGB();
+        if (configuration.displaySeconds)
+            this->leds[mapToLEDs(time.seconds, 60)] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(0xBB) : configuration.colorSeconds.toCRGB();
 
         // Hours
-        this->leds[mapToLEDs(time.hours, 24)] = this->configuration->colorHours.toCRGB();
+        this->leds[mapToLEDs(time.hours, 24)] = configuration.colorHours.toCRGB();
+
+        if (configuration.blinkingEnabled && time.seconds != lastSec)
+        {
+            FastLED.setBrightness(BLINK_BRIGHTNESS * configuration.brightness);
+            FastLED.show();
+            delay(100);
+        }
+        FastLED.show();
     }
-    return time;
 }
 
 void TIDILE::displayEnv(ClockEnv env)
@@ -58,14 +77,14 @@ void TIDILE::displayEnv(ClockEnv env)
     {
         for (int i = 0; i < mapToLEDs(env.temperature, 50); i++)
         {
-            this->leds[i] = configuration->colorTemperature.toCRGB();
+            this->leds[i] = configuration.colorTemperature.toCRGB();
         }
         FastLED.show();
         delay(ENV_DISPLAY_TIME);
         clear();
         for (int i = 0; i < mapToLEDs(env.pressure, 10000); i++)
         {
-            this->leds[i] = configuration->colorPressure.toCRGB();
+            this->leds[i] = configuration.colorPressure.toCRGB();
         }
         FastLED.show();
         delay(ENV_DISPLAY_TIME);
@@ -86,5 +105,21 @@ void TIDILE::displayCustom(int progress, CRGB color, int duration)
 
 bool TIDILE::isNightTime(ClockTime time)
 {
-    return ((String(time.hours) + String(time.minutes)).toInt() > configuration->nightTimeBegin || (String(time.hours) + String(time.minutes)).toInt() < configuration->nightTimeEnd) && configuration->nightTimeLight;
+    return ((String(time.hours) + String(time.minutes)).toInt() > configuration.nightTimeBegin || (String(time.hours) + String(time.minutes)).toInt() < configuration.nightTimeEnd) && configuration.nightTimeLight;
+}
+
+void TIDILE::displayCustom(CRGB *leds, int delayEach)
+{
+  for (int i = 0; i < NUM_LEDS; i++)
+  {
+    leds[i] = CRGB::White;
+    FastLED.show();
+    delay(delayEach);
+  }
+  for (int i = 0; i < NUM_LEDS; i++)
+  {
+    leds[i] = CRGB::Black;
+    FastLED.show();
+    delay(delayEach);
+  }
 }

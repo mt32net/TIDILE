@@ -1,7 +1,11 @@
 #include "Handler.hpp"
 #include "index_file.hpp"
+#include "TIDILE.hpp"
 
-Handler::Handler(ClockConfig * config, TIDILE *tidile, Preferences* preferences) {
+Handler::Handler() {
+}
+
+void Handler::setup(ClockConfig * config, TIDILE *tidile, Preferences* preferences){
     this->config = config;
     this->tidile = tidile;
     this->preferences = preferences;
