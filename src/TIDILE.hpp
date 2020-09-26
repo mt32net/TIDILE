@@ -28,6 +28,6 @@ private:
     int numberLEDs;
     int mapToLEDs(int value, int max);
     void clear();
-    bool inTimeWindow(ClockTime time);
+    bool isNightTime(ClockTime time);
     
 };
