@@ -152,6 +152,8 @@ void setup()
 #pragma endregion
 
 #pragma region loop
+int loopI = 0;
+int average = 30;
 void loop()
 {
   ClockTime time = getTime();
@@ -166,15 +168,22 @@ void loop()
   FastLED.show();
 
 #if defined(DISPLAY_HUMIDIY) || defined(DISPLAY_TEMPERATURE) || defined(DISPLAY_PRESSURE)
-  if (touchRead(4) < 20)
+  if (loopI >= SMOOTH_LOOPS)
   {
-    Serial.println("Display env...");
-    tidile.displayEnv(getEnv());
-    delay(2000);
+    if (average / SMOOTH_LOOPS < THRESHOLD)
+    {
+      Serial.println("Display env...");
+      tidile.displayEnv(getEnv());
+      delay(2000);
+    }
+    loopI = 0;
+    average = 0;
   }
+  else average += touchRead(4);
 #endif
 
   // Set variables
   lastSec = time.seconds;
+  loopI++;
 }
 #pragma endregion

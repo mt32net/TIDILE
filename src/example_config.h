@@ -5,10 +5,16 @@
 #define LED_PIN 5
 #define BLINK_BRIGHTNESS 0.7
 
+// Touch Pin
+#define THRESHOLD 25
+#define SMOOTH_LOOPS 50
+
 #pragma region display settings
 //#define DISPLAY_TEMPERATURE
 //#define DISPLAY_HUMIDIY
 //#define DISPLAY_PRESSURE
+// in ms
+#define ENV_DISPLAY_TIME 2000
 #pragma endregion
 
 #pragma region sensors
