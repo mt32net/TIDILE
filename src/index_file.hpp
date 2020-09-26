@@ -9,6 +9,8 @@
 #define COLORTEMPERATUREKEYWORD "{{colorTemperatureKeyword}}"
 #define COLORPRESSUREKEYWORD "{{colorPressureKeyword}}"
 #define SHOWSECONDSKEYWORD "{{secondsEnabledKeyword}}"
+#define NIGHTTIMESTARTKEYWORD "{{nighttimeStartKeyword}}"
+#define NIGHTTIMEENDKEYWORD "{{nighttimeEndKeyword}}"
 #pragma endregion
 
 const char index_html[] = R"rawliteral(
@@ -40,12 +42,24 @@ const char index_html[] = R"rawliteral(
   <h1>
     TIDILE Interface
   </h1>
+  <h3>Night Time</h3>
+  <form action="/time">
+    <label for="cl_h">Begin of Night Timee</label>
+    <input id="cl_h" type="time" name="begin_time" value="{{nighttimeStartKeyword}}">
+    <small>Enter the time when the clock should start to turn off if it´s dark in the room</small>
+    <label>Minutes</label>
+    <input type="time" name="end_time" value="{{nighttimeEndKeyword}}" width="auto">
+    <small>Enter the time when the clock should stop to turn off if it´s dark in the room</small>
+  <input type="submit" value="Set Night Time">
+  </form>
   <h3>Colors Time</h3>
   <form action="/colors">
     <label for="cl_h">Hours</label>
     <input id="cl_h" type="color" name="color_hour" value="{{colorHourKeyword}}">
     <label>Minutes</label>
     <input type="color" name="color_min" value="{{colorMinuteKeyword}}" width="auto">
+    <label>Seconds</label>
+    <input type="color" name="color_sec" value="{{colorSecondKeyword}}" width="auto">
     <input type="submit" value="Set Color">
   </form>
   <h3>Blinking & Brightness</h3>
@@ -56,8 +70,10 @@ const char index_html[] = R"rawliteral(
     <input type="checkbox" name="show_seconds" {{secondsEnabledKeyword}}>
     <lable>Brightness</label>
     <input type="number" name="brightness" min="0" max="255" value="{{brightnessKeyword}}">
+    <small>Enter a value between 0 and 255 to set the LED brightness (Caution: Higher brightness results in a higher energy consumption. e.g. with 144 LEDS in use and the brightness set to 200 the power consumption is around 2 amps</small>
     <input type="submit" value="Set Blinking & Brightness">
   </form>
+  <!--- env begin---!>
   <h3>Enviroment Colors</h3>
   <form action="/envcolors">
     <label>Temperature</label>
@@ -66,6 +82,7 @@ const char index_html[] = R"rawliteral(
     <input type="color" name="color_press" value="{{colorPressureKeyword}}">
     <input type="submit" value="Set Colors">
   </form>
+  <!--- env end---!>
 </body>
 </html>
 )rawliteral";
