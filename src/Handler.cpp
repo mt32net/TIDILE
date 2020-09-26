@@ -23,6 +23,8 @@ void Handler::onEnvColors(AsyncWebServerRequest *request) {
 }
 
 void Handler::onBlink(AsyncWebServerRequest *request) {
+    this->config->blinkingEnabled = false;
+    this->config->displaySeconds = false;
     if (request->hasParam("enabled")) {
         this->config->blinkingEnabled = request->getParam("enabled")->value().equals("on");
     }
@@ -60,6 +62,7 @@ void Handler::onIndex(AsyncWebServerRequest *request) {
 }
 
 void Handler::onNightTime(AsyncWebServerRequest *request){
+    this->config->nightTimeLight = false;
     if (request->hasParam("begin_time")) {
         this->config->nightTimeBegin = Helper.timeStringToTimeInt(request->getParam("begin_time")->value());
     }
@@ -70,4 +73,5 @@ void Handler::onNightTime(AsyncWebServerRequest *request){
         this->config->nightTimeLight = request->getParam("time_enabled")->value().equals("on");
     }
     request->redirect("/");
+    this->config->serialize(preferences);
 }

@@ -32,7 +32,7 @@ ClockTime TIDILE::displayTime()
 
     clear();
 
-    if (configuration->nightTimeLight && !isNightTime(time))
+    if (!isNightTime(Helper.getTime()))
     {
         // Minutes
         for (int i = 0; i < mapToLEDs(time.minutes, 60); i++)
@@ -54,7 +54,7 @@ ClockTime TIDILE::displayTime()
 void TIDILE::displayEnv(ClockEnv env)
 {
     clear();
-    if (configuration->nightTimeLight && !isNightTime(Helper.getTime()))
+    if (!isNightTime(Helper.getTime()))
     {
         for (int i = 0; i < mapToLEDs(env.temperature, 50); i++)
         {
@@ -75,7 +75,7 @@ void TIDILE::displayEnv(ClockEnv env)
 void TIDILE::displayCustom(int progress, CRGB color, int duration)
 {
     clear();
-    if (configuration->nightTimeLight && !isNightTime(Helper.getTime()))
+    if (!isNightTime(Helper.getTime()))
     {
         for (int i = 0; i < mapToLEDs(progress, 99); i++)
         {
@@ -86,5 +86,5 @@ void TIDILE::displayCustom(int progress, CRGB color, int duration)
 
 bool TIDILE::isNightTime(ClockTime time)
 {
-    return (String(time.hours) + String(time.minutes)).toInt() > configuration->nightTimeBegin || (String(time.hours) + String(time.minutes)).toInt() < configuration->nightTimeEnd;
+    return ((String(time.hours) + String(time.minutes)).toInt() > configuration->nightTimeBegin || (String(time.hours) + String(time.minutes)).toInt() < configuration->nightTimeEnd) && configuration->nightTimeLight;
 }

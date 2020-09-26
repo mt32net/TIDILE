@@ -45,8 +45,8 @@ const char index_html[] = R"rawliteral(
   </h1>
   <h3>Night Time</h3>
   <form action="/time">
-    <label for="timeEnabled">Enable Night Time</label>
-    <input id="timeEnabled" type="checkbox" name="time_enabled" {{nightTimeEnabledKeyword}}>
+    <label>Enable Night Time</label>
+    <input type="checkbox" name="time_enabled" {{nightTimeEnabledKeyword}}>
     <label for="timeB">Begin of Night Time</label>
     <div>
       <input id="timeB" type="time" name="begin_time" value="{{nighttimeStartKeyword}}" width="auto">
