@@ -8,7 +8,6 @@
 #define BRIGHTNESSKEYWORD "{{brightnessKeyword}}"
 #define COLORTEMPERATUREKEYWORD "{{colorTemperatureKeyword}}"
 #define COLORPRESSUREKEYWORD "{{colorPressureKeyword}}"
-#define COLORHUMIDITYKEYWORD "{{colorHumidityKeyword}}"
 #define SHOWSECONDSKEYWORD "{{secondsEnabledKeyword}}"
 #pragma endregion
 
@@ -60,13 +59,11 @@ const char index_html[] = R"rawliteral(
     <input type="submit" value="Set Blinking & Brightness">
   </form>
   <h3>Enviroment Colors</h3>
-  <form>
+  <form action="/envcolors">
     <label>Temperature</label>
     <input type="color" name="color_temp" value="{{colorTemperatureKeyword}}">
     <label>Pressure</label>
     <input type="color" name="color_press" value="{{colorPressureKeyword}}">
-    <label>Humidity</label>
-    <input type="color" name="color_hum" value="{{colorHumidityKeyword}}">
     <input type="submit" value="Set Colors">
   </form>
 </body>

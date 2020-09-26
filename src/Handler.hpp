@@ -20,5 +20,5 @@ class Handler {
         TIDILE* tidile;
         Preferences* preferences;
         Color hexToColor(String input);
-        String colorToHEX(Color color);
+        String colorToHex(Color color);
 };
