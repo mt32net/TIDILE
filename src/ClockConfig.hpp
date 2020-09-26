@@ -85,7 +85,7 @@ struct ClockConfig
   ///@param preferences is the preference object
   void serialize(Preferences* preferences)
   {
-    /*preferences->begin("tidilePrefs");
+    preferences->begin("prefs", false);
     preferences->putBool("displSecs", displaySeconds);
 
     colorHours.serialize(preferences, "hours");
@@ -100,7 +100,6 @@ struct ClockConfig
     preferences->putInt("displOffBegin", displayOffBegin);
     preferences->putInt("displOffEnd", displayOffEnd);
     preferences->putInt("brightness", brightness);
-
-    preferences->end();*/
+    preferences->end();
   }
 };

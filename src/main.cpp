@@ -8,7 +8,7 @@
 #include "ClockConfig.hpp"
 #include "Handler.hpp"
 #include "Webserver.hpp"
-#include "config.h"
+#include "config.hpp"
 
 CRGB leds[NUM_LEDS];
 ClockConfig config;
@@ -53,11 +53,14 @@ void setup()
     WiFi.mode(WIFI_AP_STA);
     delay(500);
     WiFi.beginSmartConfig();
+    int tries = 0;
     while (WiFi.status() != WL_CONNECTED)
     {
       delay(500);
       Serial.print(".");
       Serial.println(WiFi.smartConfigDone());
+      tries++;
+      if(tries > 5) ESP.restart();
     }
   }
 
@@ -70,8 +73,6 @@ void setup()
   // Time
   configTime(3600, 3600, ntpServer);
 
-  //preferences.begin("tidilePrefs", false);
-
   //register leds
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
   FastLED.setBrightness(config.brightness);
@@ -81,10 +82,9 @@ void setup()
 
   tidile.setup(leds, NUM_LEDS, &config);
   webserver.setup(&handler, &server);
-  
+
+  config.deserialize(&preferences);
   startupLEDs(leds, 16);
-  //preferences.clear();
-  //config.deserialize(&preferences);
 }
 
 ClockTime getNTPTime()
