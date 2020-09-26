@@ -123,7 +123,8 @@ void setup()
 
 #pragma region loop
 int loopI = 0;
-int average = 30;
+int touchAverage = 30;
+long lightAvg = 0;
 void loop()
 {
   ClockTime time = tidile.displayTime();
@@ -134,27 +135,33 @@ void loop()
     FastLED.show();
     delay(100);
   }
-  FastLED.setBrightness(config.brightness);
-  FastLED.show();
 #pragma endregion
 
 #pragma region touch pin handler
-#if defined(DISPLAY_HUMIDIY) || defined(DISPLAY_TEMPERATURE) || defined(DISPLAY_PRESSURE)
   if (loopI >= SMOOTH_LOOPS)
   {
-    if (average / SMOOTH_LOOPS < THRESHOLD)
+#if defined(DISPLAY_HUMIDIY) || defined(DISPLAY_TEMPERATURE) || defined(DISPLAY_PRESSURE)
+    if (touchAverage / SMOOTH_LOOPS < THRESHOLD)
     {
-      Serial.println("Display env...");
       tidile.displayEnv(getEnv());
-      delay(2000);
     }
+#endif
+    lightAvg = lightAvg / SMOOTH_LOOPS;
+    Serial.println(lightAvg);
+    // brighnest * (photo in % * influence in %)
+    double lightPercent = (double)map(lightAvg, 0, 4095, 0, 100) / (double)100;
+    FastLED.setBrightness(config.brightness * ((( + MIN_LIGHT_PERCENT) * ((double)config.lightInfluence / (double)100)));
+
     loopI = 0;
-    average = 0;
+    touchAverage = 0;
+    lightAvg = 0;
   }
   else
-    average += touchRead(TOUCH_PIN);
-#endif
-
+  {
+    touchAverage += touchRead(TOUCH_PIN);
+    lightAvg += analogRead(PHOTORESISTOR_PIN);
+  }
+  FastLED.show();
   // Set variables
   lastSec = time.seconds;
   loopI++;

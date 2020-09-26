@@ -55,6 +55,7 @@ struct ClockConfig
   Color colorTemperature = Color();
   Color colorPressure = Color();
   bool nightTimeLight = true;
+  int lightInfluence = 50;
   uint16_t nightTimeBegin = 0; //(13:30 -> 1330, 06:24 -> 624)
   uint16_t nightTimeEnd = 600;
   uint8_t brightness = 60;
