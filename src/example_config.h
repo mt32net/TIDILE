@@ -13,6 +13,8 @@
 //#define DISPLAY_TEMPERATURE
 //#define DISPLAY_HUMIDIY
 //#define DISPLAY_PRESSURE
+// in ms
+#define ENV_DISPLAY_TIME 2000
 #pragma endregion
 
 #pragma region sensors

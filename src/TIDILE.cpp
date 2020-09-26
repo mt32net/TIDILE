@@ -44,13 +44,13 @@ void TIDILE::displayEnv(ClockEnv env) {
         this->leds[i] = configuration->colorTemperature.toCRGB();
     }
     FastLED.show();
-    delay(2000);
+    delay(ENV_DISPLAY_TIME);
     clear();
     for (int i = 0; i < mapToLEDs(env.pressure, 10000); i++) {
         this->leds[i] = configuration->colorPressure.toCRGB();
     }
     FastLED.show();
-    delay(2000);
+    delay(ENV_DISPLAY_TIME);
 }
 
 void TIDILE::displayCustom(int progress, CRGB color, int duration) {
