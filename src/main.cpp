@@ -10,7 +10,7 @@
 #include "ClockConfig.hpp"
 #include "Handler.hpp"
 #include "Webserver.hpp"
-#include "config.h"
+#include "config.hpp"
 
 //#define BMP_SDA 21
 //#define BMP_SCL 22
@@ -29,6 +29,7 @@ Handler handler(&config, &tidile, &preferences);
 Webserver webserver;
 AsyncWebServer server(HTTP_ENDPOINT_PORT);
 
+#pragma region startup animation
 void startupLEDs(CRGB *leds, int delayEach)
 {
   for (int i = 0; i < NUM_LEDS; i++)
@@ -44,7 +45,9 @@ void startupLEDs(CRGB *leds, int delayEach)
     delay(delayEach);
   }
 }
+#pragma endregion
 
+#pragma region get NPT Time
 ClockTime getTime()
 {
   struct tm timeinfo;
@@ -70,6 +73,7 @@ ClockEnv getEnv() {
     pressure: bmp.readPressure()/100
   };
 }
+#pragma endregion
 
 #pragma region setup
 void setup()
@@ -87,11 +91,14 @@ void setup()
     WiFi.mode(WIFI_AP_STA);
     delay(500);
     WiFi.beginSmartConfig();
+    int tries = 0;
     while (WiFi.status() != WL_CONNECTED)
     {
       delay(500);
       Serial.print(".");
       Serial.println(WiFi.smartConfigDone());
+      tries++;
+      if(tries > 5) ESP.restart();
     }
   }
 
@@ -124,9 +131,8 @@ void setup()
   tidile.setup(leds, NUM_LEDS, &config);
   webserver.setup(&handler, &server);
   
+  config.deserialize(&preferences);
   startupLEDs(leds, 16);
-  //preferences.clear();
-  //config.deserialize(&preferences);
 }
 #pragma endregion
 

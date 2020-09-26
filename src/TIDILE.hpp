@@ -3,7 +3,7 @@
 #include "ClockInfo.hpp"
 #include "ClockConfig.hpp"
 #include "definements.hpp"
-#include "config.h"
+#include "config.hpp"
 
 class TIDILE
 {
