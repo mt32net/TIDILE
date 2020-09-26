@@ -166,8 +166,6 @@ void loop()
   FastLED.show();
 
 #if defined(DISPLAY_HUMIDIY) || defined(DISPLAY_TEMPERATURE) || defined(DISPLAY_PRESSURE)
-  // ENV
-  //printEnv();
   if (touchRead(4) < 20)
   {
     Serial.println("Display env...");

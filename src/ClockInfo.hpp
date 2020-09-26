@@ -10,6 +10,6 @@ struct ClockTime {
 };
 
 struct ClockEnv {
-    unsigned int temperature;
-    unsigned int pressure;
+    int temperature;
+    int pressure;
 };

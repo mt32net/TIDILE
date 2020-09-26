@@ -15,6 +15,12 @@ void Handler::onColors(AsyncWebServerRequest *request) {
     this->config->serialize(preferences);
 };
 
+void Handler::onEnvColors(AsyncWebServerRequest *request) {
+    this->config->colorTemperature = hexToColor(request->getParam("color_temp")->value());
+    this->config->colorPressure = hexToColor(request->getParam("color_press")->value());
+    request->redirect("/");
+    this->config->serialize(preferences);
+};
 
 void Handler::onBlink(AsyncWebServerRequest *request) {
     boolean en = false;
@@ -43,13 +49,12 @@ void Handler::onCustom(AsyncWebServerRequest *request) {
 
 void Handler::onIndex(AsyncWebServerRequest *request) {
     String html = index_html;
-    html.replace(COLORHOURKEYWORD, colorToHEX(this->config->colorHours));
-    html.replace(COLORMINUTEKEYWORD, colorToHEX(this->config->colorMinutes));
+    html.replace(COLORHOURKEYWORD, colorToHex(this->config->colorHours));
+    html.replace(COLORMINUTEKEYWORD, colorToHex(this->config->colorMinutes));
     html.replace(BLINKINGENABLEDKEYWORD, (this->config->blinkingEnabled)? "checked" : "");
     html.replace(BRIGHTNESSKEYWORD, String(this->config->brightness));
-    html.replace(COLORTEMPERATUREKEYWORD, colorToHEX(this->config->colorTemperature));
-    html.replace(COLORPRESSUREKEYWORD, colorToHEX(this->config->colorPressure));
-    html.replace(COLORHUMIDITYKEYWORD, colorToHEX(this->config->colorHumidity));
+    html.replace(COLORTEMPERATUREKEYWORD, colorToHex(this->config->colorTemperature));
+    html.replace(COLORPRESSUREKEYWORD, colorToHex(this->config->colorPressure));
     html.replace(SHOWSECONDSKEYWORD, (this->config->displaySeconds)? "checked" : "");
     request->send(200, "text/html", html);
 };
@@ -63,7 +68,7 @@ Color Handler::hexToColor(String input) {
     return Color(r, g, b);
 }
 
-String Handler::colorToHEX(Color color){
+String Handler::colorToHex(Color color){
     String red = String(color.red, HEX);
     if(red.length() == 1) red = "0" + red;
     String green = String(color.green, HEX);
