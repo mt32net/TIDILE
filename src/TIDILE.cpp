@@ -66,6 +66,7 @@ void TIDILE::displayTime()
             FastLED.show();
             delay(100);
         }
+        FastLED.setBrightness(configuration.brightness);
         FastLED.show();
     }
 }
