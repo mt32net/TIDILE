@@ -1,6 +1,6 @@
 # TIDILE - Time Indication Device through Indirect Light Emittation
 
-Or to put it simple: A clock with leds on it shining on your wall.
+Or to put it simple: A clock with leds shining on your wall.
 
 ## Features
 
