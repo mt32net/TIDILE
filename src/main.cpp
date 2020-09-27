@@ -93,13 +93,14 @@ void loop()
     }
 #endif
     lightAvg = lightAvg / SMOOTH_LOOPS;
-    Serial.println(lightAvg);
+    //Serial.println(lightAvg);
     // brighnest * (photo in % * influence in %)
     double lightPercent = (double)map(lightAvg, 0, 4095, 0, 100) / (double)100;
-    //double influence = (double)tidile.getConfig()->lightInfluence / (double)100;
+    double influence = (double)tidile.getConfig()->lightInfluence / (double)100;
     //Serial.print((1 / (lightPercent * influence + 1)));
 #ifdef LIGHT_SENSOR
-    FastLED.setBrightness(tidile.getConfig()->brightness * lightPercent);
+    double factor = influence * lightPercent + (1 - influence);
+    FastLED.setBrightness(tidile.getConfig()->brightness * factor);
 #else
     FastLED.setBrightness(tidile.getConfig()->brightness);
 #endif
