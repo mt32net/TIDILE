@@ -31,11 +31,7 @@ void Handler::onEnvColors(AsyncWebServerRequest *request) {
 }
 
 void Handler::onBlink(AsyncWebServerRequest *request) {
-    this->config->blinkingEnabled = false;
     this->config->displaySeconds = false;
-    if (request->hasParam("enabled")) {
-        this->config->blinkingEnabled = request->getParam("enabled")->value().equals("on");
-    }
     if (request->hasParam("brightness")) {
         this->config->brightness = request->getParam("brightness")->value().toInt();
     }
@@ -61,7 +57,6 @@ void Handler::onIndex(AsyncWebServerRequest *request) {
     html.replace(COLORHOURKEYWORD, Helper.colorToHex(this->config->colorHours));
     html.replace(COLORMINUTEKEYWORD, Helper.colorToHex(this->config->colorMinutes));
     html.replace(COLORSECONDSKEYWORD, Helper.colorToHex(this->config->colorSeconds));
-    html.replace(BLINKINGENABLEDKEYWORD, (this->config->blinkingEnabled)? "checked" : "");
     html.replace(DIMMSECONDSKEYWORD, (this->config->dimmSeconds)? "checked" : "");
     html.replace(BRIGHTNESSKEYWORD, String(this->config->brightness));
     html.replace(COLORTEMPERATUREKEYWORD, Helper.colorToHex(this->config->colorTemperature));

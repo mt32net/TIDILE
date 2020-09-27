@@ -59,7 +59,6 @@ struct ClockConfig
   uint16_t nightTimeBegin = 0; //(13:30 -> 1330, 06:24 -> 624)
   uint16_t nightTimeEnd = 600;
   uint8_t brightness = 60;
-  bool blinkingEnabled = false;
   bool dimmSeconds = false;
 
   ///deserializes this ClockConfig from startPosition into this object
@@ -81,6 +80,7 @@ struct ClockConfig
     nightTimeBegin = preferences->getInt("nightTimeBegin");
     nightTimeEnd = preferences->getInt("nightTimeEnd");
     brightness = preferences->getInt("brightness");
+    lightInfluence = preferences->getInt("lightInflu");
     preferences->end();
   }
 
@@ -104,6 +104,7 @@ struct ClockConfig
     preferences->putInt("nightTimeBegin", nightTimeBegin);
     preferences->putInt("nightTimeEnd", nightTimeEnd);
     preferences->putInt("brightness", brightness);
+    preferences->putInt("lightInflu", lightInfluence);
     preferences->end();
   }
 };
