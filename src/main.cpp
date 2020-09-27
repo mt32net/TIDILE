@@ -22,9 +22,11 @@ AsyncWebServer server(HTTP_ENDPOINT_PORT);
 
 ClockEnv getEnv()
 {
-  return ClockEnv{
+  return ClockEnv {
+#ifdef BME280
     temperature : bmp.readTemperature(),
     pressure : bmp.readPressure() / 100
+#endif
   };
 }
 
