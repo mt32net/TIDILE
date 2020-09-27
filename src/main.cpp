@@ -51,7 +51,7 @@ void setup()
         Serial.print(".");
         Serial.println(WiFi.smartConfigDone());
         tries++;
-        if (tries > 5)
+        if (tries > 50)
           ESP.restart();
       }
     }
