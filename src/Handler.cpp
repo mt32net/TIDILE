@@ -39,6 +39,9 @@ void Handler::onBlink(AsyncWebServerRequest *request) {
     if (request->hasParam("brightness")) {
         this->config->brightness = request->getParam("brightness")->value().toInt();
     }
+    if (request->hasParam("influence")) {
+        this->config->lightInfluence = request->getParam("influence")->value().toInt();
+    }
     if (request->hasParam("show_seconds")) {
         this->config->displaySeconds = request->getParam("show_seconds")->value().equals("on");
     }
@@ -67,6 +70,7 @@ void Handler::onIndex(AsyncWebServerRequest *request) {
     html.replace(NIGHTTIMESTARTKEYWORD, Helper.timeIntToTimeString(this->config->nightTimeBegin));
     html.replace(NIGHTTIMEENDKEYWORD, Helper.timeIntToTimeString(this->config->nightTimeEnd));
     html.replace(NIGHTTIMEENABLEDKEYWORD, (this->config->nightTimeLight)? "checked" : "");
+    html.replace(INFLUENCEKEYWORD, String(this->config->lightInfluence));
     request->send(200, "text/html", html);
 }
 

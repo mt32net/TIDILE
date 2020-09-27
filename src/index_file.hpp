@@ -13,6 +13,7 @@
 #define NIGHTTIMESTARTKEYWORD "{{nighttimeStartKeyword}}"
 #define NIGHTTIMEENDKEYWORD "{{nighttimeEndKeyword}}"
 #define NIGHTTIMEENABLEDKEYWORD "{{nightTimeEnabledKeyword}}"
+#define INFLUENCEKEYWORD "{{envLightInfluence}}"
 #pragma endregion
 
 const char index_html[] = R"rawliteral(
@@ -100,6 +101,8 @@ const char index_html[] = R"rawliteral(
       <br>
       <small>Enter a value between 0 and 255 to set the LED brightness (Caution: Higher brightness results in a higher energy consumption. e.g. with 144 LEDS in use and the brightness set to 200 the power consumption is around 2 amps</small>
     </div>
+    <label>Enviroment Light Influence</label>
+    <input id="influence" type="number" name="influence" min="0" max="100" value="{{envLightInfluence}}">
     <input type="submit" value="Set Blinking & Brightness">
   </form>
   <!--- env begin---!>
