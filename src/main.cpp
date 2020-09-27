@@ -60,7 +60,7 @@ void setup()
     Serial.println(WiFi.localIP());
   }while(1 == 0);
 
-#if defined(LIGHT_SENSOR) || defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
+#if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
   Wire.begin();
 #ifdef HUMIDITY_SENSOR
   // BMP280
@@ -99,7 +99,11 @@ void loop()
     double lightPercent = (double)map(lightAvg, 0, 4095, 0, 100) / (double)100;
     //double influence = (double)tidile.getConfig()->lightInfluence / (double)100;
     //Serial.print((1 / (lightPercent * influence + 1)));
+#ifdef LIGHT_SENSOR
     FastLED.setBrightness(tidile.getConfig()->brightness * lightPercent);
+#else
+    FastLED.setBrightness(tidile.getConfig()->brightness);
+#endif
     //*/
 
     loopI = 0;
