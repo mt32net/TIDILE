@@ -68,7 +68,6 @@ void setup()
   if (!ok)
   {
     Serial.println("Could not find a valid BMP280!");
-    //while (1);
   }
 #endif
 #endif

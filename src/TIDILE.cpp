@@ -21,7 +21,7 @@ void TIDILE::setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer* server)
     Helper.getTime();
 
 #ifndef FASTSTARTUP
-    startupLEDs(15);
+    startupLEDs(STARTUP_ANIMATION_DELAY);
 #endif
 }
 
