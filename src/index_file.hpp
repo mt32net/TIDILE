@@ -5,7 +5,6 @@
 #define COLORMINUTEKEYWORD "{{colorMinuteKeyword}}"
 #define COLORSECONDSKEYWORD "{{colorSecondKeyword}}"
 #define DIMMSECONDSKEYWORD "{{dimmSecondsKeyword}}"
-#define BLINKINGENABLEDKEYWORD "{{blinkingEnabledKeyword}}"
 #define BRIGHTNESSKEYWORD "{{brightnessKeyword}}"
 #define COLORTEMPERATUREKEYWORD "{{colorTemperatureKeyword}}"
 #define COLORPRESSUREKEYWORD "{{colorPressureKeyword}}"
@@ -48,7 +47,7 @@ const char index_html[] = R"rawliteral(
   </h1>
   <h3>Night Time</h3>
   <form action="/time">
-    <label>Enable Night Time</label>
+    <label>Enable Night Time <small>Info: Between both times should be 12pm</small></label>
     <input type="checkbox" name="time_enabled" {{nightTimeEnabledKeyword}}>
     <label for="timeB">Begin of Night Time</label>
     <div>
@@ -91,8 +90,6 @@ const char index_html[] = R"rawliteral(
   </script>
   <h3>Blinking & Brightness</h3>
   <form action="/blink">
-    <lable>LED strip blinking each second</lable>
-    <input type="checkbox" name="enabled" {{blinkingEnabledKeyword}}>
     <label>Show Seconds</label>
     <input type="checkbox" name="show_seconds" {{secondsEnabledKeyword}}>
     <lable for="bright">Brightness</lable>

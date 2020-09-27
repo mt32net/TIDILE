@@ -80,13 +80,6 @@ void TIDILE::displayTime()
     // Hours
     this->leds[mapToLEDs(time.hours, 24)] = configuration.colorHours.toCRGB();
 
-    if (configuration.blinkingEnabled && time.seconds != lastSec)
-    {
-        FastLED.setBrightness(BLINK_BRIGHTNESS * configuration.brightness);
-        FastLED.show();
-        delay(100);
-    }
-
     FastLED.show();
 }
 
