@@ -11,9 +11,6 @@
 #include <Adafruit_BME280.h>
 #endif
 
-//#define BMP_SDA 21
-//#define BMP_SCL 22
-
 #if defined(HUMIDITY_SENSOR) && defined(BME280)
 Adafruit_BME280 bmp; // I2C
 #endif
@@ -23,16 +20,11 @@ CRGB leds[NUM_LEDS];
 TIDILE tidile;
 AsyncWebServer server(HTTP_ENDPOINT_PORT);
 
-
-
-
 ClockEnv getEnv()
 {
   return ClockEnv{
-#ifdef BME280
     temperature : bmp.readTemperature(),
     pressure : bmp.readPressure() / 100
-#endif
   };
 }
 
@@ -101,11 +93,14 @@ void loop()
       tidile.displayEnv(getEnv());
     }
 #endif
-    /*lightAvg = lightAvg / SMOOTH_LOOPS;
+    lightAvg = lightAvg / SMOOTH_LOOPS;
     Serial.println(lightAvg);
     // brighnest * (photo in % * influence in %)
     double lightPercent = (double)map(lightAvg, 0, 4095, 0, 100) / (double)100;
-    FastLED.setBrightness(config.brightness * ((((lightPercent > MIN_LIGHT_PERCENT) ? lightPercent : MIN_LIGHT_PERCENT) * ((double)config.lightInfluence / (double)100))));*/
+    //double influence = (double)tidile.getConfig()->lightInfluence / (double)100;
+    //Serial.print((1 / (lightPercent * influence + 1)));
+    FastLED.setBrightness(tidile.getConfig()->brightness * lightPercent);
+    //*/
 
     loopI = 0;
     touchAverage = 0;
@@ -116,6 +111,5 @@ void loop()
     touchAverage += touchRead(TOUCH_PIN);
     lightAvg += analogRead(PHOTORESISTOR_PIN);
   }
-  // Set variables
   loopI++;
 }

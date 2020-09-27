@@ -20,9 +20,9 @@ void TIDILE::setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer* server)
 
     Helper.getTime();
 
-    #ifndef FASTSTARTUP
-        startupLEDs(leds, 16);
-    #endif
+#ifndef FASTSTARTUP
+    startupLEDs(15);
+#endif
 }
 
 int TIDILE::mapToLEDs(int value, int max)
@@ -32,7 +32,27 @@ int TIDILE::mapToLEDs(int value, int max)
 
 void TIDILE::clear()
 {
-    FastLED.showColor(CRGB::Black);
+    for(int i = 0; i < numberLEDs; i++) {
+        leds[i] = CRGB::Black;
+    }
+}
+
+void TIDILE::startupLEDs(int delayTime)
+{
+    for(int i = 0; i < numberLEDs; i++) {
+        leds[i] = CRGB::White;
+        FastLED.show();
+        delay(delayTime);
+    }
+    for(int i = 0; i < numberLEDs; i++) {
+        leds[i] = CRGB::Black;
+        FastLED.show();
+        delay(delayTime);
+    }
+}
+
+ClockConfig * TIDILE::getConfig() {
+    return &configuration;
 }
 
 void TIDILE::displayTime()
@@ -41,31 +61,32 @@ void TIDILE::displayTime()
 
     clear();
 
-    if (!isNightTime(Helper.getTime()))
-    {
-        // Minutes
-        for (int i = 0; i < mapToLEDs(time.minutes, 60); i++)
-        {
-            this->leds[i] = configuration.colorMinutes.toCRGB();
-            //this->leds[i] = CRGB::Blue;
-        }
-
-        // Seconds
-        if (configuration.displaySeconds)
-            this->leds[mapToLEDs(time.seconds, 60)] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(0xBB) : configuration.colorSeconds.toCRGB();
-
-        // Hours
-        this->leds[mapToLEDs(time.hours, 24)] = configuration.colorHours.toCRGB();
-
-        if (configuration.blinkingEnabled && time.seconds != lastSec)
-        {
-            FastLED.setBrightness(BLINK_BRIGHTNESS * configuration.brightness);
-            FastLED.show();
-            delay(100);
-        }
-        FastLED.setBrightness(configuration.brightness);
-        
+    if (isNightTime(Helper.getTime())) {
+        FastLED.show();
+        return;
     }
+
+    // Minutes
+    for (int i = 0; i < mapToLEDs(time.minutes, 60); i++)
+    {
+        this->leds[i] = configuration.colorMinutes.toCRGB();
+        //this->leds[i] = CRGB::Blue;
+    }
+
+    // Seconds
+    if (configuration.displaySeconds)
+        this->leds[mapToLEDs(time.seconds, 60)] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(0xBB) : configuration.colorSeconds.toCRGB();
+
+    // Hours
+    this->leds[mapToLEDs(time.hours, 24)] = configuration.colorHours.toCRGB();
+
+    if (configuration.blinkingEnabled && time.seconds != lastSec)
+    {
+        FastLED.setBrightness(BLINK_BRIGHTNESS * configuration.brightness);
+        FastLED.show();
+        delay(100);
+    }
+
     FastLED.show();
 }
 

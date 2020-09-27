@@ -25,6 +25,7 @@ public:
     ///@param progress value between 0 and 99
     ///@param duration in ms
     void displayCustom(int progress, CRGB color, int duration);
+    ClockConfig* getConfig();
 private:
     CRGB *leds;
     ClockConfig configuration;
@@ -35,8 +36,8 @@ private:
     int numberLEDs;
     int mapToLEDs(int value, int max);
     void clear();
+    void startupLEDs(int delay);
     bool isNightTime(ClockTime time);
     void displayCustom(CRGB *leds, int delayEach);
     int lastSec = 0;
-    
 };
