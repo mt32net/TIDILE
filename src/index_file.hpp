@@ -13,6 +13,7 @@
 #define NIGHTTIMEENDKEYWORD "{{nighttimeEndKeyword}}"
 #define NIGHTTIMEENABLEDKEYWORD "{{nightTimeEnabledKeyword}}"
 #define INFLUENCEKEYWORD "{{envLightInfluence}}"
+#define CURRENTTIMEKEYWORD "{{currentTimeKeyword}}"
 #pragma endregion
 
 const char index_html[] = R"rawliteral(
@@ -45,6 +46,8 @@ const char index_html[] = R"rawliteral(
   <h1>
     TIDILE Interface
   </h1>
+  <h2>Current Time (d/m/y)</h2>
+  <div>{{currentTimeKeyword}}</div>
   <h3>Night Time</h3>
   <form action="/time">
     <label>Enable Night Time <small>Info: Between both times should be 12pm</small></label>

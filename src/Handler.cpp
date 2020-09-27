@@ -66,6 +66,7 @@ void Handler::onIndex(AsyncWebServerRequest *request) {
     html.replace(NIGHTTIMEENDKEYWORD, Helper.timeIntToTimeString(this->config->nightTimeEnd));
     html.replace(NIGHTTIMEENABLEDKEYWORD, (this->config->nightTimeLight)? "checked" : "");
     html.replace(INFLUENCEKEYWORD, String(this->config->lightInfluence));
+    html.replace(CURRENTTIMEKEYWORD, Helper.getDateTimeToString());
     request->send(200, "text/html", html);
 }
 
