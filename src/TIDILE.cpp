@@ -59,22 +59,22 @@ void TIDILE::displayTime()
     ClockTime time = Helper.getTime();
     clear();
 
-    if (Helper.isNightTime(configuration, Helper.getTime()))
+    if (Helper.isNightTime(configuration, time))
     {
         FastLED.show();
         return;
     }
 
     // Minutes
-    for (int i = 0; i < mapToLEDs(time.minutes, 60); i++)
+    for (int i = 0; i < mapToLEDs(time.minutes, 59); i++)
         this->leds[i] = configuration.colorMinutes.toCRGB();
-
+    FastLED.show();
     // Seconds
     if (configuration.displaySeconds)
-        this->leds[mapToLEDs(time.seconds, 60)] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(0xBB) : configuration.colorSeconds.toCRGB();
-
+        this->leds[mapToLEDs(time.seconds, 59)] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(0xBB) : configuration.colorSeconds.toCRGB();
+    FastLED.show();
     // Hours
-    this->leds[mapToLEDs(time.hours, 24)] = configuration.colorHours.toCRGB();
+    this->leds[mapToLEDs(time.hours, 23)] = configuration.colorHours.toCRGB();
     FastLED.show();
 }
 

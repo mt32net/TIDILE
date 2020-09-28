@@ -18,6 +18,8 @@ public:
     String getDateTimeToString();
     bool isNightTime(ClockConfig configuration, ClockTime time);
     void setupWiFi();
+    ///converts 6 to "06", 0 -> "00", 16 -> "16"
+    String digitToTwoCharsDigit(int digit);
 private:
     int timeTries = 0;
 };

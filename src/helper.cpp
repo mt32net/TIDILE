@@ -51,7 +51,7 @@ ClockTime HelperClass::getTime()
     timeTries++;
     if (timeTries > 25)
       ESP.restart();
-    return ClockTime{0, 0, 0, 0, 0, 0};
+    return ClockTime{1, 1, 1, 1, 1, 1};
   }
   //Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
   return ClockTime{
@@ -67,12 +67,12 @@ ClockTime HelperClass::getTime()
 String HelperClass::getDateTimeToString()
 {
   ClockTime time = getTime();
-  return String(time.hours) + ":" + String(time.minutes) + ":" + String(time.seconds) + " " + String(time.day) + "/" + String(time.month) + "/" + String(time.year + 1900);
+  return digitToTwoCharsDigit(time.hours) + ":" + digitToTwoCharsDigit(time.minutes) + ":" + digitToTwoCharsDigit(time.seconds) + " " + digitToTwoCharsDigit(time.day) + "/" + digitToTwoCharsDigit(time.month) + "/" + digitToTwoCharsDigit(time.year + 1900);
 }
 
 bool HelperClass::isNightTime(ClockConfig configuration, ClockTime time)
 {
-  return ((String(time.hours) + String(time.minutes)).toInt() > configuration.nightTimeBegin || (String(time.hours) + String(time.minutes)).toInt() < configuration.nightTimeEnd) && configuration.nightTimeLight;
+  return ((digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes)).toInt() > configuration.nightTimeBegin || (digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes)).toInt() < configuration.nightTimeEnd) && configuration.nightTimeLight;
 }
 
 void HelperClass::setupWiFi()
@@ -102,4 +102,8 @@ void HelperClass::setupWiFi()
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
   delay(100);
+}
+
+String HelperClass::digitToTwoCharsDigit(int digit){
+  return (digit <= 9)? "0" + String(digit) : String(digit);
 }
