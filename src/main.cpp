@@ -95,7 +95,7 @@ void loop()
     }
 #endif
     lightAvg = lightAvg / SMOOTH_LOOPS;
-    //Serial.println(lightAvg);
+    Serial.println(touchAverage / SMOOTH_LOOPS);
     // brighnest * (photo in % * influence in %)
     double lightPercent = (double)map(lightAvg, 0, 4095, 0, 100) / (double)100;
     double influence = (double)tidile.getConfig()->lightInfluence / (double)100;
