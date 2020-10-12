@@ -69,10 +69,14 @@ void TIDILE::displayTime()
     for (int i = 0; i < mapToLEDs(time.minutes, 59); i++)
         this->leds[i] = configuration.colorMinutes.toCRGB();
     // Seconds
-    if (configuration.displaySeconds)
+    if (configuration.displaySeconds) {
         this->leds[mapToLEDs(time.seconds, 59)] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(0xBB) : configuration.colorSeconds.toCRGB();
+        if (DOUBLE_FOR_EACH) 
+            this->leds[mapToLEDs(time.seconds, 59) + 1] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(0xBB) : configuration.colorSeconds.toCRGB();
+    }
     // Hours
     this->leds[mapToLEDs(time.hours, 23)] = configuration.colorHours.toCRGB();
+    if (DOUBLE_FOR_EACH) this->leds[mapToLEDs(time.hours, 23) + 1] = configuration.colorHours.toCRGB();
     FastLED.show();
 }
 
