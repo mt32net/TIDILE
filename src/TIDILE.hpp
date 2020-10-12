@@ -8,6 +8,11 @@
 #include "definements.hpp"
 #include "config.hpp"
 #include "helper.hpp"
+#if defined(LIGHT_SENSOR) || defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME280.h>
+#endif
 
 class TIDILE
 {
@@ -18,6 +23,8 @@ public:
     ///@param numberLEDS the number of LEDS within the array
     ///@param configuration the pointer to thee configuration object where all settings are saved
     void setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer* server);
+    void addBMP(Adafruit_BME280* bmp);
+    ClockEnv getEnv();
     void loop();
     ///displays current time
     void displayTime();
@@ -34,6 +41,7 @@ private:
     Preferences preferences;
     Webserver webserver;
     AsyncWebServer* server;
+    Adafruit_BME280* bmp;
     int numberLEDs;
     int mapToLEDs(int value, int max);
     void clear();

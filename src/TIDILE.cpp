@@ -144,7 +144,7 @@ void TIDILE::loop()
 #if defined(DISPLAY_HUMIDIY) || defined(DISPLAY_TEMPERATURE) || defined(DISPLAY_PRESSURE)
         if (touchAverage / SMOOTH_LOOPS < THRESHOLD)
         {
-            tidile.displayEnv(getEnv());
+            displayEnv(getEnv());
         }
 #endif
         lightAvg = lightAvg / SMOOTH_LOOPS;
@@ -167,4 +167,18 @@ void TIDILE::loop()
         lightAvg += analogRead(PHOTORESISTOR_PIN);
     }
     loopI++;
+}
+
+void TIDILE::addBMP(Adafruit_BME280* bmp){
+    this->bmp = bmp;
+}
+
+ClockEnv TIDILE::getEnv()
+{
+  return ClockEnv {
+#ifdef BME280
+    temperature : bmp->readTemperature(),
+    pressure : bmp->readPressure() / 100
+#endif
+  };
 }

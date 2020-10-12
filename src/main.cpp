@@ -5,11 +5,6 @@
 #include "helper.hpp"
 #include "Handler.hpp"
 #include "definements.hpp"
-#if defined(LIGHT_SENSOR) || defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
-#include <Wire.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_BME280.h>
-#endif
 
 #if defined(HUMIDITY_SENSOR) && defined(BME280)
 Adafruit_BME280 bmp; // I2C
@@ -19,16 +14,6 @@ CRGB leds[NUM_LEDS];
 
 TIDILE tidile;
 AsyncWebServer server(HTTP_ENDPOINT_PORT);
-
-ClockEnv getEnv()
-{
-  return ClockEnv {
-#ifdef BME280
-    temperature : bmp.readTemperature(),
-    pressure : bmp.readPressure() / 100
-#endif
-  };
-}
 
 void setup()
 {
@@ -50,6 +35,7 @@ void setup()
 
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
   tidile.setup(leds, NUM_LEDS, &server);
+  tidile.addBMP(&bmp);
 }
 
 
