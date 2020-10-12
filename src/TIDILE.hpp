@@ -18,6 +18,7 @@ public:
     ///@param numberLEDS the number of LEDS within the array
     ///@param configuration the pointer to thee configuration object where all settings are saved
     void setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer* server);
+    void loop();
     ///displays current time
     void displayTime();
     ///displays information about your sorrounding such as temperature, humdity and pressure. IF the sensors are connected and defined in the config file
@@ -37,7 +38,10 @@ private:
     int mapToLEDs(int value, int max);
     void clear();
     void startupLEDs(int delay);
-    bool isNightTime(ClockTime time);
+    
     void displayCustom(CRGB *leds, int delayEach);
     int lastSec = 0;
+    int loopI = 0;
+    int touchAverage = 30;
+    long lightAvg = 0;
 };
