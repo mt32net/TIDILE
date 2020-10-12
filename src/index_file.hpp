@@ -25,11 +25,19 @@ const char index_html[] = R"rawliteral(
 <style>
   * {
     font-family: 'Calibri', sans-serif;
+    color: white;
+  }
+  body {
+    background-color: black;
+    text-align: center;
   }
   form {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 0.7rem;
+    margin: auto;
+    width: 60rem;
+    text-align: left;
   }
   input {
     outline: none;
@@ -38,33 +46,71 @@ const char index_html[] = R"rawliteral(
     border-radius: 3px;
     font-size: 1.5rem;
   }
+  .submit {
+    grid-column: 1 / 3;
+    justify-self: center;
+  }
   h3, h2, h1 {
     text-decoration: underline;
+    align-self: center;
+  }
+  .clock {
+    margin: 2rem auto 1rem auto;
+    width: 60rem;
+    display: flex;
+  }
+  .minutes {
+    padding: 0.5rem;
+    background-color: {{colorMinuteKeyword}};
+    border-radius: 5px;
+    filter: blur(5px);
+    width: 40%;
+  }
+  .hour {
+    padding: 0.5rem;
+    background-color: {{colorHourKeyword}};
+    border-radius: 5px;
+    filter: blur(5px);
+    width: 1%;
+  }
+  .spacer {
+    width: 10%;
+  }
+  .secs {
+    padding: 0.5rem;
+    background-color: {{colorSecondsKeyword}};
+    border-radius: 5px;
+    filter: blur(5px);
+    width: 1%;
   }
 </style>
 <body>
-  <h1>
-    TIDILE Interface
-  </h1>
-  <h2>Current Time (d/m/y)</h2>
-  <div>{{currentTimeKeyword}}</div>
+  <h1>TIDILE Interface</h1>
+  <div>Current Time (d/m/y): {{currentTimeKeyword}}</div>
+  <div class="clock">
+      <div class="minutes"></div>
+      <div class="spacer"></div>
+      <div class="hour"></div>
+      <div class="spacer"></div>
+      <div class="secs"></div>
+  </div>
   <h3>Night Time</h3>
   <form action="/time">
-    <label>Enable Night Time <small>Info: Between both times should be 12pm</small></label>
+    <label>Enable Night Time<small>Info: Between both times should be 12pm</small></label>
     <input type="checkbox" name="time_enabled" {{nightTimeEnabledKeyword}}>
-    <label for="timeB">Begin of Night Time</label>
+    <label for="timeB">Begin of Night Time at</label>
     <div>
       <input id="timeB" type="time" name="begin_time" value="{{nighttimeStartKeyword}}" width="auto">
       <small>Enter the time when the clock should start to turn off if it´s dark in the room</small>
     </div>
-    <label for="timeE">Minutes</label>
+    <label for="timeE">End of Night Time at</label>
     <div>
       <input id="timeE" type="time" name="end_time" value="{{nighttimeEndKeyword}}" width="auto">
       <small>Enter the time when the clock should stop to turn off if it´s dark in the room</small>
     </div>
-  <input type="submit" value="Set Night Time">
+  <input type="submit" class="submit" value="Set Night Time">
   </form>
-  <h3>Colors Time</h3>
+  <h3>Colors for Time</h3>
   <form action="/colors">
     <label for="cl_h">Hours</label>
     <input id="cl_h" type="color" name="color_hour" value="{{colorHourKeyword}}">
@@ -74,7 +120,7 @@ const char index_html[] = R"rawliteral(
     <input id="cl_s" type="color" name="color_sec" value="{{colorSecondKeyword}}" width="auto">
     <label for="dim_sec">Dimm Seconds instead of using different color</label>
     <input id="dim_sec" type="checkbox" name="dimm_seconds" {{dimmSecondsKeyword}} onchange="onDimmSecondsChange()">
-    <input type="submit" value="Set Color">
+    <input type="submit" class="submit" value="Set Color">
   </form>
   <script>
     function onDimmSecondsChange(){
@@ -103,18 +149,18 @@ const char index_html[] = R"rawliteral(
     </div>
     <label>Enviroment Light Influence</label>
     <input id="influence" type="number" name="influence" min="0" max="100" value="{{envLightInfluence}}">
-    <input type="submit" value="Set Blinking & Brightness">
+    <input type="submit" class="submit" value="Set Blinking & Brightness">
   </form>
-  <!--- env begin---!>
+  <!--- env begin --->
   <h3>Enviroment Colors</h3>
   <form action="/envcolors">
     <label>Temperature</label>
     <input type="color" name="color_temp" value="{{colorTemperatureKeyword}}">
     <label>Pressure</label>
     <input type="color" name="color_press" value="{{colorPressureKeyword}}">
-    <input type="submit" value="Set Colors">
+    <input type="submit" class="submit" value="Set Colors">
   </form>
-  <!--- env end---!>
+  <!--- env end --->
 </body>
 </html>
 )rawliteral";
