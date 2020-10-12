@@ -1,25 +1,3 @@
-#pragma once
-
-#pragma region UIkeywords
-#define COLORHOURKEYWORD "{{colorHourKeyword}}"
-#define COLORMINUTEKEYWORD "{{colorMinuteKeyword}}"
-#define COLORSECONDSKEYWORD "{{colorSecondKeyword}}"
-#define DIMMSECONDSKEYWORD "{{dimmSecondsKeyword}}"
-#define BRIGHTNESSKEYWORD "{{brightnessKeyword}}"
-#define COLORTEMPERATUREKEYWORD "{{colorTemperatureKeyword}}"
-#define COLORPRESSUREKEYWORD "{{colorPressureKeyword}}"
-#define SHOWSECONDSKEYWORD "{{secondsEnabledKeyword}}"
-#define NIGHTTIMESTARTKEYWORD "{{nighttimeStartKeyword}}"
-#define NIGHTTIMEENDKEYWORD "{{nighttimeEndKeyword}}"
-#define NIGHTTIMEENABLEDKEYWORD "{{nightTimeEnabledKeyword}}"
-#define INFLUENCEKEYWORD "{{envLightInfluence}}"
-#define CURRENTTIMEKEYWORD "{{currentTimeKeyword}}"
-#define MINUTESKEYWORD "{{minutesKeyword}}"
-#define HOURSKEYWORD "{{hoursKeyword}}"
-#define SECONDSKEYWORD "{{secondsKeyword}}"
-#pragma endregion
-
-const char index_html[] = R"rawliteral(
 <html>
 <head>
   <title>TIDILE Interface</title>
@@ -64,18 +42,18 @@ const char index_html[] = R"rawliteral(
   }
   #minutes {
     padding: 0.5rem;
-    background-color: {{colorMinuteKeyword}};
+    background-color: red; /*{{colorMinuteKeyword}};*/
     border-radius: 5px;
     filter: blur(5px);
-    width: calc(100% * ({{minutesKeyword}}/60));
+    width: calc(100% * (0/60));
   }
   #hours {
     padding: 0.5rem;
-    background-color: {{colorHourKeyword}};
+    background-color: green; /*{{colorHourKeyword}};*/
     border-radius: 5px;
     filter: blur(5px);
     width: 1%;
-    margin-left: calc(100% * ({{hoursKeyword}}/24));
+    margin-left: calc(100% * (12/24));
     margin-top: -1rem;
   }
   #spacer {
@@ -83,12 +61,12 @@ const char index_html[] = R"rawliteral(
   }
   #seconds {
     padding: 0.5rem;
-    background-color: {{colorSecondsKeyword}};
+    background-color: blue; /*{{colorSecondsKeyword}};*/
     border-radius: 5px;
     filter: blur(7px);
     width: 1%;
     margin-top: -1rem;
-    margin-left: calc(100% * ({{secondsKeyword}}/60));
+    margin-left: calc(100% * (50/60));
   }
 </style>
 <body>
@@ -181,4 +159,3 @@ const char index_html[] = R"rawliteral(
   <!--- env end --->
 </body>
 </html>
-)rawliteral";
