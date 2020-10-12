@@ -169,16 +169,19 @@ void TIDILE::loop()
     loopI++;
 }
 
-void TIDILE::addBMP(Adafruit_BME280* bmp){
+#if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
+void TIDILE::addBMP(Adafruit_BME280 *bmp)
+{
     this->bmp = bmp;
 }
 
 ClockEnv TIDILE::getEnv()
 {
-  return ClockEnv {
+    return ClockEnv{
 #ifdef BME280
-    temperature : bmp->readTemperature(),
-    pressure : bmp->readPressure() / 100
+        temperature : bmp->readTemperature(),
+        pressure : bmp->readPressure() / 100
 #endif
-  };
+    };
 }
+#endif

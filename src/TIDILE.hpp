@@ -8,7 +8,7 @@
 #include "definements.hpp"
 #include "config.hpp"
 #include "helper.hpp"
-#if defined(LIGHT_SENSOR) || defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
+#if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
@@ -22,9 +22,11 @@ public:
     ///@param leds the LED array wich is already registered in FastLED within the main file
     ///@param numberLEDS the number of LEDS within the array
     ///@param configuration the pointer to thee configuration object where all settings are saved
-    void setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer* server);
-    void addBMP(Adafruit_BME280* bmp);
+    void setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer *server);
+#if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
+    void addBMP(Adafruit_BME280 *bmp);
     ClockEnv getEnv();
+#endif
     void loop();
     ///displays current time
     void displayTime();
@@ -33,20 +35,23 @@ public:
     ///@param progress value between 0 and 99
     ///@param duration in ms
     void displayCustom(int progress, CRGB color, int duration);
-    ClockConfig* getConfig();
+    ClockConfig *getConfig();
+
 private:
     CRGB *leds;
     ClockConfig configuration;
     Handler handler;
     Preferences preferences;
     Webserver webserver;
-    AsyncWebServer* server;
-    Adafruit_BME280* bmp;
+    AsyncWebServer *server;
+#if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
+    Adafruit_BME280 *bmp;
+#endif
     int numberLEDs;
     int mapToLEDs(int value, int max);
     void clear();
     void startupLEDs(int delay);
-    
+
     void displayCustom(CRGB *leds, int delayEach);
     int lastSec = 0;
     int loopI = 0;
