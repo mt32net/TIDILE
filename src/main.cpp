@@ -35,9 +35,10 @@ void setup()
 
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
   tidile.setup(leds, NUM_LEDS, &server);
+#if defined(HUMIDITY_SENSOR) && defined(BME280)
   tidile.addBMP(&bmp);
+#endif
 }
-
 
 void loop()
 {
