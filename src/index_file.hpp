@@ -28,26 +28,27 @@ const char index_html[] = R"rawliteral(
 <style>
   * {
     font-family: 'Calibri', sans-serif;
-    color: white;
+    color: rgb(236, 236, 236);
   }
   body {
-    background-color: black;
+    background-color: #080808;
     text-align: center;
   }
   form {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 50%));
     gap: 0.7rem;
     margin: auto;
-    width: 60rem;
+    width: 90%;
     text-align: left;
   }
   input {
     outline: none;
     border: none;
-    background-color: orangered;
+    background-color: rgb(236, 236, 236);
     border-radius: 3px;
-    font-size: 1.5rem;
+    font-size: 1.1rem;
+    color: black;
   }
   .submit {
     grid-column: 1 / 3;
@@ -59,7 +60,7 @@ const char index_html[] = R"rawliteral(
   }
   .clock {
     margin: 2rem auto 1rem auto;
-    width: 60rem;
+    width: 90%;
     display: block;
   }
   #minutes {
