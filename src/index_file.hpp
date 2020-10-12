@@ -57,14 +57,14 @@ const char index_html[] = R"rawliteral(
   .clock {
     margin: 2rem auto 1rem auto;
     width: 60rem;
-    display: flex;
+    display: block;
   }
   .minutes {
     padding: 0.5rem;
     background-color: {{colorMinuteKeyword}};
     border-radius: 5px;
     filter: blur(5px);
-    width: 40%;
+    width: calc(100% * ({{minutesKeyword}}/60));
   }
   .hour {
     padding: 0.5rem;
@@ -72,16 +72,20 @@ const char index_html[] = R"rawliteral(
     border-radius: 5px;
     filter: blur(5px);
     width: 1%;
+    margin-left: calc(100% * ({{hoursKeyword}}/60));
+    margin-top: -1rem;
   }
   .spacer {
     width: 10%;
   }
-  .secs {
+  .seconds {
     padding: 0.5rem;
-    background-color: {{colorSecondsKeyword}};
+    background-color: {{colorSecondsKeyword}}
     border-radius: 5px;
-    filter: blur(5px);
+    filter: blur(7px);
     width: 1%;
+    margin-top: -1rem;
+    margin-left: calc(100% * ({{secondsKeyword}}/60));
   }
 </style>
 <body>
@@ -89,10 +93,8 @@ const char index_html[] = R"rawliteral(
   <div>Current Time (d/m/y): {{currentTimeKeyword}}</div>
   <div class="clock">
       <div class="minutes"></div>
-      <div class="spacer"></div>
       <div class="hour"></div>
-      <div class="spacer"></div>
-      <div class="secs"></div>
+      <div class="seconds"></div>
   </div>
   <h3>Night Time</h3>
   <form action="/time">
