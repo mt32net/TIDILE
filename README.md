@@ -14,6 +14,8 @@ The Clock can display the temperature, pressure and humidity with a simple tap. 
 
 The TIDILE features a web interface to quickly configure color, brightness and other settings on your phone or computer. And it looks like you configure your clock to look like!
 
+![Web Interface](https://raw.githubusercontent.com/Universumgames/TIDILE/master/webinterface.png)
+
 ### Automatic Deactivation At Preconfigured Times
 
 If you want your TIDILE to not shine in the night, no problem! Configure activation and deactivation time.
