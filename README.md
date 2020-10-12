@@ -33,3 +33,11 @@ In case you buy a 144leds/m strip and use 120leds (recommended), your clock will
 ## Implementation Details
 
 ### Enviroment Brightness Influence
+
+With the brightness control in the web interface you set the maximal brightness. When the influence is 0 this will be the actual lightness of yout TIDILE. The brigther the enviroment gets, the brigther the lights get. The dependency is described by this linear function:
+
+> influence / 100 = a; 0 <= a <= 1; sensor value x; 0 <= x <= 1
+
+> f_a(x)=ax+1-a
+
+### Calculation of the LEDs State
