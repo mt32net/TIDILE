@@ -83,7 +83,7 @@ const char index_html[] = R"rawliteral(
   }
   #seconds {
     padding: 0.5rem;
-    background-color: {{colorSecondsKeyword}};
+    background-color: {{colorSecondKeyword}};
     border-radius: 5px;
     filter: blur(7px);
     width: 1%;
