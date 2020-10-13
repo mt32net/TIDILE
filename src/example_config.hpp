@@ -2,9 +2,11 @@
 #define CONFIG_DEF
 
 #define NUM_LEDS 120
-#define DOUBLE_FOR_EACH false
+#define DOUBLE_FOR_EACH true
 #define LED_PIN 5 
 #define BLINK_BRIGHTNESS 0.7
+#define DIMM_VALUE 0xFF
+#define DIMM_ADD_VALUE 0xAA
 
 // Touch Pin
 #define THRESHOLD 39
