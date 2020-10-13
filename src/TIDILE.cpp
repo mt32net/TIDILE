@@ -24,7 +24,7 @@ void TIDILE::setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer *server)
 
 int TIDILE::mapToLEDs(int value, int max)
 {
-    return map(value, 0, max, 0, this->numberLEDs);
+    return map(value, 0, max, 0, this->numberLEDs - 1);
 }
 
 void TIDILE::clear()
