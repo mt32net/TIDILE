@@ -58,7 +58,7 @@ const char index_html[] = R"rawliteral(
     text-decoration: underline;
     align-self: center;
   }
-  .clock {
+  #clock {
     margin: 2rem auto 1rem auto;
     width: 90%;
     display: block;
@@ -91,11 +91,14 @@ const char index_html[] = R"rawliteral(
     margin-top: -1rem;
     margin-left: calc(100% * ({{secondsKeyword}}/60));
   }
+  #clockNightTime{
+    visibility: hidden;
+  }
 </style>
 <body>
   <h1>TIDILE Interface</h1>
   <div>Current Time (d/m/y): {{currentTimeKeyword}}</div>
-  <div class="clock">
+  <div id="clock">
       <div id="minutes"></div>
       <div id="hours"></div>
       <div id="seconds"></div>
@@ -141,7 +144,8 @@ const char index_html[] = R"rawliteral(
       }else{
         colorSelector.style.visibility = "visible";
         dimmLabel.style.visibility = "visible";
-        secondsLight.style.visibility = "visible";
+        if(document.getElementById("clock").style.visibility == "hidden")
+          secondsLight.style.visibility = "visible";
       }
     };
     function setTimeBar(){
@@ -152,9 +156,38 @@ const char index_html[] = R"rawliteral(
         minutes.style.width = (100 * (time.getMinutes()/60)) + "%";
         hours.style.marginLeft = (100 * (time.getHours()/24)) + "%";
         seconds.style.marginLeft = (100 * (time.getSeconds()/60)) + "%";
-    }
+    };
+    function loop(){
+      setTimeBar();
+      var time = new Date();
+      var elementNighTimeBegin = document.getElementById("timeB");
+      var elementNighTimeEnd = document.getElementById("timeE");
+      var elementClockNightTime = document.getElementById("clockNightTime");
+      var elementClock = document.getElementById("clock");
+
+      var nightTimeBegin = new Date();
+      nightTimeBegin.setDate(0);
+      nightTimeBegin.setHours(elementNighTimeBegin.value.split(":")[0]);
+      nightTimeBegin.setMinutes(elementNighTimeBegin.value.split(":")[1]);
+      nightTimeBegin.setSeconds(0);
+
+      var nightTimeEnd = new Date();
+      nightTimeEnd.setDate(0);
+      nightTimeEnd.setHours(elementNighTimeEnd.value.split(":")[0]);
+      nightTimeEnd.setMinutes(elementNighTimeEnd.value.split(":")[1]);
+      nightTimeEnd.setSeconds(0);
+      time.setDate(0);
+
+      if(time.getTime() > nightTimeBegin.getTime() || time.getTime() < nightTimeEnd.getTime()){
+        elementClock.style.visibility = "hidden";
+        elementClockNightTime.style.visibility = "visible";
+      }else{
+        elementClock.style.visibility = "visible";
+        elementClockNightTime.style.visibility = "hidden";
+      }
+    };
     onDimmSecondsChange();
-    var timeUpdater = setInterval(()=>setTimeBar(), 990);
+    var timeUpdater = setInterval(()=>loop(), 990);
   </script>
   <h3>Blinking & Brightness</h3>
   <form action="/blink">
