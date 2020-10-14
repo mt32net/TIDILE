@@ -53,7 +53,7 @@ void Handler::onOther(AsyncWebServerRequest *request)
         this->config->displaySeconds = request->getParam("show_seconds")->value().equals("on");
     }
     if(request->hasParam("format")){
-        this->config->format = (request->getParam("format")->value().equals("on"))? ClockFormat::Format_24H: ClockFormat::Format_12H;
+        this->config->format = ClockFormat::Format_24H;
     }
     request->redirect("/");
     this->config->serialize(preferences);
