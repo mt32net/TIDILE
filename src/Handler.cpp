@@ -1,5 +1,6 @@
 #include "Handler.hpp"
-#include "index_file.hpp"
+#include "html/index_file.hpp"
+#include "html/style.hpp"
 #include "TIDILE.hpp"
 
 Handler::Handler()
@@ -65,9 +66,6 @@ void Handler::onCustom(AsyncWebServerRequest *request)
 void Handler::onIndex(AsyncWebServerRequest *request)
 {
     String html = index_html;
-    html.replace(COLORHOURKEYWORD, Helper.colorToHex(this->config->colorHours));
-    html.replace(COLORMINUTEKEYWORD, Helper.colorToHex(this->config->colorMinutes));
-    html.replace(COLORSECONDSKEYWORD, Helper.colorToHex(this->config->colorSeconds));
     html.replace(DIMMSECONDSKEYWORD, (this->config->dimmSeconds) ? "checked" : "");
     html.replace(BRIGHTNESSKEYWORD, String(this->config->brightness));
     html.replace(COLORTEMPERATUREKEYWORD, Helper.colorToHex(this->config->colorTemperature));
@@ -78,10 +76,7 @@ void Handler::onIndex(AsyncWebServerRequest *request)
     html.replace(NIGHTTIMEENABLEDKEYWORD, (this->config->nightTimeLight) ? "checked" : "");
     html.replace(INFLUENCEKEYWORD, String(this->config->lightInfluence));
     html.replace(CURRENTTIMEKEYWORD, Helper.getDateTimeToString());
-    ClockTime time = Helper.getTime();
-    html.replace(MINUTESKEYWORD, String(time.minutes));
-    html.replace(HOURSKEYWORD, String(time.hours));
-    html.replace(SECONDSKEYWORD, String(time.seconds));
+    
     request->send(200, "text/html", html);
 }
 
@@ -108,4 +103,16 @@ void Handler::onNightTime(AsyncWebServerRequest *request)
     }
     request->redirect("/");
     this->config->serialize(preferences);
+}
+
+void Handler::onStyleSheet(AsyncWebServerRequest *request){
+    String html = style_css;
+    html.replace(COLORHOURKEYWORD, Helper.colorToHex(this->config->colorHours));
+    html.replace(COLORMINUTEKEYWORD, Helper.colorToHex(this->config->colorMinutes));
+    html.replace(COLORSECONDSKEYWORD, Helper.colorToHex(this->config->colorSeconds));
+    ClockTime time = Helper.getTime();
+    html.replace(MINUTESKEYWORD, String(time.minutes));
+    html.replace(HOURSKEYWORD, String(time.hours));
+    html.replace(SECONDSKEYWORD, String(time.seconds));
+    request->send(200, "text/css", html);
 }

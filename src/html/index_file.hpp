@@ -1,3 +1,25 @@
+#pragma once
+
+#pragma region UIkeywords
+#define COLORHOURKEYWORD "'colorHourKeyword'"
+#define COLORMINUTEKEYWORD "'colorMinuteKeyword'"
+#define COLORSECONDSKEYWORD "'colorSecondKeyword'"
+#define DIMMSECONDSKEYWORD "'dimmSecondsKeyword'"
+#define BRIGHTNESSKEYWORD "'brightnessKeyword'"
+#define COLORTEMPERATUREKEYWORD "'colorTemperatureKeyword'"
+#define COLORPRESSUREKEYWORD "'colorPressureKeyword'"
+#define SHOWSECONDSKEYWORD "'secondsEnabledKeyword'"
+#define NIGHTTIMESTARTKEYWORD "'nighttimeStartKeyword'"
+#define NIGHTTIMEENDKEYWORD "'nighttimeEndKeyword'"
+#define NIGHTTIMEENABLEDKEYWORD "'nightTimeEnabledKeyword'"
+#define INFLUENCEKEYWORD "'envLightInfluence'"
+#define CURRENTTIMEKEYWORD "'currentTimeKeyword'"
+#define MINUTESKEYWORD "'minutesKeyword'"
+#define HOURSKEYWORD "'hoursKeyword'"
+#define SECONDSKEYWORD "'secondsKeyword'"
+#pragma endregion
+
+const char index_html[] = R"rawliteral(
 <html>
 
 <head>
@@ -144,3 +166,4 @@
 </body>
 
 </html>
+)rawliteral";

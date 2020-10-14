@@ -25,6 +25,7 @@ public:
         server->on("/time", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onNightTime(request); });
         //server->on("/env", HTTP_GET, [handler](AsyncWebServerRequest *request){handler->onEnv(request);});
         //server->on("/times", HTTP_GET, [handler](AsyncWebServerRequest *request){handler->onTimes(request);});
+        server->on("/styles.css", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onStyleSheet(request); });
 
         server->onNotFound([](AsyncWebServerRequest *request) { request->send(404); });
         server->begin();
