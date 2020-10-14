@@ -36,6 +36,26 @@ void Handler::onEnvColors(AsyncWebServerRequest *request)
     this->config->serialize(preferences);
 }
 
+void Handler::onManuel(AsyncWebServerRequest *request)
+{   
+    ClockTime time;
+    if (request->hasParam("hours"))
+    {
+        time.hours = request->getParam("hours")->value().toInt();
+    }
+    if (request->hasParam("minutes"))
+    {
+        time.minutes = request->getParam("minutes")->value().toInt();
+    }
+    if (request->hasParam("seconds"))
+    {
+        time.seconds = request->getParam("seconds")->value().toInt();
+    }
+    // Wait for 10s
+    tidile->displayTime(time, 10000);
+    request->redirect("/");
+}
+
 void Handler::onOther(AsyncWebServerRequest *request)
 {
     this->config->displaySeconds = false;

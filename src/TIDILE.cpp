@@ -54,9 +54,8 @@ ClockConfig *TIDILE::getConfig()
     return &configuration;
 }
 
-void TIDILE::displayTime()
+void TIDILE::displayTime(ClockTime time, int delayTime)
 {
-    ClockTime time = Helper.getTime();
     clear();
 
     Helper.resetOverwriteNightTimeIfLegit(configuration, time);
@@ -86,6 +85,9 @@ void TIDILE::displayTime()
     for(int i = 0; i < LED_COUNT_FOR_ONE_SECOND; i++)
         this->leds[mapToLEDs(hours, configuration.format) + i] = configuration.colorHours.toCRGB();
     FastLED.show();
+    
+    // Normally 0
+    delay(delayTime);
 }
 
 void TIDILE::displayEnv(ClockEnv env)
@@ -149,7 +151,7 @@ void TIDILE::displayCustom(CRGB *leds, int delayEach)
 
 void TIDILE::loop()
 {
-    displayTime();
+    displayTime(Helper.getTime(), 0);
 
     if (loopI >= SMOOTH_LOOPS)
     {

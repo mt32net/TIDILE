@@ -85,6 +85,17 @@
     <input type="submit" class="submit" value="Set Colors">
   </form>
   <!--- env end --->
+  <h3>Manuel</h3>
+  <small>Display a certain time manually for a defined time.</small>
+  <form action="/manuel">
+    <label>Hours</label>
+    <input type="number" min="0" max="23" name="hours">
+    <label>Minutes</label>
+    <input type="number" min="0" max="59" name="minutes">
+    <label>Seconds</label>
+    <input type="number" min="0" max="59" name="seconds">
+    <input type="submit" class="submit" value="Display">
+  </form>
 </body>
 <script>
   function onDimmSecondsChange() {

@@ -29,7 +29,7 @@ public:
 #endif
     void loop();
     ///displays current time
-    void displayTime();
+    void displayTime(ClockTime time, int delayTime);
     ///displays information about your sorrounding such as temperature, humdity and pressure. IF the sensors are connected and defined in the config file
     void displayEnv(ClockEnv env);
     ///@param progress value between 0 and 99
