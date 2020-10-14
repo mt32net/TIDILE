@@ -85,7 +85,7 @@ const char index_html[] = R"rawliteral(
     </label>
     <label>24 H Clock</label>
     <label class="switch">
-      <input type="checkbox" name="format" '24HKeyword'>
+      <input type="checkbox" name="format" id="format" '24HKeyword'>
       <span class="slider round"></span>
     </label>
     <lable for="bright">Brightness</lable>
@@ -143,8 +143,11 @@ const char index_html[] = R"rawliteral(
     var minutes = document.getElementById("minutes");
     var hours = document.getElementById("hours");
     var seconds = document.getElementById("seconds");
+    var format = 24;
+    if (document.getElementById("format").checked) format = 12;
+
     minutes.style.width = (100 * (time.getMinutes() / 60)) + "%";
-    hours.style.marginLeft = (100 * (time.getHours() / 24)) + "%";
+    hours.style.marginLeft = (100 * (time.getHours() / format)) + "%";
     seconds.style.marginLeft = (100 * (time.getSeconds() / 60)) + "%";
     document.getElementById("curTime").innerHTML = "Current System Time: " + time.toGMTString();
   };

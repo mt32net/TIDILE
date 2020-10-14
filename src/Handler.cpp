@@ -59,7 +59,7 @@ void Handler::onManuel(AsyncWebServerRequest *request)
 void Handler::onOther(AsyncWebServerRequest *request)
 {
     this->config->displaySeconds = false;
-    this->config->format = ClockFormat::Format_24H;
+    this->config->format = ClockFormat::Format_12H;
     if (request->hasParam("brightness"))
     {
         this->config->brightness = request->getParam("brightness")->value().toInt();
@@ -73,7 +73,7 @@ void Handler::onOther(AsyncWebServerRequest *request)
         this->config->displaySeconds = request->getParam("show_seconds")->value().equals("on");
     }
     if(request->hasParam("format")){
-        this->config->format = (request->getParam("format")->value().equals("on"))? ClockFormat::Format_24H: ClockFormat::Format_12H;
+        this->config->format = ClockFormat::Format_24H;
     }
     request->redirect("/");
     this->config->serialize(preferences);
