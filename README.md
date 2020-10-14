@@ -4,6 +4,9 @@ Or to put it simple: A clock with leds shining on your wall.
 
 *Work in progess*
 
+*Very nice picture of the first prototype*
+![Web Interface](https://raw.githubusercontent.com/Universumgames/TIDILE/master/TIDILE_Prototype1.jpg)
+
 ## Features
 
 ### Displays Enviroment Variables
