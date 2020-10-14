@@ -66,6 +66,9 @@ void Handler::onCustom(AsyncWebServerRequest *request)
 void Handler::onIndex(AsyncWebServerRequest *request)
 {
     String html = index_html;
+    html.replace(COLORHOURKEYWORD, Helper.colorToHex(this->config->colorHours));
+    html.replace(COLORMINUTEKEYWORD, Helper.colorToHex(this->config->colorMinutes));
+    html.replace(COLORSECONDSKEYWORD, Helper.colorToHex(this->config->colorSeconds));
     html.replace(DIMMSECONDSKEYWORD, (this->config->dimmSeconds) ? "checked" : "");
     html.replace(BRIGHTNESSKEYWORD, String(this->config->brightness));
     html.replace(COLORTEMPERATUREKEYWORD, Helper.colorToHex(this->config->colorTemperature));

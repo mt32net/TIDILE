@@ -73,19 +73,17 @@ void TIDILE::displayTime()
     if (configuration.displaySeconds) {
 
         if (mapToLEDs(time.seconds, 59) > mapToLEDs(time.minutes, 59)) {
-            this->leds[mapToLEDs(time.seconds, 59)] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(DIMM_ADD_VALUE) : configuration.colorSeconds.toCRGB();
-            if (DOUBLE_FOR_EACH) 
-                this->leds[mapToLEDs(time.seconds, 59) + 1] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(DIMM_ADD_VALUE) : configuration.colorSeconds.toCRGB();
+            for(int i = 0; i < LED_COUNT_FOR_ONE_SECOND; i++)
+                this->leds[mapToLEDs(time.seconds, 59) + i] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(DIMM_ADD_VALUE) : configuration.colorSeconds.toCRGB();
         }
         else {
-            this->leds[mapToLEDs(time.seconds, 59)] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(DIMM_VALUE) : configuration.colorSeconds.toCRGB();
-            if (DOUBLE_FOR_EACH) 
-                this->leds[mapToLEDs(time.seconds, 59) + 1] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(DIMM_VALUE) : configuration.colorSeconds.toCRGB();
+            for(int i = 0; i < LED_COUNT_FOR_ONE_SECOND; i++)
+                this->leds[mapToLEDs(time.seconds, 59) + i] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(DIMM_VALUE) : configuration.colorSeconds.toCRGB();
         }
     }
     // Hours
-    this->leds[mapToLEDs(time.hours, 23)] = configuration.colorHours.toCRGB();
-    if (DOUBLE_FOR_EACH) this->leds[mapToLEDs(time.hours, 23) + 1] = configuration.colorHours.toCRGB();
+    for(int i = 0; i < LED_COUNT_FOR_ONE_SECOND; i++)
+        this->leds[mapToLEDs(time.hours, 23) + i] = configuration.colorHours.toCRGB();
     FastLED.show();
 }
 

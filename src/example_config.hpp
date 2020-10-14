@@ -5,7 +5,7 @@
 #define LED_PIN 5
 #define BLINK_BRIGHTNESS 0.7
 
-#define DOUBLE_FOR_EACH (NUM_LEDS / 2) > 60
+#define LED_COUNT_FOR_ONE_SECOND (int) (NUM_LEDS / 60)
 #define DIMM_VALUE 0xFF
 #define DIMM_ADD_VALUE 0xAA
 
