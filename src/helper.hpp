@@ -20,6 +20,7 @@ public:
     void setupWiFi();
     ///converts 6 to "06", 0 -> "00", 16 -> "16"
     String digitToTwoCharsDigit(int digit);
+    void resetOverwriteNightTimeIfLegit(ClockConfig configuration, ClockTime time);
 private:
     int timeTries = 0;
 };

@@ -60,6 +60,7 @@ struct ClockConfig
   uint16_t nightTimeEnd = 600;
   uint8_t brightness = 60;
   bool dimmSeconds = false;
+  bool tempOverwriteNightTime = false;
 
   ///deserializes this ClockConfig from startPosition into this object
   ///@param preferences is the preference object

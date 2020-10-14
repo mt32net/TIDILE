@@ -59,6 +59,7 @@ void TIDILE::displayTime()
     ClockTime time = Helper.getTime();
     clear();
 
+    Helper.resetOverwriteNightTimeIfLegit(configuration, time);
     if (Helper.isNightTime(configuration, time))
     {
         FastLED.show();

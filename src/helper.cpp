@@ -72,7 +72,10 @@ String HelperClass::getDateTimeToString()
 
 bool HelperClass::isNightTime(ClockConfig configuration, ClockTime time)
 {
-  return ((digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes)).toInt() > configuration.nightTimeBegin || (digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes)).toInt() < configuration.nightTimeEnd) && configuration.nightTimeLight;
+  return ((digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes)).toInt() > configuration.nightTimeBegin ||
+  (digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes)).toInt() < configuration.nightTimeEnd ||
+  configuration.tempOverwriteNightTime) 
+  && configuration.nightTimeLight;
 }
 
 void HelperClass::setupWiFi()
@@ -104,6 +107,13 @@ void HelperClass::setupWiFi()
   delay(100);
 }
 
-String HelperClass::digitToTwoCharsDigit(int digit){
-  return (digit <= 9)? "0" + String(digit) : String(digit);
+String HelperClass::digitToTwoCharsDigit(int digit)
+{
+  return (digit <= 9) ? "0" + String(digit) : String(digit);
+}
+
+void HelperClass::resetOverwriteNightTimeIfLegit(ClockConfig configuration, ClockTime time)
+{
+  if(!isNightTime(configuration, time) && (digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes)).toInt() >= configuration.nightTimeEnd)
+    configuration.tempOverwriteNightTime = false;
 }

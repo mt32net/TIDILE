@@ -97,7 +97,8 @@ const char index_html[] = R"rawliteral(
 </style>
 <body>
   <h1>TIDILE Interface</h1>
-  <div>Current Time (d/m/y): {{currentTimeKeyword}}</div>
+  <div>Last ESP Time (d/m/y): {{currentTimeKeyword}}</div>
+  <div id="curTime"></div>
   <div id="clock">
       <div id="minutes"></div>
       <div id="hours"></div>
@@ -117,7 +118,10 @@ const char index_html[] = R"rawliteral(
       <input id="timeE" type="time" name="end_time" value="{{nighttimeEndKeyword}}" width="auto">
       <small>Enter the time when the clock should stop to turn off if it´s dark in the room</small>
     </div>
-  <input type="submit" class="submit" value="Set Night Time">
+    <div class="submit">
+      <input type="submit" name="settings" value="Set Night Time">
+      <input type="submit" name="nightTimeTilMorning" value="Set Night Time until Morning">
+    </div>
   </form>
   <h3>Colors for Time</h3>
   <form action="/colors">
@@ -156,6 +160,7 @@ const char index_html[] = R"rawliteral(
         minutes.style.width = (100 * (time.getMinutes()/60)) + "%";
         hours.style.marginLeft = (100 * (time.getHours()/24)) + "%";
         seconds.style.marginLeft = (100 * (time.getSeconds()/60)) + "%";
+        document.getElementById("curTime").innerHTML = "Current System Time: " + time.toGMTString();
     };
     function loop(){
       setTimeBar();
