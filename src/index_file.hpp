@@ -106,7 +106,7 @@ const char index_html[] = R"rawliteral(
   <h3>Night Time</h3>
   <form action="/time">
     <label>Enable Night Time<small>Info: Between both times should be 12pm</small></label>
-    <input type="checkbox" name="time_enabled" {{nightTimeEnabledKeyword}}>
+    <input id="nightTimeEnabled" type="checkbox" name="time_enabled" {{nightTimeEnabledKeyword}}>
     <label for="timeB">Begin of Night Time at</label>
     <div>
       <input id="timeB" type="time" name="begin_time" value="{{nighttimeStartKeyword}}" width="auto">
@@ -178,7 +178,7 @@ const char index_html[] = R"rawliteral(
       nightTimeEnd.setSeconds(0);
       time.setDate(0);
 
-      if(time.getTime() > nightTimeBegin.getTime() || time.getTime() < nightTimeEnd.getTime()){
+      if(time.getTime() > nightTimeBegin.getTime() || time.getTime() < nightTimeEnd.getTime() && document.getElementById("nightTimeEnabled").checked){
         elementClock.style.visibility = "hidden";
         elementClockNightTime.style.visibility = "visible";
       }else{
