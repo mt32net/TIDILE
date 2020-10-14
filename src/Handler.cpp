@@ -39,7 +39,7 @@ void Handler::onEnvColors(AsyncWebServerRequest *request)
 void Handler::onOther(AsyncWebServerRequest *request)
 {
     this->config->displaySeconds = false;
-    this->config->format = ClockFormat::Format_24H;
+    this->config->format = ClockFormat::Format_12H;
     if (request->hasParam("brightness"))
     {
         this->config->brightness = request->getParam("brightness")->value().toInt();
