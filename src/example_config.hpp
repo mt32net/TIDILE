@@ -5,6 +5,10 @@
 #define LED_PIN 5
 #define BLINK_BRIGHTNESS 0.7
 
+#define DOUBLE_FOR_EACH true
+#define DIMM_VALUE 0xFF
+#define DIMM_ADD_VALUE 0xAA
+
 //#define FASTSTARTUP //uncomment when the startup animation shouldn´t be displayed each startup
 
 // Touch Pin

@@ -84,7 +84,7 @@ void TIDILE::displayTime()
     }
     // Hours
     this->leds[mapToLEDs(time.hours, 23)] = configuration.colorHours.toCRGB();
-    if (DOUBLE_FOR_EACH) this->leds[mapToLEDs(time.hours, 23)] = configuration.colorHours.toCRGB();
+    if (DOUBLE_FOR_EACH) this->leds[mapToLEDs(time.hours, 23) + 1] = configuration.colorHours.toCRGB();
     FastLED.show();
 }
 
