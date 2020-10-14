@@ -14,7 +14,7 @@ class Handler {
         void onIndex(AsyncWebServerRequest *request);
         void onCustom(AsyncWebServerRequest *request);
         void onEnvColors(AsyncWebServerRequest *request);
-        void onBlink(AsyncWebServerRequest *request);
+        void onOther(AsyncWebServerRequest *request);
         void onNightTime(AsyncWebServerRequest *request);
         void onStyleSheet(AsyncWebServerRequest *request);
         //void onEnv(AsyncWebServerRequest *request);

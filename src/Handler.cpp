@@ -36,9 +36,10 @@ void Handler::onEnvColors(AsyncWebServerRequest *request)
     this->config->serialize(preferences);
 }
 
-void Handler::onBlink(AsyncWebServerRequest *request)
+void Handler::onOther(AsyncWebServerRequest *request)
 {
     this->config->displaySeconds = false;
+    this->config->format = ClockFormat::Format_24H;
     if (request->hasParam("brightness"))
     {
         this->config->brightness = request->getParam("brightness")->value().toInt();
@@ -50,6 +51,9 @@ void Handler::onBlink(AsyncWebServerRequest *request)
     if (request->hasParam("show_seconds"))
     {
         this->config->displaySeconds = request->getParam("show_seconds")->value().equals("on");
+    }
+    if(request->hasParam("format")){
+        this->config->format = (request->getParam("format")->value().equals("on"))? ClockFormat::Format_24H: ClockFormat::Format_12H;
     }
     request->redirect("/");
     this->config->serialize(preferences);
@@ -79,6 +83,7 @@ void Handler::onIndex(AsyncWebServerRequest *request)
     html.replace(NIGHTTIMEENABLEDKEYWORD, (this->config->nightTimeLight) ? "checked" : "");
     html.replace(INFLUENCEKEYWORD, String(this->config->lightInfluence));
     html.replace(CURRENTTIMEKEYWORD, Helper.getDateTimeToString());
+    html.replace(CLOCKFORMAT24HKEYWORD, (this->config->format == ClockFormat::Format_24H) ? "checked" : "");
     
     request->send(200, "text/html", html);
 }

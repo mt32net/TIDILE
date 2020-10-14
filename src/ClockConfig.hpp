@@ -4,6 +4,11 @@
 #include "definements.hpp"
 #include <Preferences.h>
 
+enum ClockFormat{
+  Format_24H = 23,
+  Format_12H = 11
+};
+
 struct Color
 {
   byte red = 0;
@@ -61,6 +66,7 @@ struct ClockConfig
   uint8_t brightness = 60;
   bool dimmSeconds = false;
   bool tempOverwriteNightTime = false;
+  ClockFormat format = ClockFormat::Format_24H;
 
   ///deserializes this ClockConfig from startPosition into this object
   ///@param preferences is the preference object
@@ -82,6 +88,8 @@ struct ClockConfig
     nightTimeEnd = preferences->getInt("nightTimeEnd");
     brightness = preferences->getInt("brightness");
     lightInfluence = preferences->getInt("lightInflu");
+
+    format = (preferences->getInt("format") == ClockFormat::Format_24H) ? ClockFormat::Format_24H : ClockFormat::Format_12H;
     preferences->end();
   }
 
@@ -106,6 +114,8 @@ struct ClockConfig
     preferences->putInt("nightTimeEnd", nightTimeEnd);
     preferences->putInt("brightness", brightness);
     preferences->putInt("lightInflu", lightInfluence);
+
+    preferences->putInt("format", format);
     preferences->end();
   }
 };

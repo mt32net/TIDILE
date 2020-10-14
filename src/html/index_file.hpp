@@ -17,6 +17,7 @@
 #define MINUTESKEYWORD "'minutesKeyword'"
 #define HOURSKEYWORD "'hoursKeyword'"
 #define SECONDSKEYWORD "'secondsKeyword'"
+#define CLOCKFORMAT24HKEYWORD "'24HKeyword'"
 #pragma endregion
 
 const char index_html[] = R"rawliteral(
@@ -75,72 +76,16 @@ const char index_html[] = R"rawliteral(
     </label>
     <input type="submit" class="submit" value="Set Color">
   </form>
-  <script>
-    function onDimmSecondsChange() {
-      var checked = document.getElementById("dim_sec").checked;
-      var colorSelector = document.getElementById("cl_s");
-      var secondsLight = document.getElementById("seconds");
-      var dimmLabel = document.getElementById("dimm_label");
-      if (checked) {
-        colorSelector.style.visibility = "hidden";
-        dimmLabel.style.visibility = "hidden";
-        secondsLight.style.visibility = "hidden";
-      } else {
-        colorSelector.style.visibility = "visible";
-        dimmLabel.style.visibility = "visible";
-        if (document.getElementById("clock").style.visibility == "hidden")
-          secondsLight.style.visibility = "visible";
-      }
-    };
-
-    function setTimeBar() {
-      var time = new Date();
-      var minutes = document.getElementById("minutes");
-      var hours = document.getElementById("hours");
-      var seconds = document.getElementById("seconds");
-      minutes.style.width = (100 * (time.getMinutes() / 60)) + "%";
-      hours.style.marginLeft = (100 * (time.getHours() / 24)) + "%";
-      seconds.style.marginLeft = (100 * (time.getSeconds() / 60)) + "%";
-      document.getElementById("curTime").innerHTML = "Current System Time: " + time.toGMTString();
-    };
-
-    function loop() {
-      setTimeBar();
-      var time = new Date();
-      var elementNighTimeBegin = document.getElementById("timeB");
-      var elementNighTimeEnd = document.getElementById("timeE");
-      var elementClockNightTime = document.getElementById("clockNightTime");
-      var elementClock = document.getElementById("clock");
-
-      var nightTimeBegin = new Date();
-      nightTimeBegin.setDate(0);
-      nightTimeBegin.setHours(elementNighTimeBegin.value.split(":")[0]);
-      nightTimeBegin.setMinutes(elementNighTimeBegin.value.split(":")[1]);
-      nightTimeBegin.setSeconds(0);
-
-      var nightTimeEnd = new Date();
-      nightTimeEnd.setDate(0);
-      nightTimeEnd.setHours(elementNighTimeEnd.value.split(":")[0]);
-      nightTimeEnd.setMinutes(elementNighTimeEnd.value.split(":")[1]);
-      nightTimeEnd.setSeconds(0);
-      time.setDate(0);
-
-      if (time.getTime() > nightTimeBegin.getTime() || time.getTime() < nightTimeEnd.getTime() && document.getElementById("nightTimeEnabled").checked) {
-        elementClock.style.visibility = "hidden";
-        elementClockNightTime.style.visibility = "visible";
-      } else {
-        elementClock.style.visibility = "visible";
-        elementClockNightTime.style.visibility = "hidden";
-      }
-    };
-    onDimmSecondsChange();
-    var timeUpdater = setInterval(() => loop(), 990);
-  </script>
-  <h3>Blinking & Brightness</h3>
-  <form action="/blink">
+  <h3>Other</h3>
+  <form action="/other">
     <label>Show Seconds</label>
     <label class="switch">
       <input type="checkbox" name="show_seconds" 'secondsEnabledKeyword'>
+      <span class="slider round"></span>
+    </label>
+    <label>24 H Clock</label>
+    <label class="switch">
+      <input type="checkbox" name="format" '24HKeyword'>
       <span class="slider round"></span>
     </label>
     <lable for="bright">Brightness</lable>
@@ -151,7 +96,7 @@ const char index_html[] = R"rawliteral(
     </div>
     <label>Enviroment Light Influence</label>
     <input id="influence" type="number" name="influence" min="0" max="100" value="'envLightInfluence'">
-    <input type="submit" class="submit" value="Set Blinking & Brightness">
+    <input type="submit" class="submit" value="Update Preferences">
   </form>
   <!--- env begin --->
   <h3>Enviroment Colors</h3>
@@ -164,6 +109,67 @@ const char index_html[] = R"rawliteral(
   </form>
   <!--- env end --->
 </body>
+<script>
+  function onDimmSecondsChange() {
+    var checked = document.getElementById("dim_sec").checked;
+    var colorSelector = document.getElementById("cl_s");
+    var secondsLight = document.getElementById("seconds");
+    var dimmLabel = document.getElementById("dimm_label");
+    if (checked) {
+      colorSelector.style.visibility = "hidden";
+      dimmLabel.style.visibility = "hidden";
+      secondsLight.style.visibility = "hidden";
+    } else {
+      colorSelector.style.visibility = "visible";
+      dimmLabel.style.visibility = "visible";
+      if (document.getElementById("clock").style.visibility == "hidden")
+        secondsLight.style.visibility = "visible";
+    }
+  };
+
+  function setTimeBar() {
+    var time = new Date();
+    var minutes = document.getElementById("minutes");
+    var hours = document.getElementById("hours");
+    var seconds = document.getElementById("seconds");
+    minutes.style.width = (100 * (time.getMinutes() / 60)) + "%";
+    hours.style.marginLeft = (100 * (time.getHours() / 24)) + "%";
+    seconds.style.marginLeft = (100 * (time.getSeconds() / 60)) + "%";
+    document.getElementById("curTime").innerHTML = "Current System Time: " + time.toGMTString();
+  };
+
+  function loop() {
+    setTimeBar();
+    var time = new Date();
+    var elementNighTimeBegin = document.getElementById("timeB");
+    var elementNighTimeEnd = document.getElementById("timeE");
+    var elementClockNightTime = document.getElementById("clockNightTime");
+    var elementClock = document.getElementById("clock");
+
+    var nightTimeBegin = new Date();
+    nightTimeBegin.setDate(0);
+    nightTimeBegin.setHours(elementNighTimeBegin.value.split(":")[0]);
+    nightTimeBegin.setMinutes(elementNighTimeBegin.value.split(":")[1]);
+    nightTimeBegin.setSeconds(0);
+
+    var nightTimeEnd = new Date();
+    nightTimeEnd.setDate(0);
+    nightTimeEnd.setHours(elementNighTimeEnd.value.split(":")[0]);
+    nightTimeEnd.setMinutes(elementNighTimeEnd.value.split(":")[1]);
+    nightTimeEnd.setSeconds(0);
+    time.setDate(0);
+
+    if (time.getTime() > nightTimeBegin.getTime() || time.getTime() < nightTimeEnd.getTime() && document.getElementById("nightTimeEnabled").checked) {
+      elementClock.style.visibility = "hidden";
+      elementClockNightTime.style.visibility = "visible";
+    } else {
+      elementClock.style.visibility = "visible";
+      elementClockNightTime.style.visibility = "hidden";
+    }
+  };
+  onDimmSecondsChange();
+  var timeUpdater = setInterval(() => loop(), 990);
+</script>
 
 </html>
 )rawliteral";

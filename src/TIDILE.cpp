@@ -82,8 +82,9 @@ void TIDILE::displayTime()
         }
     }
     // Hours
+    int hours = (configuration.format == ClockFormat::Format_24H || time.hours < 12)? time.hours : time.hours - 12;
     for(int i = 0; i < LED_COUNT_FOR_ONE_SECOND; i++)
-        this->leds[mapToLEDs(time.hours, 23) + i] = configuration.colorHours.toCRGB();
+        this->leds[mapToLEDs(hours, configuration.format) + i] = configuration.colorHours.toCRGB();
     FastLED.show();
 }
 

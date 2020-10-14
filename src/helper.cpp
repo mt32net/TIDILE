@@ -49,7 +49,7 @@ ClockTime HelperClass::getTime()
   {
     Serial.println("Failed to obtain time");
     timeTries++;
-    if (timeTries > 25)
+    if (timeTries > 10)
       ESP.restart();
     return ClockTime{1, 1, 1, 1, 1, 1};
   }
