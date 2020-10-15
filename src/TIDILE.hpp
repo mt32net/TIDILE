@@ -23,18 +23,17 @@ public:
     ///@param numberLEDS the number of LEDS within the array
     ///@param configuration the pointer to thee configuration object where all settings are saved
     void setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer *server);
+    void displaCustom(Color colorCode, int toLED, ClockTime until);
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
     void addBMP(Adafruit_BME280 *bmp);
     ClockEnv getEnv();
 #endif
     void loop();
     ///displays current time
-    void displayTime(ClockTime time, int delayTime);
+    void displayTime(ClockTime time);
     ///displays information about your sorrounding such as temperature, humdity and pressure. IF the sensors are connected and defined in the config file
     void displayEnv(ClockEnv env);
     ///@param progress value between 0 and 99
-    ///@param duration in ms
-    void displayCustom(int progress, CRGB color, int duration);
     ClockConfig *getConfig();
 
 private:
@@ -52,8 +51,8 @@ private:
     void clear();
     void startupLEDs(int delay);
 
-    void displayCustom(CRGB *leds, int delayEach);
     int lastSec = 0;
+    ClockTime customDisplayTil;
     int loopI = 0;
     int touchAverage = 30;
     long lightAvg = 0;

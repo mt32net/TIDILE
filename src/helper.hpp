@@ -14,7 +14,8 @@ public:
     String colorToHex(Color color);
     String timeIntToTimeString(int timeInt);
     int timeStringToTimeInt(String timeString);
-    ClockTime getTime();
+	int hmsToTimeInt(ClockTime time);
+	ClockTime getTime();
     String getDateTimeToString();
     bool isNightTime(ClockConfig configuration, ClockTime time);
     void setupWiFi();

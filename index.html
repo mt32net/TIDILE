@@ -85,15 +85,14 @@
     <input type="submit" class="submit" value="Set Colors">
   </form>
   <!--- env end --->
-  <h3>Manuel</h3>
-  <small>Display a certain time manually for a defined time.</small>
-  <form action="/manuel">
+  <h3>Custom Display</h3>
+  <form action="/manual">
     <label>Hours</label>
-    <input type="number" min="0" max="23" name="hours">
+    <input type="number" min="0" max="'numleds'" name="last">
     <label>Minutes</label>
-    <input type="number" min="0" max="59" name="minutes">
-    <label>Seconds</label>
-    <input type="number" min="0" max="59" name="seconds">
+    <input type="color" min="" max="59" name="color">
+    <label>Duration</label>
+    <input type="number" min="0" max="59" name="duration">
     <input type="submit" class="submit" value="Display">
   </form>
 </body>
