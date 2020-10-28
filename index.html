@@ -120,11 +120,14 @@
     var minutes = document.getElementById("minutes");
     var hours = document.getElementById("hours");
     var seconds = document.getElementById("seconds");
-    var format = 24;
-    if (document.getElementById("format").checked) format = 12;
+    var format = 11;
+    if (document.getElementById("format").checked) format = 23;
+
+    var hoursTime = time.getHours();
+    if (hoursTime >= 12 && format == 11) hoursTime -= 12;
 
     minutes.style.width = (100 * (time.getMinutes() / 60)) + "%";
-    hours.style.marginLeft = (100 * (time.getHours() / format)) + "%";
+    hours.style.marginLeft = (100 * (hoursTime / format)) + "%";
     seconds.style.marginLeft = (100 * (time.getSeconds() / 60)) + "%";
     document.getElementById("curTime").innerHTML = "Current System Time: " + time.toGMTString();
   };
