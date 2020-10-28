@@ -19,11 +19,10 @@ public:
 #pragma region HTTP handler
         server->on("/", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onIndex(request); });
         server->on("/colors", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onColors(request); });
-        server->on("/display", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onCustom(request); });
         server->on("/envcolors", HTTP_GET, [handler](AsyncWebServerRequest *request){ handler->onEnvColors(request); });
         server->on("/other", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onOther(request); });
         server->on("/time", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onNightTime(request); });
-        server->on("/manuel", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onManuel(request); });
+        server->on("/manual", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onManual(request); });
         //server->on("/env", HTTP_GET, [handler](AsyncWebServerRequest *request){handler->onEnv(request);});
         //server->on("/times", HTTP_GET, [handler](AsyncWebServerRequest *request){handler->onTimes(request);});
         server->on("/styles.css", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onStyleSheet(request); });

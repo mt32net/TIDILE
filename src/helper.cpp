@@ -117,3 +117,7 @@ void HelperClass::resetOverwriteNightTimeIfLegit(ClockConfig configuration, Cloc
   if(!isNightTime(configuration, time) && (digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes)).toInt() >= configuration.nightTimeEnd)
     configuration.tempOverwriteNightTime = false;
 }
+
+int HelperClass::hmsToTimeInt(ClockTime time){
+	return (digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes) + digitToTwoCharsDigit(time.seconds)).toInt();
+}

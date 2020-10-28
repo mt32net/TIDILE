@@ -36,23 +36,11 @@ void Handler::onEnvColors(AsyncWebServerRequest *request)
     this->config->serialize(preferences);
 }
 
-void Handler::onManuel(AsyncWebServerRequest *request)
+void Handler::onManual(AsyncWebServerRequest *request)
 {   
-    ClockTime time;
-    if (request->hasParam("hours"))
-    {
-        time.hours = request->getParam("hours")->value().toInt();
-    }
-    if (request->hasParam("minutes"))
-    {
-        time.minutes = request->getParam("minutes")->value().toInt();
-    }
-    if (request->hasParam("seconds"))
-    {
-        time.seconds = request->getParam("seconds")->value().toInt();
-    }
-    // Wait for 10s
-    tidile->displayTime(time, 10000);
+    ClockTime time = Helper.getTime();
+    time.seconds = time.seconds + 10;
+    tidile->displaCustom(Helper.hexToColor(request->getParam("color")->value()), request->getParam("last")->value().toInt(), time);
     request->redirect("/");
 }
 
@@ -77,14 +65,6 @@ void Handler::onOther(AsyncWebServerRequest *request)
     }
     request->redirect("/");
     this->config->serialize(preferences);
-}
-
-void Handler::onCustom(AsyncWebServerRequest *request)
-{
-    int duration = request->getParam("duration")->value().toInt();
-    int progress = request->getParam("progress")->value().toInt();
-    this->tidile->displayCustom(progress, CRGB::Aquamarine, duration);
-    request->redirect("/");
 }
 
 void Handler::onIndex(AsyncWebServerRequest *request)

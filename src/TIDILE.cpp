@@ -8,6 +8,8 @@ void TIDILE::setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer *server)
     this->numberLEDs = numberLEDs;
     this->server = server;
 
+    customDisplayTil = Helper.getTime();
+
     configTime(3600, 3600, ntpServer);
     Helper.getTime();
 
@@ -54,7 +56,7 @@ ClockConfig *TIDILE::getConfig()
     return &configuration;
 }
 
-void TIDILE::displayTime(ClockTime time, int delayTime)
+void TIDILE::displayTime(ClockTime time)
 {
     clear();
 
@@ -85,9 +87,6 @@ void TIDILE::displayTime(ClockTime time, int delayTime)
     for(int i = 0; i < LED_COUNT_FOR_ONE_SECOND; i++)
         this->leds[mapToLEDs(hours, configuration.format) + i] = configuration.colorHours.toCRGB();
     FastLED.show();
-    
-    // Normally 0
-    delay(delayTime);
 }
 
 void TIDILE::displayEnv(ClockEnv env)
@@ -113,47 +112,25 @@ void TIDILE::displayEnv(ClockEnv env)
     delay(ENV_DISPLAY_TIME);
 }
 
-void TIDILE::displayCustom(int progress, CRGB color, int duration)
-{
-    clear();
-    if (Helper.isNightTime(configuration, Helper.getTime()))
-    {
-        FastLED.show();
-        return;
+void TIDILE::displaCustom(Color colorCode, int toLED, ClockTime until) {
+    this->customDisplayTil = until;
+    for (int i = 0; i < toLED; i++) {
+        this->leds[i] = colorCode.toCRGB();
     }
-    for (int i = 0; i < mapToLEDs(progress, 99); i++)
-    {
-        this->leds[i] = color;
-    }
-}
-
-void TIDILE::displayCustom(CRGB *leds, int delayEach)
-{
-    if (Helper.isNightTime(configuration, Helper.getTime()))
-    {
-        clear();
-        FastLED.show();
-        return;
-    }
-    for (int i = 0; i < NUM_LEDS; i++)
-    {
-        leds[i] = CRGB::White;
-        FastLED.show();
-        delay(delayEach);
-    }
-    for (int i = 0; i < NUM_LEDS; i++)
-    {
-        leds[i] = CRGB::Black;
-        FastLED.show();
-        delay(delayEach);
-    }
+    FastLED.show();
 }
 
 void TIDILE::loop()
 {
-    displayTime(Helper.getTime(), 0);
+    // Check if something else is displyed
+    ClockTime currentTime = Helper.getTime();
+	int timeTil = Helper.hmsToTimeInt(customDisplayTil);
+	int curr = Helper.hmsToTimeInt(currentTime);
+    if(curr >= timeTil){
+        displayTime(currentTime);
+    }
 
-    if (loopI >= SMOOTH_LOOPS)
+	if (loopI >= SMOOTH_LOOPS)
     {
 #if defined(DISPLAY_HUMIDIY) || defined(DISPLAY_TEMPERATURE) || defined(DISPLAY_PRESSURE)
         if (touchAverage / SMOOTH_LOOPS < THRESHOLD)
