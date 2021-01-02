@@ -1,11 +1,17 @@
 * {
   font-family: 'Calibri', sans-serif;
-  color: rgb(236, 236, 236);
 }
 
 body {
-  background-color: #080808;
-  text-align: center;
+  padding: 25px;
+  background-color: white;
+  color: black;
+  font-size: 25px;
+}
+
+.dark-mode {
+  background-color:#23272A;
+  color: white;
 }
 
 form {

@@ -7,6 +7,9 @@
 </head>
 
 <body>
+  <div class="tooglebutton">
+<button onclick="myFunction()">LIGHT/DARK</button>
+</div>
   <h1>TIDILE Interface</h1>
   <div>Last ESP Time (d/m/y): 'currentTimeKeyword'</div>
   <div id="curTime"></div>
@@ -162,6 +165,11 @@
   };
   onDimmSecondsChange();
   var timeUpdater = setInterval(() => loop(), 990);
+  
+  function myFunction() {
+   var element = document.body;
+   element.classList.toggle("dark-mode");
+
 </script>
 
 </html>
