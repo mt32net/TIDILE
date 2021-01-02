@@ -23,7 +23,7 @@ public:
     ///@param numberLEDS the number of LEDS within the array
     ///@param configuration the pointer to thee configuration object where all settings are saved
     void setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer *server);
-    void displaCustom(Color colorCode, int toLED, ClockTime until);
+    void displaCustom(Color colorCode, ClockTime until);
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
     void addBMP(Adafruit_BME280 *bmp);
     ClockEnv getEnv();

@@ -40,7 +40,7 @@ void Handler::onManual(AsyncWebServerRequest *request)
 {   
     ClockTime time = Helper.getTime();
     time.seconds = time.seconds + 10;
-    tidile->displaCustom(Helper.hexToColor(request->getParam("color")->value()), request->getParam("last")->value().toInt(), time);
+    tidile->displaCustom(Helper.hexToColor(request->getParam("color")->value()), time);
     request->redirect("/");
 }
 

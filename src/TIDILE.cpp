@@ -112,9 +112,9 @@ void TIDILE::displayEnv(ClockEnv env)
     delay(ENV_DISPLAY_TIME);
 }
 
-void TIDILE::displaCustom(Color colorCode, int toLED, ClockTime until) {
+void TIDILE::displaCustom(Color colorCode, ClockTime until) {
     this->customDisplayTil = until;
-    for (int i = 0; i < toLED; i++) {
+    for (int i = 0; i < this->numberLEDs; i++) {
         this->leds[i] = colorCode.toCRGB();
     }
     FastLED.show();
