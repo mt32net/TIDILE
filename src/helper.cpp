@@ -95,7 +95,7 @@ void HelperClass::setupWiFi()
       Serial.print(".");
       Serial.println(WiFi.smartConfigDone());
       tries++;
-      if (tries > 20)
+      if (tries > 50)
         ESP.restart();
     }
   }
