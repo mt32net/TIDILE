@@ -44,6 +44,13 @@ void Handler::onManual(AsyncWebServerRequest *request)
     request->redirect("/");
 }
 
+void Handler::onLamp(AsyncWebServerRequest *request)
+{   
+    tidile->clockMode = (!tidile->clockMode);
+    tidile->displaCustom(Helper.hexToColor(request->getParam("color")->value()), Helper.getTime());
+    request->redirect("/");
+}
+
 void Handler::onOther(AsyncWebServerRequest *request)
 {
     this->config->displaySeconds = false;

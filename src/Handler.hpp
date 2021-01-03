@@ -17,6 +17,8 @@ class Handler {
         void onNightTime(AsyncWebServerRequest *request);
         void onStyleSheet(AsyncWebServerRequest *request);
         void onManual(AsyncWebServerRequest *request);
+        void onLamp(AsyncWebServerRequest *request);
+
         //void onEnv(AsyncWebServerRequest *request);
         //void onTimes(AsyncWebServerRequest *request);
     private:

@@ -58,6 +58,8 @@ ClockConfig *TIDILE::getConfig()
 
 void TIDILE::displayTime(ClockTime time)
 {
+    if (!this->clockMode) return;
+
     clear();
 
     Helper.resetOverwriteNightTimeIfLegit(configuration, time);

@@ -35,7 +35,9 @@ public:
     void displayEnv(ClockEnv env);
     ///@param progress value between 0 and 99
     ClockConfig *getConfig();
-
+    bool clockMode = true;
+    CRGB lmapColor = CRGB::White;
+    
 private:
     CRGB *leds;
     ClockConfig configuration;
