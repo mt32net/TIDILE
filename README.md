@@ -2,7 +2,7 @@
 
 Or to put it simple: A clock with leds shining on your wall.
 
-*Work in progess*
+*documentation not complete*
 
 *Very nice picture of the first prototype*
 ![Web Interface](https://raw.githubusercontent.com/Universumgames/TIDILE/master/TIDILE_Prototype1.jpg)
