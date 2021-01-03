@@ -39,7 +39,7 @@ void Handler::onEnvColors(AsyncWebServerRequest *request)
 void Handler::onManual(AsyncWebServerRequest *request)
 {   
     ClockTime time = Helper.getTime();
-    time.seconds = time.seconds + 10;
+    time.seconds = time.seconds + request->getParam("last")->value().toInt();
     tidile->displaCustom(Helper.hexToColor(request->getParam("color")->value()), time);
     request->redirect("/");
 }
@@ -60,7 +60,8 @@ void Handler::onOther(AsyncWebServerRequest *request)
     {
         this->config->displaySeconds = request->getParam("show_seconds")->value().equals("on");
     }
-    if(request->hasParam("format")){
+    if(request->hasParam("format"))
+    {
         this->config->format = ClockFormat::Format_24H;
     }
     request->redirect("/");
