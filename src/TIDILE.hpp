@@ -36,8 +36,8 @@ public:
     ///@param progress value between 0 and 99
     ClockConfig *getConfig();
     bool clockMode = true;
-    CRGB lmapColor = CRGB::White;
-    
+    Color lmapColor = Color(255, 255, 255);
+
 private:
     CRGB *leds;
     ClockConfig configuration;

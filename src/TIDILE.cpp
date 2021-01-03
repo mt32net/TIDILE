@@ -58,8 +58,6 @@ ClockConfig *TIDILE::getConfig()
 
 void TIDILE::displayTime(ClockTime time)
 {
-    if (!this->clockMode) return;
-
     clear();
 
     Helper.resetOverwriteNightTimeIfLegit(configuration, time);
@@ -116,9 +114,7 @@ void TIDILE::displayEnv(ClockEnv env)
 
 void TIDILE::displaCustom(Color colorCode, ClockTime until) {
     this->customDisplayTil = until;
-    for (int i = 0; i < this->numberLEDs; i++) {
-        this->leds[i] = colorCode.toCRGB();
-    }
+    this->lmapColor = colorCode;
     FastLED.show();
 }
 
@@ -128,8 +124,14 @@ void TIDILE::loop()
     ClockTime currentTime = Helper.getTime();
 	int timeTil = Helper.hmsToTimeInt(customDisplayTil);
 	int curr = Helper.hmsToTimeInt(currentTime);
-    if(curr >= timeTil){
+    if(curr >= timeTil && this->clockMode){
         displayTime(currentTime);
+    } else {
+        clear();
+        for (int i = 0; i < this->numberLEDs; i++) {
+            this->leds[i] = this->lmapColor.toCRGB();
+        }
+        FastLED.show();
     }
 
 	if (loopI >= SMOOTH_LOOPS)
