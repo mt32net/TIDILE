@@ -29,7 +29,7 @@ You can use the TIDILE for IoT applications and display custom information on it
 
 ## Build
 
-You can build a TIDILE in a circular or linear shape (See pictures).
+You can build a TIDILE in a circular or linear shape (see pictures).
 
 TIDILE uses WS2812b LEDS, also known as Neopixel. You can get a 1m strip with 144leds for around 15-20 Euros. Using 120 Leds (60 * 2), your clock will have a (perimeter) length of about 0.8m. You also need an ESP32 (around 5 Euros) and optionaly an BMP280 sensor (around 3 Euros). Some soldering (or jumper cables ;) ) is also required to connect the components together.
 
@@ -46,3 +46,5 @@ With the brightness control in the web interface you set the maximal brightness.
 > f_a(x)=ax+1-a
 
 ### Calculation of the LEDs State
+
+There are some fixes to be made, so this section will is not complete yet.
