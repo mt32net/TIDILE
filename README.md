@@ -1,8 +1,6 @@
-# TIDILE - Time Indication Device through Indirect Light Emittation
+# TIDILE
 
-Or to put it simple: A clock with leds shining on your wall.
-
-*documentation not complete*
+A customizable and IoT freindly clock with leds shining on your wall (or whatever you want them to shine on...). TIDILE has a userfriendly web interface to change paramteres and colors.
 
 *Very nice picture of the first prototype*
 ![Web Interface](https://raw.githubusercontent.com/Universumgames/TIDILE/master/TIDILE_Prototype1.jpg)
@@ -49,6 +47,6 @@ With the brightness control in the web interface you set the maximal brightness.
 
 > f_a(x)=ax+1-a
 
-### Calculation of the LEDs State
+## Questions and Improvements
 
-There are some fixes to be made, so this section will is not complete yet.
+If you habe questions or ideas to improve TIDILE or you want to share your own build, please open an issue or a discussion.
