@@ -2,6 +2,8 @@
 #include "html/index_file.hpp"
 #include "html/style.hpp"
 #include "TIDILE.hpp"
+#include "helper/color.hpp"
+#include "helper/time.hpp"
 
 Handler::Handler()
 {
@@ -16,9 +18,9 @@ void Handler::setup(ClockConfig *config, TIDILE *tidile, Preferences *preference
 
 void Handler::onColors(AsyncWebServerRequest *request)
 {
-    this->config->colorMinutes = Helper.hexToColor(request->getParam("color_min")->value());
-    this->config->colorHours = Helper.hexToColor(request->getParam("color_hour")->value());
-    this->config->colorSeconds = Helper.hexToColor(request->getParam("color_sec")->value());
+    this->config->colorMinutes = hexToColor(request->getParam("color_min")->value());
+    this->config->colorHours = hexToColor(request->getParam("color_hour")->value());
+    this->config->colorSeconds = hexToColor(request->getParam("color_sec")->value());
     this->config->dimmSeconds = false;
     if (request->hasParam("dimm_seconds"))
     {
@@ -30,24 +32,24 @@ void Handler::onColors(AsyncWebServerRequest *request)
 
 void Handler::onEnvColors(AsyncWebServerRequest *request)
 {
-    this->config->colorTemperature = Helper.hexToColor(request->getParam("color_temp")->value());
-    this->config->colorPressure = Helper.hexToColor(request->getParam("color_press")->value());
+    this->config->colorTemperature = hexToColor(request->getParam("color_temp")->value());
+    this->config->colorPressure = hexToColor(request->getParam("color_press")->value());
     request->redirect("/");
     this->config->serialize(preferences);
 }
 
 void Handler::onManual(AsyncWebServerRequest *request)
-{   
-    ClockTime time = Helper.getTime();
+{
+    ClockTime time = getTime();
     time.seconds = time.seconds + request->getParam("last")->value().toInt();
-    tidile->displaCustom(Helper.hexToColor(request->getParam("color")->value()), time);
+    tidile->displaCustom(hexToColor(request->getParam("color")->value()), time);
     request->redirect("/");
 }
 
 void Handler::onLamp(AsyncWebServerRequest *request)
-{   
+{
     tidile->clockMode = (!tidile->clockMode);
-    tidile->displaCustom(Helper.hexToColor(request->getParam("color")->value()), Helper.getTime());
+    tidile->displaCustom(hexToColor(request->getParam("color")->value()), getTime());
     request->redirect("/");
 }
 
@@ -67,7 +69,7 @@ void Handler::onOther(AsyncWebServerRequest *request)
     {
         this->config->displaySeconds = request->getParam("show_seconds")->value().equals("on");
     }
-    if(request->hasParam("format"))
+    if (request->hasParam("format"))
     {
         this->config->format = ClockFormat::Format_24H;
     }
@@ -78,21 +80,21 @@ void Handler::onOther(AsyncWebServerRequest *request)
 void Handler::onIndex(AsyncWebServerRequest *request)
 {
     String html = index_html;
-    html.replace(COLORHOURKEYWORD, Helper.colorToHex(this->config->colorHours));
-    html.replace(COLORMINUTEKEYWORD, Helper.colorToHex(this->config->colorMinutes));
-    html.replace(COLORSECONDSKEYWORD, Helper.colorToHex(this->config->colorSeconds));
+    html.replace(COLORHOURKEYWORD, colorToHex(this->config->colorHours));
+    html.replace(COLORMINUTEKEYWORD, colorToHex(this->config->colorMinutes));
+    html.replace(COLORSECONDSKEYWORD, colorToHex(this->config->colorSeconds));
     html.replace(DIMMSECONDSKEYWORD, (this->config->dimmSeconds) ? "checked" : "");
     html.replace(BRIGHTNESSKEYWORD, String(this->config->brightness));
-    html.replace(COLORTEMPERATUREKEYWORD, Helper.colorToHex(this->config->colorTemperature));
-    html.replace(COLORPRESSUREKEYWORD, Helper.colorToHex(this->config->colorPressure));
+    html.replace(COLORTEMPERATUREKEYWORD, colorToHex(this->config->colorTemperature));
+    html.replace(COLORPRESSUREKEYWORD, colorToHex(this->config->colorPressure));
     html.replace(SHOWSECONDSKEYWORD, (this->config->displaySeconds) ? "checked" : "");
-    html.replace(NIGHTTIMESTARTKEYWORD, Helper.timeIntToTimeString(this->config->nightTimeBegin));
-    html.replace(NIGHTTIMEENDKEYWORD, Helper.timeIntToTimeString(this->config->nightTimeEnd));
+    html.replace(NIGHTTIMESTARTKEYWORD, timeIntToTimeString(this->config->nightTimeBegin));
+    html.replace(NIGHTTIMEENDKEYWORD, timeIntToTimeString(this->config->nightTimeEnd));
     html.replace(NIGHTTIMEENABLEDKEYWORD, (this->config->nightTimeLight) ? "checked" : "");
     html.replace(INFLUENCEKEYWORD, String(this->config->lightInfluence));
-    html.replace(CURRENTTIMEKEYWORD, Helper.getDateTimeToString());
+    html.replace(CURRENTTIMEKEYWORD, getDateTimeToString());
     html.replace(CLOCKFORMAT24HKEYWORD, (this->config->format == ClockFormat::Format_24H) ? "checked" : "");
-    
+
     request->send(200, "text/html", html);
 }
 
@@ -103,30 +105,32 @@ void Handler::onNightTime(AsyncWebServerRequest *request)
         this->config->nightTimeLight = false;
         if (request->hasParam("begin_time"))
         {
-            this->config->nightTimeBegin = Helper.timeStringToTimeInt(request->getParam("begin_time")->value());
+            this->config->nightTimeBegin = timeStringToTimeInt(request->getParam("begin_time")->value());
         }
         if (request->hasParam("end_time"))
         {
-            this->config->nightTimeEnd = Helper.timeStringToTimeInt(request->getParam("end_time")->value());
+            this->config->nightTimeEnd = timeStringToTimeInt(request->getParam("end_time")->value());
         }
         if (request->hasParam("time_enabled"))
         {
             this->config->nightTimeLight = request->getParam("time_enabled")->value().equals("on");
         }
     }
-    if(request->hasParam("nightTimeTilMorning")){
+    if (request->hasParam("nightTimeTilMorning"))
+    {
         this->config->tempOverwriteNightTime = true;
     }
     request->redirect("/");
     this->config->serialize(preferences);
 }
 
-void Handler::onStyleSheet(AsyncWebServerRequest *request){
+void Handler::onStyleSheet(AsyncWebServerRequest *request)
+{
     String html = style_css;
-    html.replace(COLORHOURKEYWORD, Helper.colorToHex(this->config->colorHours));
-    html.replace(COLORMINUTEKEYWORD, Helper.colorToHex(this->config->colorMinutes));
-    html.replace(COLORSECONDSKEYWORD, Helper.colorToHex(this->config->colorSeconds));
-    ClockTime time = Helper.getTime();
+    html.replace(COLORHOURKEYWORD, colorToHex(this->config->colorHours));
+    html.replace(COLORMINUTEKEYWORD, colorToHex(this->config->colorMinutes));
+    html.replace(COLORSECONDSKEYWORD, colorToHex(this->config->colorSeconds));
+    ClockTime time = getTime();
     html.replace(MINUTESKEYWORD, String(time.minutes));
     html.replace(HOURSKEYWORD, String(time.hours));
     html.replace(SECONDSKEYWORD, String(time.seconds));

@@ -1,10 +1,13 @@
 #include <Arduino.h>
 #include <FastLED.h>
-#include <WiFi.h>
 #include "TIDILE.hpp"
-#include "helper.hpp"
 #include "Handler.hpp"
 #include "definements.hpp"
+#include "helper/WiFiHelper.hpp"
+#include "helper/numbers.hpp"
+#ifdef RUN_TESTS
+#include "uTest.hpp"
+#endif
 
 #if defined(HUMIDITY_SENSOR) && defined(BME280)
 Adafruit_BME280 bmp; // I2C
@@ -15,11 +18,19 @@ CRGB leds[NUM_LEDS];
 TIDILE tidile;
 AsyncWebServer server(HTTP_ENDPOINT_PORT);
 
+#ifdef RUN_TESTS
+void tests();
+#endif
+
 void setup()
 {
   Serial.begin(115200);
 
-  Helper.setupWiFi();
+#ifdef RUN_TESTS
+  tests();
+#endif
+
+  connectWiFi();
 
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
   Wire.begin();
@@ -44,3 +55,18 @@ void loop()
 {
   tidile.loop();
 }
+
+#ifdef RUN_TESTS
+void helperTests()
+{
+  TEST_INIT(Helper, two Digits);
+  EXPECT_EQUALS(String("00"), digitToTwoCharsDigit(0));
+  TEST_RESULT_PRINT();
+}
+
+void tests()
+{
+  helperTests();
+  tidile.tests();
+}
+#endif

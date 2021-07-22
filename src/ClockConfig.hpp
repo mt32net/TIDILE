@@ -3,51 +3,12 @@
 #include <FastLED.h>
 #include "definements.hpp"
 #include <Preferences.h>
+#include "helper/color.hpp"
 
-enum ClockFormat{
+enum ClockFormat
+{
   Format_24H = 23,
   Format_12H = 11
-};
-
-struct Color
-{
-  byte red = 0;
-  byte green = 0;
-  byte blue = 0;
-
-  Color(byte r, byte g, byte b)
-  {
-    red = r;
-    green = g;
-    blue = b;
-  }
-
-  Color()
-  {
-  }
-
-  ///deserializes this Color from startPosition into this object
-  ///@param preferences is the preference object
-  void deserialize(Preferences* preferences, String name)
-  {
-    red = preferences->getInt((name + String("_r")).c_str());
-    green = preferences->getInt((name + String("_g")).c_str());
-    blue = preferences->getInt((name + String("_b")).c_str());
-  }
-
-  ///serializes this Color object into the given storage container
-  ///@param preferences is the preference object
-  void serialize(Preferences* preferences, String name)
-  {
-    preferences->putInt((name + String("_r")).c_str(), red);
-    preferences->putInt((name + String("_g")).c_str(), green);
-    preferences->putInt((name + String("_b")).c_str(), blue);
-  }
-
-  CRGB toCRGB()
-  {
-    return CRGB(red, green, blue);
-  }
 };
 
 struct ClockConfig
@@ -70,7 +31,7 @@ struct ClockConfig
 
   ///deserializes this ClockConfig from startPosition into this object
   ///@param preferences is the preference object
-  void deserialize(Preferences* preferences)
+  void deserialize(Preferences *preferences)
   {
     preferences->begin("prefs");
     displaySeconds = preferences->getBool("displSecs");
@@ -95,7 +56,7 @@ struct ClockConfig
 
   ///serializes this ClockConfig object into the given storage container
   ///@param preferences is the preference object
-  void serialize(Preferences* preferences)
+  void serialize(Preferences *preferences)
   {
     preferences->begin("prefs", false);
     preferences->putBool("displSecs", displaySeconds);

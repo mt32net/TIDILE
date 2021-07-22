@@ -1,4 +1,6 @@
 #include "TIDILE.hpp"
+#include "helper/time.hpp"
+#include "helper/color.hpp"
 
 TIDILE::TIDILE() {}
 
@@ -8,10 +10,10 @@ void TIDILE::setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer *server)
     this->numberLEDs = numberLEDs;
     this->server = server;
 
-    customDisplayTil = Helper.getTime();
+    customDisplayTil = getTime();
 
     configTime(3600, 3600, ntpServer);
-    Helper.getTime();
+    getTime();
 
     configuration.deserialize(&preferences);
     handler.setup(&configuration, this, &preferences);
@@ -60,8 +62,8 @@ void TIDILE::displayTime(ClockTime time)
 {
     clear();
 
-    Helper.resetOverwriteNightTimeIfLegit(configuration, time);
-    if (Helper.isNightTime(configuration, time))
+    resetOverwriteNightTimeIfLegit(configuration, time);
+    if (isNightTime(configuration, time))
     {
         FastLED.show();
         return;
@@ -71,20 +73,23 @@ void TIDILE::displayTime(ClockTime time)
     for (int i = 0; i < mapToLEDs(time.minutes, 59); i++)
         this->leds[i] = configuration.colorMinutes.toCRGB();
     // Seconds
-    if (configuration.displaySeconds) {
+    if (configuration.displaySeconds)
+    {
 
-        if (mapToLEDs(time.seconds, 59) > mapToLEDs(time.minutes, 59)) {
-            for(int i = 0; i < LED_COUNT_FOR_ONE_SECOND; i++)
+        if (mapToLEDs(time.seconds, 59) > mapToLEDs(time.minutes, 59))
+        {
+            for (int i = 0; i < LED_COUNT_FOR_ONE_SECOND; i++)
                 this->leds[mapToLEDs(time.seconds, 59) + i] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(DIMM_ADD_VALUE) : configuration.colorSeconds.toCRGB();
         }
-        else {
-            for(int i = 0; i < LED_COUNT_FOR_ONE_SECOND; i++)
+        else
+        {
+            for (int i = 0; i < LED_COUNT_FOR_ONE_SECOND; i++)
                 this->leds[mapToLEDs(time.seconds, 59) + i] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(DIMM_VALUE) : configuration.colorSeconds.toCRGB();
         }
     }
     // Hours
-    int hours = (configuration.format == ClockFormat::Format_24H || time.hours < 12)? time.hours : time.hours - 12;
-    for(int i = 0; i < LED_COUNT_FOR_ONE_SECOND; i++)
+    int hours = (configuration.format == ClockFormat::Format_24H || time.hours < 12) ? time.hours : time.hours - 12;
+    for (int i = 0; i < LED_COUNT_FOR_ONE_SECOND; i++)
         this->leds[mapToLEDs(hours, configuration.format) + i] = configuration.colorHours.toCRGB();
     FastLED.show();
 }
@@ -92,7 +97,7 @@ void TIDILE::displayTime(ClockTime time)
 void TIDILE::displayEnv(ClockEnv env)
 {
     clear();
-    if (Helper.isNightTime(configuration, Helper.getTime()))
+    if (isNightTime(configuration, getTime()))
     {
         FastLED.show();
         return;
@@ -112,7 +117,8 @@ void TIDILE::displayEnv(ClockEnv env)
     delay(ENV_DISPLAY_TIME);
 }
 
-void TIDILE::displaCustom(Color colorCode, ClockTime until) {
+void TIDILE::displaCustom(Color colorCode, ClockTime until)
+{
     this->customDisplayTil = until;
     this->lmapColor = colorCode;
     FastLED.show();
@@ -121,20 +127,24 @@ void TIDILE::displaCustom(Color colorCode, ClockTime until) {
 void TIDILE::loop()
 {
     // Check if something else is displyed
-    ClockTime currentTime = Helper.getTime();
-	int timeTil = Helper.hmsToTimeInt(customDisplayTil);
-	int curr = Helper.hmsToTimeInt(currentTime);
-    if(curr >= timeTil && this->clockMode){
+    ClockTime currentTime = getTime();
+    int timeTil = hmsToTimeInt(customDisplayTil);
+    int curr = hmsToTimeInt(currentTime);
+    if (curr >= timeTil && this->clockMode)
+    {
         displayTime(currentTime);
-    } else {
+    }
+    else
+    {
         clear();
-        for (int i = 0; i < this->numberLEDs; i++) {
+        for (int i = 0; i < this->numberLEDs; i++)
+        {
             this->leds[i] = this->lmapColor.toCRGB();
         }
         FastLED.show();
     }
 
-	if (loopI >= SMOOTH_LOOPS)
+    if (loopI >= SMOOTH_LOOPS)
     {
 #if defined(DISPLAY_HUMIDIY) || defined(DISPLAY_TEMPERATURE) || defined(DISPLAY_PRESSURE)
         if (touchAverage / SMOOTH_LOOPS < THRESHOLD)
@@ -178,5 +188,11 @@ ClockEnv TIDILE::getEnv()
         pressure : bmp->readPressure() / 100
 #endif
     };
+}
+#endif
+
+#ifdef RUN_TESTS
+void TIDILE::tests()
+{
 }
 #endif

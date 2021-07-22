@@ -7,7 +7,6 @@
 #include "Webserver.hpp"
 #include "definements.hpp"
 #include "config.hpp"
-#include "helper.hpp"
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
@@ -37,6 +36,10 @@ public:
     ClockConfig *getConfig();
     bool clockMode = true;
     Color lmapColor = Color(255, 255, 255);
+
+#ifdef RUN_TESTS
+    void tests();
+#endif
 
 private:
     CRGB *leds;

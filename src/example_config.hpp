@@ -1,11 +1,13 @@
 #ifndef CONFIG_DEF
 #define CONFIG_DEF
 
+#define RUN_TESTS
+
 #define NUM_LEDS 49
 #define LED_PIN 5
 #define BLINK_BRIGHTNESS 0.7
 
-#define LED_COUNT_FOR_ONE_SECOND (int) (NUM_LEDS / 60)
+#define LED_COUNT_FOR_ONE_SECOND (int)(NUM_LEDS / 60)
 #define DIMM_VALUE 0xFF
 #define DIMM_ADD_VALUE 0xAA
 
