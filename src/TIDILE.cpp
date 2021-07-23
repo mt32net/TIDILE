@@ -124,7 +124,7 @@ void TIDILE::displaCustom(Color colorCode, ClockTime until)
     FastLED.show();
 }
 
-void TIDILE::loop()
+void TIDILE::update()
 {
     // Check if something else is displyed
     ClockTime currentTime = getTime();
@@ -188,12 +188,5 @@ ClockEnv TIDILE::getEnv()
         pressure : bmp->readPressure() / 100
 #endif
     };
-}
-#endif
-
-#ifdef RUN_TESTS
-void TIDILE::tests()
-{
-    Serial.println("Performing tests on TIDILE class");
 }
 #endif

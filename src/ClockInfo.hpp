@@ -1,7 +1,11 @@
 #pragma once
 #include <time.h>
 
-struct ClockTime {
+/**
+ * @brief Simple time struct
+ */
+struct ClockTime
+{
     int seconds;
     int minutes;
     int hours;
@@ -22,7 +26,8 @@ struct ClockTime {
     }*/
 };
 
-struct ClockEnv {
+struct ClockEnv
+{
     int temperature;
     int pressure;
 };

@@ -5,6 +5,7 @@
 #include "esp_wifi.h"
 #include "esp_event.h"
 #include "esp_log.h"
+#include "driver/gpio.h"
 #include "nvs_flash.h"
 #include <Arduino.h>
 #include <FastLED.h>
@@ -41,7 +42,7 @@ extern "C" void app_main()
 
 #ifdef RUN_TESTS
   runTests();
-#else
+#endif
 
   connectWiFi();
 
@@ -65,7 +66,6 @@ extern "C" void app_main()
 
   while (true)
   {
-    tidile.loop();
+    tidile.update();
   }
-#endif
 }

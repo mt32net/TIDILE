@@ -9,6 +9,7 @@ void connectWiFi()
         WiFi.enableIpV6();
         WiFi.disconnect();
         WiFi.setAutoReconnect(true);
+        WiFi.enableLongRange(true);
         delay(500);
 
 #ifndef WIFI_SSID

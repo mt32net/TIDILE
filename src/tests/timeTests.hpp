@@ -7,6 +7,10 @@
 #include "../ClockConfig.hpp"
 #include "../ClockInfo.hpp"
 
+/**
+ * @brief tests all time functionalities
+ * 
+ */
 void timeTests()
 {
     //timeIntToTimeString

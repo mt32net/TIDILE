@@ -13,35 +13,66 @@
 #include <Adafruit_BME280.h>
 #endif
 
+/**
+ * @brief Easy to use class to create custom clock with led strip
+ * 
+ */
 class TIDILE
 {
 public:
     TIDILE();
-    ///setup function
-    ///@param leds the LED array wich is already registered in FastLED within the main file
-    ///@param numberLEDS the number of LEDS within the array
-    ///@param configuration the pointer to thee configuration object where all settings are saved
+    /**
+    * @brief Setup function
+    * 
+    * @param numberLEDS the number of LEDS within the array
+    * @param configuration the pointer to thee configuration object where all settings are saved
+    */
     void setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer *server);
+
+    /**
+    * @brief way to diasply color on all leds until a certain time is reached
+    * 
+    * @param colorCode the color all leds should have
+    * @param until the time until normal operation is returned
+    */
     void displaCustom(Color colorCode, ClockTime until);
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
+    /**
+ * @brief add BME280 sensor to tidile
+ * 
+ * @param bmp 
+ */
     void addBMP(Adafruit_BME280 *bmp);
+    /**
+     * @brief Get the Env object
+     * 
+     * @return ClockEnv 
+     */
     ClockEnv getEnv();
 #endif
-    void loop();
-    ///displays current time
+    /**
+ * @brief update method, call this method to update tidile
+ * 
+ */
+    void update();
+    /**
+     * @brief displays current time
+     * 
+     * @param time current time
+     */
     void displayTime(ClockTime time);
-    ///displays information about your sorrounding such as temperature, humdity and pressure. IF the sensors are connected and defined in the config file
+    /**
+     * @brief displays information about your sorrounding such as temperature, humdity and pressure. IF the sensors are connected and defined in the config file
+     * 
+     * @param env 
+     */
     void displayEnv(ClockEnv env);
-    ///@param progress value between 0 and 99
     ClockConfig *getConfig();
     bool clockMode = true;
     Color lmapColor = Color(255, 255, 255);
 
-#ifdef RUN_TESTS
-    void tests();
-#endif
-
 private:
+    //FastLED Array
     CRGB *leds;
     ClockConfig configuration;
     RequestHandler requestHandler;
@@ -53,7 +84,15 @@ private:
 #endif
     int numberLEDs;
     int mapToLEDs(int value, int max);
+    /**
+     * @brief set all LEDs to black
+     */
     void clear();
+    /**
+     * @brief small startup animation to test leds connected
+     * 
+     * @param delay the delay betwenn each LED operation in animation
+     */
     void startupLEDs(int delay);
 
     int lastSec = 0;
@@ -61,4 +100,12 @@ private:
     int loopI = 0;
     int touchAverage = 30;
     long lightAvg = 0;
+
+#ifdef RUN_TESTS
+    /**
+ * @brief friend method to test Tidile
+ * 
+ */
+    friend void tidileTests();
+#endif
 };

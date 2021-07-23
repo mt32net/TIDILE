@@ -4,6 +4,10 @@
 #include "timeTests.hpp"
 #include "tidileTests.hpp"
 
+/**
+ * @brief tests for checking number operations
+ * 
+ */
 void numberTests()
 {
     TEST_INIT(numbers, digits to two character string);
@@ -11,6 +15,10 @@ void numberTests()
     TEST_RESULT_PRINT();
 }
 
+/**
+ * @brief runs all available tests
+ * 
+ */
 void runTests()
 {
     Serial.println("Started performing tests");

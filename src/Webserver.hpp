@@ -5,6 +5,10 @@
 #include "definements.hpp"
 #include "RequestHandler.hpp"
 
+/**
+ * @brief Webser class to initialize the WEbserver for configuration
+ * 
+ */
 class Webserver
 {
 public:

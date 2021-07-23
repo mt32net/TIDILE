@@ -6,6 +6,10 @@
 
 class TIDILE;
 
+/**
+ * @brief used for asynchronous webserver to handle incoming requests
+ * 
+ */
 class RequestHandler
 {
 public:

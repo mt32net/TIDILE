@@ -5,12 +5,19 @@
 #include <Preferences.h>
 #include "helper/color.hpp"
 
+/**
+ * @brief CHosen clock format
+ */
 enum ClockFormat
 {
   Format_24H = 23,
   Format_12H = 11
 };
 
+/**
+ * @brief Configuration class for TIDILE, will be saved and restored out of permanent storage at each reboot
+ * 
+ */
 struct ClockConfig
 {
   bool displaySeconds = false;
