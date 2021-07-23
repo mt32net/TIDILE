@@ -1,6 +1,6 @@
 #pragma once
 
-#pragma region UIkeywords
+// #pragma region UIkeywords
 #define COLORHOURKEYWORD "'colorHourKeyword'"
 #define COLORMINUTEKEYWORD "'colorMinuteKeyword'"
 #define COLORSECONDSKEYWORD "'colorSecondKeyword'"
@@ -18,7 +18,7 @@
 #define HOURSKEYWORD "'hoursKeyword'"
 #define SECONDSKEYWORD "'secondsKeyword'"
 #define CLOCKFORMAT24HKEYWORD "'24HKeyword'"
-#pragma endregion
+// #pragma endregion
 
 const char index_html[] = R"rawliteral(
 <html>

@@ -16,6 +16,11 @@ int timeStringToTimeInt(String timeString)
     return timeString.toInt();
 }
 
+int hmsToTimeInt(ClockTime time)
+{
+    return (digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes) + digitToTwoCharsDigit(time.seconds)).toInt();
+}
+
 ClockTime getTime()
 {
     struct tm timeinfo;
@@ -44,16 +49,39 @@ String getDateTimeToString()
     return digitToTwoCharsDigit(time.hours) + ":" + digitToTwoCharsDigit(time.minutes) + ":" + digitToTwoCharsDigit(time.seconds) + " " + digitToTwoCharsDigit(time.day) + "/" + digitToTwoCharsDigit(time.month) + "/" + digitToTwoCharsDigit(time.year + 1900);
 }
 
-bool isNightTime(ClockConfig configuration, ClockTime time)
+bool isNightTime(ClockConfig config, ClockTime time)
 {
-    return ((digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes)).toInt() > configuration.nightTimeBegin ||
-            (digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes)).toInt() < configuration.nightTimeEnd ||
-            configuration.tempOverwriteNightTime) &&
-           configuration.nightTimeLight;
+    //temporal night light overwrite
+    if (config.tempOverwriteNightTime)
+        return true;
+    //converting current time to simple time format
+    String simpleCurTimeStr = digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes);
+    int simpleCurTime = simpleCurTimeStr.toInt();
+
+    //true if timeinterval includes midnight
+    bool daySwitchIncluded = config.nightTimeBegin >= config.nightTimeEnd;
+
+    if (daySwitchIncluded)
+    {
+        //shifting times to exclude the day switch (going over midnight)
+        int diffBeginMidnight = 2400 - config.nightTimeBegin;
+        int adjBegin = 0; // config.nightTimeBegin + diffBeginMidnight % 2400
+        int adjEnd = (config.nightTimeEnd + diffBeginMidnight) % 2400;
+        int adjCurTime = (simpleCurTime + diffBeginMidnight) % 2400;
+        return adjCurTime >= adjBegin && adjCurTime <= adjEnd;
+    }
+    else
+    {
+        return simpleCurTime >= config.nightTimeBegin && simpleCurTime <= config.nightTimeEnd;
+    }
+    /* return ((digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes)).toInt() > config.nightTimeBegin ||
+            (digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes)).toInt() < config.nightTimeEnd ||
+            config.tempOverwriteNightTime) &&
+           config.nightTimeLight; */
 }
 
-void resetOverwriteNightTimeIfLegit(ClockConfig configuration, ClockTime time)
+void resetOverwriteNightTimeIfLegit(ClockConfig config, ClockTime time)
 {
-    if (!isNightTime(configuration, time) && (digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes)).toInt() >= configuration.nightTimeEnd)
-        configuration.tempOverwriteNightTime = false;
+    if (!isNightTime(config, time) && (digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes)).toInt() >= config.nightTimeEnd)
+        config.tempOverwriteNightTime = false;
 }
