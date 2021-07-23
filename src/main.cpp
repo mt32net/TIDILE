@@ -7,7 +7,7 @@
 #include "esp_log.h"
 #include "driver/gpio.h"
 #include "nvs_flash.h"
-#include <Arduino.h>
+#include "Arduino.h"
 #include <FastLED.h>
 #include "TIDILE.hpp"
 #include "RequestHandler.hpp"
