@@ -1,22 +1,22 @@
-#include "Handler.hpp"
+#include "RequestHandler.hpp"
 #include "html/index_file.hpp"
 #include "html/style.hpp"
 #include "TIDILE.hpp"
 #include "helper/color.hpp"
 #include "helper/time.hpp"
 
-Handler::Handler()
+RequestHandler::RequestHandler()
 {
 }
 
-void Handler::setup(ClockConfig *config, TIDILE *tidile, Preferences *preferences)
+void RequestHandler::setup(ClockConfig *config, TIDILE *tidile, Preferences *preferences)
 {
     this->config = config;
     this->tidile = tidile;
     this->preferences = preferences;
 }
 
-void Handler::onColors(AsyncWebServerRequest *request)
+void RequestHandler::onColors(AsyncWebServerRequest *request)
 {
     this->config->colorMinutes = hexToColor(request->getParam("color_min")->value());
     this->config->colorHours = hexToColor(request->getParam("color_hour")->value());
@@ -30,7 +30,7 @@ void Handler::onColors(AsyncWebServerRequest *request)
     this->config->serialize(preferences);
 }
 
-void Handler::onEnvColors(AsyncWebServerRequest *request)
+void RequestHandler::onEnvColors(AsyncWebServerRequest *request)
 {
     this->config->colorTemperature = hexToColor(request->getParam("color_temp")->value());
     this->config->colorPressure = hexToColor(request->getParam("color_press")->value());
@@ -38,7 +38,7 @@ void Handler::onEnvColors(AsyncWebServerRequest *request)
     this->config->serialize(preferences);
 }
 
-void Handler::onManual(AsyncWebServerRequest *request)
+void RequestHandler::onManual(AsyncWebServerRequest *request)
 {
     ClockTime time = getTime();
     time.seconds = time.seconds + request->getParam("last")->value().toInt();
@@ -46,14 +46,14 @@ void Handler::onManual(AsyncWebServerRequest *request)
     request->redirect("/");
 }
 
-void Handler::onLamp(AsyncWebServerRequest *request)
+void RequestHandler::onLamp(AsyncWebServerRequest *request)
 {
     tidile->clockMode = (!tidile->clockMode);
     tidile->displaCustom(hexToColor(request->getParam("color")->value()), getTime());
     request->redirect("/");
 }
 
-void Handler::onOther(AsyncWebServerRequest *request)
+void RequestHandler::onOther(AsyncWebServerRequest *request)
 {
     this->config->displaySeconds = false;
     this->config->format = ClockFormat::Format_12H;
@@ -77,7 +77,7 @@ void Handler::onOther(AsyncWebServerRequest *request)
     this->config->serialize(preferences);
 }
 
-void Handler::onIndex(AsyncWebServerRequest *request)
+void RequestHandler::onIndex(AsyncWebServerRequest *request)
 {
     String html = index_html;
     html.replace(COLORHOURKEYWORD, colorToHex(this->config->colorHours));
@@ -98,7 +98,7 @@ void Handler::onIndex(AsyncWebServerRequest *request)
     request->send(200, "text/html", html);
 }
 
-void Handler::onNightTime(AsyncWebServerRequest *request)
+void RequestHandler::onNightTime(AsyncWebServerRequest *request)
 {
     if (request->hasParam("settings"))
     {
@@ -124,7 +124,7 @@ void Handler::onNightTime(AsyncWebServerRequest *request)
     this->config->serialize(preferences);
 }
 
-void Handler::onStyleSheet(AsyncWebServerRequest *request)
+void RequestHandler::onStyleSheet(AsyncWebServerRequest *request)
 {
     String html = style_css;
     html.replace(COLORHOURKEYWORD, colorToHex(this->config->colorHours));

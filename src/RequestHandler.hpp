@@ -6,10 +6,10 @@
 
 class TIDILE;
 
-class Handler
+class RequestHandler
 {
 public:
-    Handler();
+    RequestHandler();
     void setup(ClockConfig *config, TIDILE *tidile, Preferences *preferences);
     void onColors(AsyncWebServerRequest *request);
     void onIndex(AsyncWebServerRequest *request);

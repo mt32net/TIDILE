@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include <ESPAsyncWebServer.h>
 #include "definements.hpp"
-#include "Handler.hpp"
+#include "RequestHandler.hpp"
 
 class Webserver
 {
@@ -12,29 +12,38 @@ public:
     {
     }
 
-    void setup(Handler *handler, AsyncWebServer *server)
+    void setup(RequestHandler *requestHandler, AsyncWebServer *server)
     {
-        this->handler = handler;
+        this->requestHandler = requestHandler;
         this->server = server;
-#pragma region HTTP handler
-        server->on("/", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onIndex(request); });
-        server->on("/colors", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onColors(request); });
-        server->on("/envcolors", HTTP_GET, [handler](AsyncWebServerRequest *request){ handler->onEnvColors(request); });
-        server->on("/other", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onOther(request); });
-        server->on("/time", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onNightTime(request); });
-        server->on("/manual", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onManual(request); });
-        server->on("/toggleLamp", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onLamp(request); });
-        //server->on("/env", HTTP_GET, [handler](AsyncWebServerRequest *request){handler->onEnv(request);});
-        //server->on("/times", HTTP_GET, [handler](AsyncWebServerRequest *request){handler->onTimes(request);});
-        server->on("/styles.css", HTTP_GET, [handler](AsyncWebServerRequest *request) { handler->onStyleSheet(request); });
+        // #pragma region HTTP requestHandler
+        server->on("/", HTTP_GET, [requestHandler](AsyncWebServerRequest *request)
+                   { requestHandler->onIndex(request); });
+        server->on("/colors", HTTP_GET, [requestHandler](AsyncWebServerRequest *request)
+                   { requestHandler->onColors(request); });
+        server->on("/envcolors", HTTP_GET, [requestHandler](AsyncWebServerRequest *request)
+                   { requestHandler->onEnvColors(request); });
+        server->on("/other", HTTP_GET, [requestHandler](AsyncWebServerRequest *request)
+                   { requestHandler->onOther(request); });
+        server->on("/time", HTTP_GET, [requestHandler](AsyncWebServerRequest *request)
+                   { requestHandler->onNightTime(request); });
+        server->on("/manual", HTTP_GET, [requestHandler](AsyncWebServerRequest *request)
+                   { requestHandler->onManual(request); });
+        server->on("/toggleLamp", HTTP_GET, [requestHandler](AsyncWebServerRequest *request)
+                   { requestHandler->onLamp(request); });
+        //server->on("/env", HTTP_GET, [requestHandler](AsyncWebServerRequest *request){handler->onEnv(request);});
+        //server->on("/times", HTTP_GET, [requestHandler](AsyncWebServerRequest *request){handler->onTimes(request);});
+        server->on("/styles.css", HTTP_GET, [requestHandler](AsyncWebServerRequest *request)
+                   { requestHandler->onStyleSheet(request); });
 
-        server->onNotFound([](AsyncWebServerRequest *request) { request->send(404); });
+        server->onNotFound([](AsyncWebServerRequest *request)
+                           { request->send(404); });
         server->begin();
         Serial.println("HTTP server started");
-#pragma endregion
+        // #pragma endregion
     }
 
 private:
-    Handler *handler;
+    RequestHandler *requestHandler;
     AsyncWebServer *server;
 };

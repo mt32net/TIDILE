@@ -3,7 +3,7 @@
 #include <FastLED.h>
 #include "ClockInfo.hpp"
 #include "ClockConfig.hpp"
-#include "Handler.hpp"
+#include "RequestHandler.hpp"
 #include "Webserver.hpp"
 #include "definements.hpp"
 #include "config.hpp"
@@ -44,7 +44,7 @@ public:
 private:
     CRGB *leds;
     ClockConfig configuration;
-    Handler handler;
+    RequestHandler requestHandler;
     Preferences preferences;
     Webserver webserver;
     AsyncWebServer *server;

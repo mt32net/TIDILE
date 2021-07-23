@@ -18,7 +18,7 @@
 #define SMOOTH_LOOPS 50
 #define TOUCH_PIN 4
 
-#pragma region display settings
+// #pragma region display settings
 //#define DISPLAY_TEMPERATURE
 //#define DISPLAY_HUMIDIY
 //#define DISPLAY_PRESSURE
@@ -26,17 +26,17 @@
 #define ENV_DISPLAY_TIME 2000
 #define PHOTORESISTOR_PIN 36
 #define MIN_LIGHT_PERCENT 10
-#pragma endregion
+// #pragma endregion
 
-#pragma region sensors
+// #pragma region sensors
 //#define LIGHT_SENSOR
 //#define TEMPERATURE_SENSOR
 //#define HUMIDITY_SENSOR
 //#define PRESSURE_SENSOR
-#pragma endregion
+// #pragma endregion
 
-#pragma region used sensors
+// #pragma region used sensors
 //#define BME280
-#pragma endregion
+// #pragma endregion
 
 #endif

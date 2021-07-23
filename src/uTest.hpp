@@ -71,6 +71,8 @@ int curTestCaseAdded = 0; //0: pass, 1: fail
     globalResult = globalResult && testResult
 
 #define EXPECT_ZERO(value) EXPECT_EQUALS(0, value)
+#define EXPECT_TRUE(value) EXPECT_EQUALS(true, value)
+#define EXPECT_FALSE(value) EXPECT_EQUALS(false, value)
 
 #define ADD_CUSTOM_TEST_RESULT(bool_value) EXPECT_EQUALS(true, bool_value)
 

@@ -16,8 +16,8 @@ void TIDILE::setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer *server)
     getTime();
 
     configuration.deserialize(&preferences);
-    handler.setup(&configuration, this, &preferences);
-    webserver.setup(&handler, server);
+    requestHandler.setup(&configuration, this, &preferences);
+    webserver.setup(&requestHandler, server);
 
     FastLED.setBrightness(configuration.brightness);
 
@@ -194,5 +194,6 @@ ClockEnv TIDILE::getEnv()
 #ifdef RUN_TESTS
 void TIDILE::tests()
 {
+    Serial.println("Performing tests on TIDILE class");
 }
 #endif

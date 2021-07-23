@@ -1,12 +1,20 @@
+#define LOG_LOCAL_LEVEL ESP_LOG_INFO
+#define LOG_WIFI_LEVEL ESP_LOG_ERROR
+
+#include "esp_system.h"
+#include "esp_wifi.h"
+#include "esp_event.h"
+#include "esp_log.h"
+#include "nvs_flash.h"
 #include <Arduino.h>
 #include <FastLED.h>
 #include "TIDILE.hpp"
-#include "Handler.hpp"
+#include "RequestHandler.hpp"
 #include "definements.hpp"
 #include "helper/WiFiHelper.hpp"
 #include "helper/numbers.hpp"
 #ifdef RUN_TESTS
-#include "uTest.hpp"
+#include "tests/tests.hpp"
 #endif
 
 #if defined(HUMIDITY_SENSOR) && defined(BME280)
@@ -22,13 +30,18 @@ AsyncWebServer server(HTTP_ENDPOINT_PORT);
 void tests();
 #endif
 
-void setup()
+extern "C" void app_main()
 {
+  initArduino();
+
+  esp_log_level_set("wifi", ESP_LOG_ERROR);
+  esp_log_level_set("task_wdt", ESP_LOG_ERROR);
+
   Serial.begin(115200);
 
 #ifdef RUN_TESTS
-  tests();
-#endif
+  runTests();
+#else
 
   connectWiFi();
 
@@ -49,24 +62,10 @@ void setup()
 #if defined(HUMIDITY_SENSOR) && defined(BME280)
   tidile.addBMP(&bmp);
 #endif
-}
 
-void loop()
-{
-  tidile.loop();
-}
-
-#ifdef RUN_TESTS
-void helperTests()
-{
-  TEST_INIT(Helper, two Digits);
-  EXPECT_EQUALS(String("00"), digitToTwoCharsDigit(0));
-  TEST_RESULT_PRINT();
-}
-
-void tests()
-{
-  helperTests();
-  tidile.tests();
-}
+  while (true)
+  {
+    tidile.loop();
+  }
 #endif
+}
