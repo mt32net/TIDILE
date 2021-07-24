@@ -5,6 +5,7 @@
 #include "ClockConfig.hpp"
 #include "RequestHandler.hpp"
 #include "Webserver.hpp"
+#include "MQTTHandler.hpp"
 #include "definements.hpp"
 #include "config.hpp"
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
@@ -78,6 +79,7 @@ private:
     RequestHandler requestHandler;
     Preferences preferences;
     Webserver webserver;
+    MQTTHandler mqtt;
     AsyncWebServer *server;
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
     Adafruit_BME280 *bmp;

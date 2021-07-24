@@ -19,6 +19,7 @@ void TIDILE::setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer *server)
     configuration.deserialize(&preferences);
     requestHandler.setup(&configuration, this, &preferences);
     webserver.setup(&requestHandler, server);
+    // mqtt.setup(&configuration, this, MQTT_URI);
 
     FastLED.setBrightness(configuration.brightness);
 
@@ -69,7 +70,6 @@ void TIDILE::displayTime(ClockTime time)
         FastLED.show();
         return;
     }
-    Serial.print(".");
     // Minutes
     for (int i = 0; i < mapToLEDs(time.minutes, 59); i++)
         this->leds[i] = configuration.colorMinutes.toCRGB();

@@ -47,3 +47,8 @@ bool connectedWiFi()
 {
     return WiFi.status() == WL_CONNECTED;
 }
+
+void setHostname(String name)
+{
+    WiFi.setHostname(name.c_str());
+}

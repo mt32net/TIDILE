@@ -48,6 +48,7 @@ extern "C" void app_main()
   runTests();
 #endif
 
+  setHostname("TIDILE_ESP32");
   connectWiFi();
 
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
@@ -71,6 +72,5 @@ extern "C" void app_main()
   while (true)
   {
     tidile.update();
-    delay(100);
   }
 }
