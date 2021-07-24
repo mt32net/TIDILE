@@ -19,7 +19,7 @@ void TIDILE::setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer *server)
     configuration.deserialize(&preferences);
     requestHandler.setup(&configuration, this, &preferences);
     webserver.setup(&requestHandler, server);
-    // mqtt.setup(&configuration, this, MQTT_URI);
+    mqtt.setup(&configuration, this, MQTT_URI, MQTT_PORT);
 
     FastLED.setBrightness(configuration.brightness);
 
@@ -131,6 +131,7 @@ void TIDILE::displaCustom(Color colorCode, ClockTime until)
 
 void TIDILE::update()
 {
+    mqtt.loop();
     // Check if something else is displyed
     ClockTime currentTime = getTime();
     int timeTil = hmsToTimeInt(customDisplayTil);
@@ -195,3 +196,12 @@ ClockEnv TIDILE::getEnv()
     };
 }
 #endif
+
+void TIDILE::mqttCallback(char *topic, byte *payload, unsigned int length){
+    Serial.println("-------new message from broker-----");
+    Serial.print("channel:");
+    Serial.println(topic);
+    Serial.print("data:");
+    Serial.write(payload, length);
+    Serial.println();
+}

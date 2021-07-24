@@ -97,6 +97,8 @@ private:
      */
     void startupLEDs(int delay);
 
+    void mqttCallback(char *topic, byte *payload, unsigned int length);
+
     int lastSec = 0;
     ClockTime customDisplayTil;
     int loopI = 0;
@@ -109,5 +111,6 @@ private:
  * 
  */
     friend void tidileTests();
+    friend class MQTTHandler;
 #endif
 };

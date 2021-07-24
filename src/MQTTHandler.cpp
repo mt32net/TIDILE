@@ -1,28 +1,22 @@
 #include "MQTTHandler.hpp"
-
-void callback(char *topic, byte *payload, unsigned int length)
-{
-    Serial.println("-------new message from broker-----");
-    Serial.print("channel:");
-    Serial.println(topic);
-    Serial.print("data:");
-    Serial.write(payload, length);
-    Serial.println();
-}
+#include "TIDILE.hpp"
 
 MQTTHandler::MQTTHandler()
 {
 }
 
-void MQTTHandler::setup(ClockConfig *config, TIDILE *tidile, String uri)
+void MQTTHandler::setup(ClockConfig *config, TIDILE *tidile, String uri, int port)
 {
     this->config = config;
     this->tidile = tidile;
     this->uri = uri;
+    this->port = port;
     this->client = new PubSubClient(wifiClient);
 
-    client->setServer(MQTT_URI, MQTT_PORT);
-    client->setCallback(callback);
+    client->setServer(uri.c_str(), (uint16_t)port);
+    auto that = this;
+    client->setCallback([that](char *topic, byte *payload, unsigned int length)
+                        { that->callback(topic, payload, length); });
 
     reconnect();
 }
@@ -41,9 +35,9 @@ void MQTTHandler::reconnect()
         {
             Serial.println("connected");
             //Once connected, publish an announcement...
-            client->publish("sensors/test", "hello world");
+            publish("sensors/test", "hello world");
             // ... and resubscribe
-            // client.subscribe(MQTT_SERIAL_RECEIVER_CH);
+            subscribe("sensors/test");
         }
         else
         {
@@ -54,4 +48,28 @@ void MQTTHandler::reconnect()
             delay(5000);
         }
     }
+}
+
+void MQTTHandler::callback(char *topic, byte *payload, unsigned int length)
+{
+    tidile->mqttCallback(topic, payload, length);
+}
+
+void MQTTHandler::loop()
+{
+    if (!client->connected())
+    {
+        reconnect();
+    }
+    client->loop();
+}
+
+void MQTTHandler::subscribe(String topic)
+{
+    client->subscribe(topic.c_str());
+}
+
+void MQTTHandler::publish(String topic, String payload)
+{
+    client->publish(topic.c_str(), payload.c_str());
 }

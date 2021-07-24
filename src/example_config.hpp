@@ -3,6 +3,12 @@
 
 #define RUN_TESTS
 
+//MQTT
+#define MQTT_URI "example.com"
+#define MQTT_USER ""
+#define MQTT_PWD ""
+#define MQTT_PORT 1883
+
 #define NUM_LEDS 49
 #define LED_PIN 5
 #define BLINK_BRIGHTNESS 0.7
