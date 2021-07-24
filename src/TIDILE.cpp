@@ -1,6 +1,7 @@
 #include "TIDILE.hpp"
 #include "helper/time.hpp"
 #include "helper/color.hpp"
+#include "helper/numbers.hpp"
 
 TIDILE::TIDILE() {}
 
@@ -10,7 +11,7 @@ void TIDILE::setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer *server)
     this->numberLEDs = numberLEDs;
     this->server = server;
 
-    customDisplayTil = getTime();
+    customDisplayTil = {0, 0, 0, 0, 0, 0};
 
     configTime(3600, 3600, ntpServer);
     getTime();
@@ -28,7 +29,7 @@ void TIDILE::setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer *server)
 
 int TIDILE::mapToLEDs(int value, int max)
 {
-    return map(value, 0, max, 0, this->numberLEDs - 1);
+    return (int)mapd(value, 0, max, 0, this->numberLEDs - 1);
 }
 
 void TIDILE::clear()
@@ -39,6 +40,7 @@ void TIDILE::clear()
 
 void TIDILE::startupLEDs(int delayTime)
 {
+    Serial.println("Running startup animation");
     for (int i = 0; i < numberLEDs; i++)
     {
         leds[i] = CRGB::White;
@@ -61,14 +63,13 @@ ClockConfig *TIDILE::getConfig()
 void TIDILE::displayTime(ClockTime time)
 {
     clear();
-
     resetOverwriteNightTimeIfLegit(configuration, time);
     if (isNightTime(configuration, time))
     {
         FastLED.show();
         return;
     }
-
+    Serial.print(".");
     // Minutes
     for (int i = 0; i < mapToLEDs(time.minutes, 59); i++)
         this->leds[i] = configuration.colorMinutes.toCRGB();
@@ -79,12 +80,16 @@ void TIDILE::displayTime(ClockTime time)
         if (mapToLEDs(time.seconds, 59) > mapToLEDs(time.minutes, 59))
         {
             for (int i = 0; i < LED_COUNT_FOR_ONE_SECOND; i++)
+            {
                 this->leds[mapToLEDs(time.seconds, 59) + i] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(DIMM_ADD_VALUE) : configuration.colorSeconds.toCRGB();
+            }
         }
         else
         {
             for (int i = 0; i < LED_COUNT_FOR_ONE_SECOND; i++)
+            {
                 this->leds[mapToLEDs(time.seconds, 59) + i] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(DIMM_VALUE) : configuration.colorSeconds.toCRGB();
+            }
         }
     }
     // Hours

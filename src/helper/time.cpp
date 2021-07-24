@@ -54,6 +54,8 @@ bool isNightTime(ClockConfig config, ClockTime time)
     //temporal night light overwrite
     if (config.tempOverwriteNightTime)
         return true;
+    if (!config.nightTimeLight)
+        return false;
     //converting current time to simple time format
     String simpleCurTimeStr = digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes);
     int simpleCurTime = simpleCurTimeStr.toInt();

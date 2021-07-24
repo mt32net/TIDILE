@@ -20,18 +20,18 @@ enum ClockFormat
  */
 struct ClockConfig
 {
-  bool displaySeconds = false;
-  Color colorHours = Color();
-  Color colorMinutes = Color();
-  Color colorSeconds = Color();
+  bool displaySeconds = true;
+  Color colorHours = Color(255, 0, 0);
+  Color colorMinutes = Color(0, 255, 0);
+  Color colorSeconds = Color(0, 0, 255);
   Color colorHumidity = Color();
   Color colorTemperature = Color();
   Color colorPressure = Color();
   bool nightTimeLight = true;
   int lightInfluence = 50;
-  uint16_t nightTimeBegin = 0; //(13:30 -> 1330, 06:24 -> 624)
+  uint16_t nightTimeBegin = 2300; //(13:30 -> 1330, 06:24 -> 624)
   uint16_t nightTimeEnd = 600;
-  uint8_t brightness = 60;
+  uint8_t brightness = 10;
   bool dimmSeconds = false;
   bool tempOverwriteNightTime = false;
   ClockFormat format = ClockFormat::Format_24H;
@@ -41,6 +41,11 @@ struct ClockConfig
   void deserialize(Preferences *preferences)
   {
     preferences->begin("prefs");
+    if (!preferences->getBool("valid", false))
+    {
+      serialize(preferences);
+      return;
+    }
     displaySeconds = preferences->getBool("displSecs");
     colorHours.deserialize(preferences, "hours");
     colorMinutes.deserialize(preferences, "minutes");
@@ -66,6 +71,8 @@ struct ClockConfig
   void serialize(Preferences *preferences)
   {
     preferences->begin("prefs", false);
+    preferences->putBool("valid", true);
+
     preferences->putBool("displSecs", displaySeconds);
 
     colorHours.serialize(preferences, "hours");

@@ -1,5 +1,9 @@
 #define LOG_LOCAL_LEVEL ESP_LOG_INFO
 #define LOG_WIFI_LEVEL ESP_LOG_ERROR
+#define FASTLED_ALLOW_INTERRUPTS 0
+#define FASTLED_INTERRUPT_RETRY_COUNT 1
+// #define FASTLED_RMT_BUILTIN_DRIVER 1
+// #define FASTLED_ESP32_I2S 1
 
 #include "esp_system.h"
 #include "esp_wifi.h"
@@ -67,5 +71,6 @@ extern "C" void app_main()
   while (true)
   {
     tidile.update();
+    delay(100);
   }
 }
