@@ -14,9 +14,9 @@ struct Colors
 
     void deserializeFromJSON(JsonDocument &doc)
     {
-        hours = hexToColor(String(doc[JSON_NAME_COLOR_HOURS].as<const char *>()));
-        minutes = hexToColor(String(doc[JSON_NAME_COLOR_MINUTES].as<const char *>()));
-        seconds = hexToColor(String(doc[JSON_NAME_COLOR_SECONDS].as<const char *>()));
+        hours = hexToColor(String(doc[JSON_NAME_COLOR_HOURS].as<String>()));
+        minutes = hexToColor(String(doc[JSON_NAME_COLOR_MINUTES].as<String>()));
+        seconds = hexToColor(String(doc[JSON_NAME_COLOR_SECONDS].as<String>()));
         dimmSeconds = doc[JSON_NAME_DIMM_SECONDS].as<bool>();
     }
 

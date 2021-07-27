@@ -25,7 +25,7 @@ void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server)
     loadClockConfig();
     requestHandler.setup(&configuration, this, &preferences);
     webserver.setup(&requestHandler, server);
-    mqtt.setup(&configuration, this, MQTT_URI, MQTT_PORT);
+    mqtt.setup(&configuration, &preferences, this, MQTT_URI, MQTT_PORT);
 
     FastLED.setBrightness(configuration.brightness);
 
@@ -47,19 +47,24 @@ void TIDILE::clear()
 
 void TIDILE::startupLEDs(int delayTime)
 {
-    Serial.println("Running startup animation");
+    Serial.print("Running startup animation");
     for (int i = 0; i < numberLEDs; i++)
     {
         leds[i] = CRGB::White;
         FastLED.show();
         delay(delayTime);
+        if (i % 5 == 0)
+            Serial.print(".");
     }
     for (int i = 0; i < numberLEDs; i++)
     {
         leds[i] = CRGB::Black;
         FastLED.show();
         delay(delayTime);
+        if (i % 5 == 0)
+            Serial.print(".");
     }
+    Serial.println("finished");
 }
 
 ClockConfig *TIDILE::getConfig()

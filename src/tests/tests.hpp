@@ -40,6 +40,16 @@ void internetTests()
     }
 }
 
+void colorTests()
+{
+    {
+        TEST_INIT(colors, converting hex values to rgb values);
+        EXPECT_EQUALS(hexToColor(String("#ffffff")).toHex(), Color(255, 255, 255).toHex());
+        EXPECT_EQUALS(hexToColor(String("#000000")).toHex(), Color(0, 0, 0).toHex());
+        TEST_RESULT_PRINT();
+    }
+}
+
 /**
  * @brief runs all available tests
  * 
@@ -51,6 +61,7 @@ void runTests()
     timeTests();
     numberTests();
     internetTests();
+    colorTests();
     tidileTests();
 
     ALL_TEST_RESULTS_PRINT();

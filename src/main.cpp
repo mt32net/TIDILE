@@ -22,7 +22,6 @@
 #include "tests/tests.hpp"
 #endif
 
-//TODO update to new mqtt topic structure
 //TODO refractoring
 //TODO add more tests
 
@@ -79,6 +78,5 @@ extern "C" void app_main()
   while (true)
   {
     tidile.update();
-    delay(100);
   }
 }

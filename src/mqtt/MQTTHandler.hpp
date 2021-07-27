@@ -3,6 +3,7 @@
 #include <WiFiClient.h>
 #include <vector>
 #include <PubSubClient.h>
+#include <Preferences.h>
 #include "../config/config_includes.hpp"
 #include "ClockConfig.hpp"
 
@@ -12,7 +13,7 @@ class MQTTHandler
 {
 public:
     MQTTHandler();
-    void setup(ClockConfig *config, TIDILE *tidile, String uri, int port);
+    void setup(ClockConfig *config, Preferences *preferences, TIDILE *tidile, String uri, int port);
     void callback(char *topic, byte *payload, unsigned int length);
 
 private:
@@ -34,6 +35,7 @@ private:
     WiFiClient wifiClient;
     PubSubClient *client;
     std::vector<String> subscribedTopics;
+    Preferences *preferences;
 
 private:
     friend class TIDILE;

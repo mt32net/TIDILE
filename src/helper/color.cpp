@@ -13,14 +13,5 @@ Color hexToColor(String input)
 
 String colorToHex(Color color)
 {
-    String red = String(color.red, HEX);
-    if (red.length() == 1)
-        red = "0" + red;
-    String green = String(color.green, HEX);
-    if (green.length() == 1)
-        green = "0" + green;
-    String blue = String(color.blue, HEX);
-    if (blue.length() == 1)
-        blue = "0" + blue;
-    return "#" + red + green + blue;
+    return color.toHex();
 }

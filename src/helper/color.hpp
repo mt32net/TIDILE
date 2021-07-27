@@ -42,6 +42,30 @@ struct Color
     {
         return CRGB(red, green, blue);
     }
+
+    bool operator==(const Color &c)
+    {
+        return red == c.red && green == c.green && blue == c.blue;
+    }
+
+    String toString()
+    {
+        return toHex();
+    }
+
+    String toHex()
+    {
+        return "#" + toTwoChars(String(red, HEX)) + toTwoChars(String(green, HEX)) + toTwoChars(String(blue, HEX));
+    }
+
+private:
+    String toTwoChars(String s)
+    {
+        if (s.length() < 2)
+            return String("0") + s;
+        else
+            return s;
+    }
 };
 
 Color hexToColor(String input);

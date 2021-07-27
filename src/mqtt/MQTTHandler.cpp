@@ -7,17 +7,21 @@ MQTTHandler::MQTTHandler()
 {
 }
 
-void MQTTHandler::setup(ClockConfig *config, TIDILE *tidile, String uri, int port)
+void MQTTHandler::setup(ClockConfig *config, Preferences *preferences, TIDILE *tidile, String uri, int port)
 {
     this->config = config;
     this->tidile = tidile;
     this->uri = uri;
     this->port = port;
     this->client = new PubSubClient(wifiClient);
+    this->preferences = preferences;
+
+    client->setBufferSize(512);
 
     client->setServer(uri.c_str(), (uint16_t)port);
     auto that = this;
-    client->setCallback([that](char *topic, byte *payload, unsigned int length) { that->callback(topic, payload, length); });
+    client->setCallback([that](char *topic, byte *payload, unsigned int length)
+                        { that->callback(topic, payload, length); });
 
     reconnect();
     subscribeTIDILETopics();
@@ -57,9 +61,10 @@ void MQTTHandler::restore()
 
 void MQTTHandler::callback(char *topic, byte *payload, unsigned int length)
 {
-    String payloadStr = "";
+    /* String payloadStr = "";
     for (int i = 0; i < length; i++)
-        payloadStr += payload[i];
+        payloadStr += String((char)payload[i]); */
+    String payloadStr = String((char *)payload);
     if (!handle(topic, String(payloadStr)))
         tidile->mqttCallback(topic, payload, length);
 }
@@ -89,44 +94,59 @@ void MQTTHandler::subscribePrivate(String topic)
 
 void MQTTHandler::publish(String topic, String payload)
 {
-    /*  Serial.print("Publishing to ");
-    Serial.print(topic);
-    Serial.print("\t\t");
-    Serial.println(payload); */
     client->publish(topic.c_str(), payload.c_str());
 }
 
 bool MQTTHandler::handle(String topic, String payload)
 {
-    DynamicJsonDocument doc(2048);
+    if (tidile == nullptr)
+    {
+        Serial.println("TIDILE was null");
+        return false;
+    }
+    if (payload.startsWith(MQTT_PAYLOAD_IGNORE_PREFIX))
+    {
+        Serial.println("MQTT payload ignored:");
+        Serial.println(payload);
+        Serial.println("---------------------");
+        return true;
+    }
+    if (!payload.startsWith("{"))
+    {
+        Serial.println("JSON not recognized:");
+        Serial.println(payload);
+        return false;
+    }
+    DynamicJsonDocument doc(payload.length() * 1.5);
     deserializeJson(doc, payload.c_str());
     if (topic == String(MQTT_TOPIC_TIDILE_CONFIG_NIGHTTIME))
     {
         NightTime night;
         night.deserializeFromJSON(doc);
-        night.saveToConfig(&tidile->configuration);
+        night.saveToConfig(config);
     }
     else if (topic == String(MQTT_TOPIC_TIDILE_CONFIG_COLORS))
     {
         Colors colors;
         colors.deserializeFromJSON(doc);
-        colors.saveToConfig(&tidile->configuration);
+        colors.saveToConfig(config);
     }
     else if (topic == String(MQTT_TOPIC_TIDILE_CONFIG_GENERAL))
     {
         General gen;
         gen.deserializeFromJSON(doc);
-        gen.saveToConfig(&tidile->configuration);
+        gen.saveToConfig(config);
     }
     else if (topic == String(MQTT_TOPIC_TIDILE_CONFIG_NIGHT_BEGIN_NOW))
     {
-        tidile->configuration.tempOverwriteNightTime = true;
+        config->tempOverwriteNightTime = true;
     }
     else
-    {
-        tidile->configuration.serialize(&tidile->preferences);
         return false;
-    }
+    Serial.println("Save config");
+    config->serialize(&tidile->preferences);
+    publish(topic, String(MQTT_PAYLOAD_IGNORE_PREFIX) + String(" ok"));
+
     return true;
 }
 
