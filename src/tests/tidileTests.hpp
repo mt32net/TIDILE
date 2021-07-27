@@ -1,5 +1,5 @@
 #pragma once
-#include "../config.hpp"
+#include "../config/config_includes.hpp"
 #ifdef RUN_TESTS
 #include "../TIDILE.hpp"
 

@@ -5,7 +5,13 @@
 
 TIDILE::TIDILE() {}
 
-void TIDILE::setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer *server)
+ClockConfig *TIDILE::loadClockConfig()
+{
+    configuration.deserialize(&preferences);
+    return &configuration;
+}
+
+void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server)
 {
     this->leds = leds;
     this->numberLEDs = numberLEDs;
@@ -16,7 +22,7 @@ void TIDILE::setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer *server)
     configTime(3600, 3600, ntpServer);
     getTime();
 
-    configuration.deserialize(&preferences);
+    loadClockConfig();
     requestHandler.setup(&configuration, this, &preferences);
     webserver.setup(&requestHandler, server);
     mqtt.setup(&configuration, this, MQTT_URI, MQTT_PORT);
@@ -79,14 +85,14 @@ void TIDILE::displayTime(ClockTime time)
 
         if (mapToLEDs(time.seconds, 59) > mapToLEDs(time.minutes, 59))
         {
-            for (int i = 0; i < LED_COUNT_FOR_ONE_SECOND; i++)
+            for (int i = 0; i < LED_COUNT_FOR_ONE_SECOND(configuration.ledCount); i++)
             {
                 this->leds[mapToLEDs(time.seconds, 59) + i] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(DIMM_ADD_VALUE) : configuration.colorSeconds.toCRGB();
             }
         }
         else
         {
-            for (int i = 0; i < LED_COUNT_FOR_ONE_SECOND; i++)
+            for (int i = 0; i < LED_COUNT_FOR_ONE_SECOND(configuration.ledCount); i++)
             {
                 this->leds[mapToLEDs(time.seconds, 59) + i] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(DIMM_VALUE) : configuration.colorSeconds.toCRGB();
             }
@@ -94,7 +100,7 @@ void TIDILE::displayTime(ClockTime time)
     }
     // Hours
     int hours = (configuration.format == ClockFormat::Format_24H || time.hours < 12) ? time.hours : time.hours - 12;
-    for (int i = 0; i < LED_COUNT_FOR_ONE_SECOND; i++)
+    for (int i = 0; i < LED_COUNT_FOR_ONE_SECOND(configuration.ledCount); i++)
         this->leds[mapToLEDs(hours, configuration.format) + i] = configuration.colorHours.toCRGB();
     FastLED.show();
 }
@@ -197,7 +203,8 @@ ClockEnv TIDILE::getEnv()
 }
 #endif
 
-void TIDILE::mqttCallback(char *topic, byte *payload, unsigned int length){
+void TIDILE::mqttCallback(char *topic, byte *payload, unsigned int length)
+{
     Serial.println("-------new message from broker-----");
     Serial.print("channel:");
     Serial.println(topic);

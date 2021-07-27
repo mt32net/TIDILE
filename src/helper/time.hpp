@@ -1,6 +1,5 @@
 #pragma once
 #include "Arduino.h"
-#include "definements.hpp"
 #include "ClockInfo.hpp"
 #include "ClockConfig.hpp"
 

@@ -5,9 +5,8 @@
 #include "ClockConfig.hpp"
 #include "RequestHandler.hpp"
 #include "Webserver.hpp"
-#include "MQTTHandler.hpp"
-#include "definements.hpp"
-#include "config.hpp"
+#include "mqtt/MQTTHandler.hpp"
+#include "config/config_includes.hpp"
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
@@ -22,13 +21,20 @@ class TIDILE
 {
 public:
     TIDILE();
+
+    /**
+     * @brief Loads the configuration from the Prefernces flash, if not available, the default config will be saved and used
+     * 
+     * @return a pointer to the Configuration inside of TIDILE
+     */
+    ClockConfig *loadClockConfig();
     /**
     * @brief Setup function
     * 
     * @param numberLEDS the number of LEDS within the array
     * @param configuration the pointer to thee configuration object where all settings are saved
     */
-    void setup(CRGB leds[NUM_LEDS], int numberLEDs, AsyncWebServer *server);
+    void setup(CRGB *leds, int numberLEDs, AsyncWebServer *server);
 
     /**
     * @brief way to diasply color on all leds until a certain time is reached

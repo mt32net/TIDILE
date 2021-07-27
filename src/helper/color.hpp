@@ -2,7 +2,6 @@
 #include <Arduino.h>
 #include <Preferences.h>
 #include <FastLED.h>
-#include "definements.hpp"
 
 struct Color
 {

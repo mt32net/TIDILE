@@ -1,6 +1,7 @@
 #include "time.hpp"
 #include <time.h>
 #include "numbers.hpp"
+#include "../config/config_includes.hpp"
 
 int timeTries = 0;
 
@@ -54,7 +55,7 @@ bool isNightTime(ClockConfig config, ClockTime time)
     //temporal night light overwrite
     if (config.tempOverwriteNightTime)
         return true;
-    if (!config.nightTimeLight)
+    if (!config.nightTimeEnabled)
         return false;
     //converting current time to simple time format
     String simpleCurTimeStr = digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes);

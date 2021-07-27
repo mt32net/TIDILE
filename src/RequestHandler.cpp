@@ -4,6 +4,7 @@
 #include "TIDILE.hpp"
 #include "helper/color.hpp"
 #include "helper/time.hpp"
+#include "config/config_includes.hpp"
 
 RequestHandler::RequestHandler()
 {
@@ -90,7 +91,7 @@ void RequestHandler::onIndex(AsyncWebServerRequest *request)
     html.replace(SHOWSECONDSKEYWORD, (this->config->displaySeconds) ? "checked" : "");
     html.replace(NIGHTTIMESTARTKEYWORD, timeIntToTimeString(this->config->nightTimeBegin));
     html.replace(NIGHTTIMEENDKEYWORD, timeIntToTimeString(this->config->nightTimeEnd));
-    html.replace(NIGHTTIMEENABLEDKEYWORD, (this->config->nightTimeLight) ? "checked" : "");
+    html.replace(NIGHTTIMEENABLEDKEYWORD, (this->config->nightTimeEnabled) ? "checked" : "");
     html.replace(INFLUENCEKEYWORD, String(this->config->lightInfluence));
     html.replace(CURRENTTIMEKEYWORD, getDateTimeToString());
     html.replace(CLOCKFORMAT24HKEYWORD, (this->config->format == ClockFormat::Format_24H) ? "checked" : "");
@@ -102,7 +103,7 @@ void RequestHandler::onNightTime(AsyncWebServerRequest *request)
 {
     if (request->hasParam("settings"))
     {
-        this->config->nightTimeLight = false;
+        this->config->nightTimeEnabled = false;
         if (request->hasParam("begin_time"))
         {
             this->config->nightTimeBegin = timeStringToTimeInt(request->getParam("begin_time")->value());
@@ -113,7 +114,7 @@ void RequestHandler::onNightTime(AsyncWebServerRequest *request)
         }
         if (request->hasParam("time_enabled"))
         {
-            this->config->nightTimeLight = request->getParam("time_enabled")->value().equals("on");
+            this->config->nightTimeEnabled = request->getParam("time_enabled")->value().equals("on");
         }
     }
     if (request->hasParam("nightTimeTilMorning"))

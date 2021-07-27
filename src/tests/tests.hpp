@@ -1,8 +1,9 @@
 #pragma once
-#include "../config.hpp"
+#include "../config/config_includes.hpp"
 #ifdef RUN_TESTS
 #include "timeTests.hpp"
 #include "tidileTests.hpp"
+#include <WiFiClient.h>
 
 /**
  * @brief tests for checking number operations
@@ -28,6 +29,17 @@ void numberTests()
     }
 }
 
+void internetTests()
+{
+    {
+        TEST_INIT(internet, checking connection to homeserver);
+        WiFiClient client;
+        EXPECT_TRUE(client.connect("mt32.net", 80));
+        client.stop();
+        TEST_RESULT_PRINT();
+    }
+}
+
 /**
  * @brief runs all available tests
  * 
@@ -38,6 +50,7 @@ void runTests()
 
     timeTests();
     numberTests();
+    internetTests();
     tidileTests();
 
     ALL_TEST_RESULTS_PRINT();

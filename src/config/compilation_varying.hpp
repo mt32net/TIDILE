@@ -1,23 +1,8 @@
-#ifndef CONFIG_DEF
-#define CONFIG_DEF
+#pragma once
 
-#define RUN_TESTS
+// #define FASTSTARTUP //uncomment when the startup animation shouldn´t be displayed each startup
 
-//MQTT
-#define MQTT_URI "example.com"
-#define MQTT_USER ""
-#define MQTT_PWD ""
-#define MQTT_PORT 1883
-
-#define NUM_LEDS 49
-#define LED_PIN 5
-#define BLINK_BRIGHTNESS 0.7
-
-#define LED_COUNT_FOR_ONE_SECOND (int)((double)NUM_LEDS / 60.0)
-#define DIMM_VALUE 0xFF
-#define DIMM_ADD_VALUE 0xAA
-
-//#define FASTSTARTUP //uncomment when the startup animation shouldn´t be displayed each startup
+#define RUN_TESTS //uncomment when simple test programms should not be performed
 
 // Touch Pin
 #define THRESHOLD 25
@@ -35,7 +20,7 @@
 // #pragma endregion
 
 // #pragma region sensors
-//#define LIGHT_SENSOR
+#define LIGHT_SENSOR
 //#define TEMPERATURE_SENSOR
 //#define HUMIDITY_SENSOR
 //#define PRESSURE_SENSOR
@@ -44,5 +29,3 @@
 // #pragma region used sensors
 //#define BME280
 // #pragma endregion
-
-#endif

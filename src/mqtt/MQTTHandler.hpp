@@ -1,8 +1,9 @@
 #pragma once
 #include <Arduino.h>
 #include <WiFiClient.h>
+#include <vector>
 #include <PubSubClient.h>
-#include "definements.hpp"
+#include "../config/config_includes.hpp"
 #include "ClockConfig.hpp"
 
 class TIDILE;
@@ -13,11 +14,17 @@ public:
     MQTTHandler();
     void setup(ClockConfig *config, TIDILE *tidile, String uri, int port);
     void callback(char *topic, byte *payload, unsigned int length);
+
+private:
+    void subscribeTIDILETopics();
     void loop();
     void subscribe(String topic);
     void publish(String topic, String payload);
-private:
     void reconnect();
+    void subscribePrivate(String topic);
+    void restore();
+
+    bool handle(String topic, String payload);
 
 private:
     ClockConfig *config;
@@ -26,4 +33,8 @@ private:
     int port;
     WiFiClient wifiClient;
     PubSubClient *client;
+    std::vector<String> subscribedTopics;
+
+private:
+    friend class TIDILE;
 };

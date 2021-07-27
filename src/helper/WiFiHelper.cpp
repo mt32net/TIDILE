@@ -1,4 +1,6 @@
 #include "WiFiHelper.hpp"
+#include "../config/config_includes.hpp"
+#include <WiFi.h>
 
 void connectWiFi()
 {

@@ -15,20 +15,25 @@
 #include <FastLED.h>
 #include "TIDILE.hpp"
 #include "RequestHandler.hpp"
-#include "definements.hpp"
 #include "helper/WiFiHelper.hpp"
 #include "helper/numbers.hpp"
+#include "config/config_includes.hpp"
 #ifdef RUN_TESTS
 #include "tests/tests.hpp"
 #endif
+
+//TODO update to new mqtt topic structure
+//TODO refractoring
+//TODO add more tests
 
 #if defined(HUMIDITY_SENSOR) && defined(BME280)
 Adafruit_BME280 bmp; // I2C
 #endif
 
-CRGB leds[NUM_LEDS];
+CRGB *leds;
 
 TIDILE tidile;
+ClockConfig *tidileConfig;
 AsyncWebServer server(HTTP_ENDPOINT_PORT);
 
 #ifdef RUN_TESTS
@@ -39,6 +44,8 @@ extern "C" void app_main()
 {
   initArduino();
 
+  connectWiFi();
+
   esp_log_level_set("wifi", ESP_LOG_ERROR);
   esp_log_level_set("task_wdt", ESP_LOG_ERROR);
 
@@ -47,8 +54,6 @@ extern "C" void app_main()
 #ifdef RUN_TESTS
   runTests();
 #endif
-
-  connectWiFi();
 
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
   Wire.begin();
@@ -62,8 +67,11 @@ extern "C" void app_main()
 #endif
 #endif
 
-  FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, NUM_LEDS);
-  tidile.setup(leds, NUM_LEDS, &server);
+  tidileConfig = tidile.loadClockConfig();
+  leds = new CRGB[tidileConfig->ledCount];
+
+  FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, tidileConfig->ledCount);
+  tidile.setup(leds, tidileConfig->ledCount, &server);
 #if defined(HUMIDITY_SENSOR) && defined(BME280)
   tidile.addBMP(&bmp);
 #endif

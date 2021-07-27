@@ -1,7 +1,7 @@
 #pragma once
 #include "Arduino.h"
 #include <FastLED.h>
-#include "definements.hpp"
+#include "config/config_includes.hpp"
 #include <Preferences.h>
 #include "helper/color.hpp"
 
@@ -20,21 +20,22 @@ enum ClockFormat
  */
 struct ClockConfig
 {
-  bool displaySeconds = true;
+  bool displaySeconds = DEFAULT_DISPLAY_SECONDS;
   Color colorHours = Color(255, 0, 0);
   Color colorMinutes = Color(0, 255, 0);
   Color colorSeconds = Color(0, 0, 255);
   Color colorHumidity = Color();
   Color colorTemperature = Color();
   Color colorPressure = Color();
-  bool nightTimeLight = true;
-  int lightInfluence = 50;
-  uint16_t nightTimeBegin = 2300; //(13:30 -> 1330, 06:24 -> 624)
-  uint16_t nightTimeEnd = 600;
-  uint8_t brightness = 10;
-  bool dimmSeconds = false;
+  bool nightTimeEnabled = DEFAULT_NIGHT_TIME_ENABLED;
+  uint16_t lightInfluence = DEFAULT_LIGHT_INFLUENCE;
+  uint16_t nightTimeBegin = DEFAULT_NIGHT_TIME_BEGIN; //(13:30 -> 1330, 06:24 -> 624)
+  uint16_t nightTimeEnd = DEFAULT_NIGHT_TIME_END;
+  uint8_t brightness = DEFAULT_BRIGHTNESS;
+  bool dimmSeconds = DEFAULT_DIMM_SECONDS;
   bool tempOverwriteNightTime = false;
   ClockFormat format = ClockFormat::Format_24H;
+  int ledCount = DEFAULT_LED_COUNT;
 
   ///deserializes this ClockConfig from startPosition into this object
   ///@param preferences is the preference object
@@ -46,23 +47,26 @@ struct ClockConfig
       serialize(preferences);
       return;
     }
-    displaySeconds = preferences->getBool("displSecs");
+    displaySeconds = preferences->getBool("displSecs", DEFAULT_DISPLAY_SECONDS);
     colorHours.deserialize(preferences, "hours");
     colorMinutes.deserialize(preferences, "minutes");
     colorSeconds.deserialize(preferences, "seconds");
-    dimmSeconds = preferences->getBool("dimmSecs");
+    dimmSeconds = preferences->getBool("dimmSecs", DEFAULT_DIMM_SECONDS);
 
     colorHumidity.deserialize(preferences, "humid");
     colorTemperature.deserialize(preferences, "temper");
     colorPressure.deserialize(preferences, "pressure");
 
-    nightTimeLight = preferences->getBool("nightLight");
-    nightTimeBegin = preferences->getInt("nightTimeBegin");
-    nightTimeEnd = preferences->getInt("nightTimeEnd");
-    brightness = preferences->getInt("brightness");
-    lightInfluence = preferences->getInt("lightInflu");
+    nightTimeEnabled = preferences->getBool("nightLight", DEFAULT_NIGHT_TIME_ENABLED);
+    nightTimeBegin = preferences->getInt("nightTimeBegin", DEFAULT_NIGHT_TIME_BEGIN);
+    nightTimeEnd = preferences->getInt("nightTimeEnd", DEFAULT_NIGHT_TIME_END);
+    brightness = preferences->getInt("brightness", DEFAULT_BRIGHTNESS);
+    lightInfluence = preferences->getInt("lightInflu", DEFAULT_LIGHT_INFLUENCE);
 
     format = (preferences->getInt("format") == ClockFormat::Format_24H) ? ClockFormat::Format_24H : ClockFormat::Format_12H;
+
+    ledCount = preferences->getInt("ledCount", DEFAULT_LED_COUNT);
+
     preferences->end();
   }
 
@@ -84,11 +88,13 @@ struct ClockConfig
     colorTemperature.serialize(preferences, "temper");
     colorPressure.serialize(preferences, "pressure");
 
-    preferences->putBool("nightLight", nightTimeLight);
+    preferences->putBool("nightLight", nightTimeEnabled);
     preferences->putInt("nightTimeBegin", nightTimeBegin);
     preferences->putInt("nightTimeEnd", nightTimeEnd);
     preferences->putInt("brightness", brightness);
     preferences->putInt("lightInflu", lightInfluence);
+
+    preferences->putInt("ledCount", ledCount);
 
     preferences->putInt("format", format);
     preferences->end();
