@@ -22,8 +22,7 @@
 #include "tests/tests.hpp"
 #endif
 
-//TODO refractoring
-//TODO add more tests
+//TODO update webserver
 
 #if defined(HUMIDITY_SENSOR) && defined(BME280)
 Adafruit_BME280 bmp; // I2C

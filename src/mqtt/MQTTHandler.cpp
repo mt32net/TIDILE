@@ -2,6 +2,7 @@
 #include "../TIDILE.hpp"
 #include <ArduinoJson.h>
 #include "topics/topicsInclude.hpp"
+#include "../helper/time.hpp"
 
 MQTTHandler::MQTTHandler()
 {
@@ -15,6 +16,9 @@ void MQTTHandler::setup(ClockConfig *config, Preferences *preferences, TIDILE *t
     this->port = port;
     this->client = new PubSubClient(wifiClient);
     this->preferences = preferences;
+    ClockTime t = getTime();
+    this->startupMins = t.minutes;
+    this->startupSecs = t.seconds;
 
     client->setBufferSize(512);
 
@@ -69,7 +73,7 @@ void MQTTHandler::callback(char *topic, byte *payload, unsigned int length)
         tidile->mqttCallback(topic, payload, length);
 }
 
-void MQTTHandler::loop()
+void MQTTHandler::loop(ClockTime t)
 {
     if (!client->connected())
     {
@@ -77,8 +81,15 @@ void MQTTHandler::loop()
     }
     client->loop();
 
-    publish(String(MQTT_TOPIC_META_RUNTIME), String(millis()));
-    publish(String(MQTT_TOPIC_META_VERSION), String(TIDILE_VERSION));
+    if ((t.minutes + startupMins) % 5 == 0 && (t.seconds + startupSecs) % 60 == 0)
+    {
+        publish(String(MQTT_TOPIC_META_RUNTIME), String(millis()));
+        publish(String(MQTT_TOPIC_META_VERSION), String(TIDILE_VERSION));
+    }
+    else
+    {
+        delay(200);
+    }
 }
 
 void MQTTHandler::subscribe(String topic)

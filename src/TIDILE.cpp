@@ -142,9 +142,10 @@ void TIDILE::displaCustom(Color colorCode, ClockTime until)
 
 void TIDILE::update()
 {
-    mqtt.loop();
     // Check if something else is displyed
     ClockTime currentTime = getTime();
+    mqtt.loop(currentTime);
+
     int timeTil = hmsToTimeInt(customDisplayTil);
     int curr = hmsToTimeInt(currentTime);
     if (curr >= timeTil && this->clockMode)

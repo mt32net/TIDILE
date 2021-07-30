@@ -6,6 +6,7 @@
 #include <Preferences.h>
 #include "../config/config_includes.hpp"
 #include "ClockConfig.hpp"
+#include "ClockInfo.hpp"
 
 class TIDILE;
 
@@ -18,7 +19,7 @@ public:
 
 private:
     void subscribeTIDILETopics();
-    void loop();
+    void loop(ClockTime t);
     void subscribe(String topic);
     void publish(String topic, String payload);
     void reconnect();
@@ -36,6 +37,9 @@ private:
     PubSubClient *client;
     std::vector<String> subscribedTopics;
     Preferences *preferences;
+
+    int startupSecs;
+    int startupMins;
 
 private:
     friend class TIDILE;
