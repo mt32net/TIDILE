@@ -1,6 +1,7 @@
 #pragma once
 
 #include "confidential.hpp"
+#include "example_confidential.hpp"
 #include "general.hpp"
 #include "mqttTopics.hpp"
 #include "defaults.hpp"

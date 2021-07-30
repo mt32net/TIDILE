@@ -1,4 +1,7 @@
 #pragma once
+#ifndef CONFIDENTIAL_HPP
+
+#pragma error Rename the config / example_confidential.hpp to config / confidential.hpp and change the values in there
 
 #define WIFI_SSID "yourSSID"
 #define WIFI_PWD "yourPassword"
@@ -9,3 +12,4 @@
 #define MQTT_PWD "the corresponding pwassord"
 
 #define DEVICE_ID "your custom device id"
+#endif
