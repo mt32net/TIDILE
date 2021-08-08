@@ -29,6 +29,14 @@ void MQTTHandler::setup(ClockConfig *config, Preferences *preferences, TIDILE *t
 
     reconnect();
     subscribeTIDILETopics();
+    // register device
+    DynamicJsonDocument doc(1024);
+    doc["device_id"] = DEVICE_ID;
+    doc["module_type"] = MT32_MODULE_NAME;
+    doc["version"] = TIDILE_VERSION;
+    char buffer[256];
+    serializeJson(doc, buffer);
+    client->publish(MQTT_TOPIC_DEVICES_REGISTER, buffer);
 }
 
 void MQTTHandler::reconnect()
