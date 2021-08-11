@@ -1,11 +1,12 @@
 #pragma once
 #include "confidential.hpp"
+#include "general.hpp"
 
 #define MQTT_TOPIC_DEVICES_REGISTER "mt32/devices/register"
 #define MQTT_TOPIC_META_RUNTIME "mt32/meta/devices/" DEVICE_ID "/runtime"
 #define MQTT_TOPIC_META_VERSION "mt32/meta/devices/" DEVICE_ID "/version"
 
-#define __MQTT_TOPIC_TIDILE_PREFIX "mt32/" DEVICE_ID "/tidile"
+#define __MQTT_TOPIC_TIDILE_PREFIX "mt32/" DEVICE_ID "/" MT32_MODULE_NAME
 #define __MQTT_TOPIC_TIDILE_CONFIG_PREFIX __MQTT_TOPIC_TIDILE_PREFIX "/config"
 
 #define MQTT_TOPIC_TIDILE_CONFIG_NIGHTTIME __MQTT_TOPIC_TIDILE_CONFIG_PREFIX "/nighttime"
