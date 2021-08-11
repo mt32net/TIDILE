@@ -156,7 +156,7 @@ bool MQTTHandler::handle(String topic, String payload)
         return false;
     Serial.println("Save config");
     config->serialize(&tidile->preferences);
-    publish(topic, String(MQTT_PAYLOAD_IGNORE_PREFIX) + String(" ok"));
+    // publish(topic, String(MQTT_PAYLOAD_IGNORE_PREFIX) + String(" ok"));
 
     return true;
 }
