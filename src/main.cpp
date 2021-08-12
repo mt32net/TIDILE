@@ -68,7 +68,12 @@ extern "C" void app_main()
   tidileConfig = tidile.loadClockConfig();
   leds = new CRGB[tidileConfig->ledCount];
 
+#ifdef ESP32
+  FastPin<LED_PIN>::lo();
+#endif
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, tidileConfig->ledCount);
+  FastLED.setDither(DISABLE_DITHER);
+
   tidile.setup(leds, tidileConfig->ledCount, &server);
 #if defined(HUMIDITY_SENSOR) && defined(BME280)
   tidile.addBMP(&bmp);

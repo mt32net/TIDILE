@@ -5,7 +5,6 @@
 #define ntpServer "pool.ntp.org"
 
 #define MT32_MODULE_NAME "tidile"
-#define TIDILE_VERSION "1.0"
 #define HTTP_ENDPOINT_PORT 80
 #define STARTUP_ANIMATION_DELAY 8
 
