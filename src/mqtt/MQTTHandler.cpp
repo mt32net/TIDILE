@@ -90,7 +90,7 @@ void MQTTHandler::loop(ClockTime t)
     }
     client->loop();
 
-    if ((t.minutes + startupMins) % 5 == 0 && (t.seconds + startupSecs) % 60 == 0 && lastUpdateMin != t.minutes)
+    if ((t.minutes + startupMins) % MQTT_META_PUSH_MINUTE_INTERVAL == 0 && (t.seconds + startupSecs) % 60 == 0 && lastUpdateMin != t.minutes)
     {
         DynamicJsonDocument metaData(1024);
         metaData["device_id"] = DEVICE_ID;

@@ -14,5 +14,3 @@
 #define LED_COUNT_FOR_ONE_SECOND(ledCount) (int)((double)(ledCount) / 60.0)
 #define DIMM_VALUE 0xFF
 #define DIMM_ADD_VALUE 0xAA
-
-#define PUSH_UPTIME_LOOP_COUNT 5000

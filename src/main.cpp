@@ -81,6 +81,8 @@ extern "C" void app_main()
 
   while (true)
   {
+    unsigned long start = millis();
     tidile.update();
+    Serial.println(String("Loop took ") + String(millis() - start) + "ms");
   }
 }
