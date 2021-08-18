@@ -32,9 +32,9 @@ void MQTTHandler::setup(ClockConfig *config, Preferences *preferences, TIDILE *t
     subscribeTIDILETopics();
     // register device
     DynamicJsonDocument doc(1024);
-    doc["device_id"] = DEVICE_ID;
-    doc["module_type"] = MT32_MODULE_NAME;
-    doc["version"] = TIDILE_VERSION;
+    doc[JSON_NAME_META_DEVICE_ID] = DEVICE_ID;
+    doc[JSON_NAME_META_MODULE_TYPE] = MT32_MODULE_NAME;
+    doc[JSON_NAME_META_VERSION] = TIDILE_VERSION;
     String registerStr;
     serializeJsonPretty(doc, registerStr);
     publish(MQTT_TOPIC_DEVICES_REGISTER, registerStr);
@@ -93,9 +93,9 @@ void MQTTHandler::loop(ClockTime t)
     if ((t.minutes + startupMins) % MQTT_META_PUSH_MINUTE_INTERVAL == 0 && (t.seconds + startupSecs) % 60 == 0 && lastUpdateMin != t.minutes)
     {
         DynamicJsonDocument metaData(1024);
-        metaData["device_id"] = DEVICE_ID;
-        metaData["version"] = TIDILE_VERSION;
-        metaData["uptime"] = millis();
+        metaData[JSON_NAME_META_DEVICE_ID] = DEVICE_ID;
+        metaData[JSON_NAME_META_VERSION] = TIDILE_VERSION;
+        metaData[JSON_NAME_META_UPTIME] = millis();
 
         String out;
         serializeJsonPretty(metaData, out);

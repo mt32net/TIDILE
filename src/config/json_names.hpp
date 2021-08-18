@@ -20,3 +20,10 @@
 #define JSON_NAME_NIGHT_TIME_BEGIN "begin"
 #define JSON_NAME_NIGHT_TIME_END "end"
 // #pragma endregion
+
+// #pragma region meta data
+#define JSON_NAME_META_DEVICE_ID "device_id"
+#define JSON_NAME_META_UPTIME "uptime"
+#define JSON_NAME_META_VERSION "version"
+#define JSON_NAME_META_MODULE_TYPE "module_type"
+// #pragma endregion
