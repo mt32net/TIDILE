@@ -40,7 +40,7 @@ private:
 
     int startupSecs;
     int startupMins;
-    unsigned long lastMillis;
+    int lastUpdateMin;
 
 private:
     friend class TIDILE;

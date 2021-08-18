@@ -1,5 +1,6 @@
 #include "MQTTHandler.hpp"
 #include "../TIDILE.hpp"
+#define ARDUINOJSON_ENABLE_COMMENTS 1
 #include <ArduinoJson.h>
 #include "topics/topicsInclude.hpp"
 #include "../helper/time.hpp"
@@ -34,9 +35,9 @@ void MQTTHandler::setup(ClockConfig *config, Preferences *preferences, TIDILE *t
     doc["device_id"] = DEVICE_ID;
     doc["module_type"] = MT32_MODULE_NAME;
     doc["version"] = TIDILE_VERSION;
-    char buffer[256];
-    serializeJson(doc, buffer);
-    client->publish(MQTT_TOPIC_DEVICES_REGISTER, buffer);
+    String registerStr;
+    serializeJsonPretty(doc, registerStr);
+    publish(MQTT_TOPIC_DEVICES_REGISTER, registerStr);
 }
 
 void MQTTHandler::reconnect()
@@ -89,7 +90,7 @@ void MQTTHandler::loop(ClockTime t)
     }
     client->loop();
 
-    if ((t.minutes + startupMins) % 5 == 0 && (t.seconds + startupSecs) % 60 == 0 && millis() - lastMillis > 500)
+    if ((t.minutes + startupMins) % 5 == 0 && (t.seconds + startupSecs) % 60 == 0 && lastUpdateMin != t.minutes)
     {
         DynamicJsonDocument metaData(1024);
         metaData["device_id"] = DEVICE_ID;
@@ -99,7 +100,7 @@ void MQTTHandler::loop(ClockTime t)
         String out;
         serializeJsonPretty(metaData, out);
         publish(String(MQTT_TOPIC_META), out);
-        lastMillis = millis();
+        lastUpdateMin = t.minutes;
     }
     else
     {
@@ -143,7 +144,7 @@ bool MQTTHandler::handle(String topic, String payload)
         Serial.println(payload);
         return false;
     }
-    DynamicJsonDocument doc(payload.length() * 1.5);
+    DynamicJsonDocument doc(payload.length());
     deserializeJson(doc, payload.c_str());
     if (topic == String(MQTT_TOPIC_TIDILE_CONFIG_NIGHTTIME))
     {
