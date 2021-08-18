@@ -34,7 +34,9 @@ void internetTests()
     {
         TEST_INIT(internet, checking connection to homeserver);
         WiFiClient client;
+        unsigned long start = millis();
         EXPECT_TRUE(client.connect("mt32.net", 80));
+        PRINT_ADDITIONAL_TEST_INFO(String("Connecting took ") + String(millis() - start) + String("ms"));
         client.stop();
         TEST_RESULT_PRINT();
     }

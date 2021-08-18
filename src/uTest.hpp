@@ -76,7 +76,7 @@ int curTestCaseAdded = 0; //0: pass, 1: fail
 
 #define ADD_CUSTOM_TEST_RESULT(bool_value) EXPECT_EQUALS(true, bool_value)
 
-#define PRINT_ADDITIONAL_TEST_INFO(string) OUTPUT_METHOD(String("\t[INFO] ") + String(string))
+#define PRINT_ADDITIONAL_TEST_INFO(string) OUTPUT_METHOD(String("\t[INFO] ") + String(string) + String("\n"))
 
 #define TEST_RESULT_BOOL() testResult
 #define TEST_RESULT_STRING() ((TEST_RESULT_BOOL()) ? String("[PASSED] ") : String("[FAILED] ")) + "in \"" + testComponent + "\" in component \"" + testCase + "\""
