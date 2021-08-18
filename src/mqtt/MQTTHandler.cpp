@@ -89,16 +89,17 @@ void MQTTHandler::loop(ClockTime t)
     }
     client->loop();
 
-    if ((t.minutes + startupMins) % 5 == 0 && (t.seconds + startupSecs) % 60 == 0)
+    if ((t.minutes + startupMins) % 5 == 0 && (t.seconds + startupSecs) % 60 == 0 && millis() - lastMillis > 500)
     {
         DynamicJsonDocument metaData(1024);
         metaData["device_id"] = DEVICE_ID;
         metaData["version"] = TIDILE_VERSION;
-        metaData["runtime"] = millis();
+        metaData["uptime"] = millis();
 
         String out;
         serializeJsonPretty(metaData, out);
         publish(String(MQTT_TOPIC_META), out);
+        lastMillis = millis();
     }
     else
     {

@@ -3,7 +3,7 @@
 #include "general.hpp"
 
 #define MQTT_TOPIC_DEVICES_REGISTER "mt32/devices/register"
-#define MQTT_TOPIC_META "mt32/meta/devices/" DEVICE_ID
+#define MQTT_TOPIC_META "mt32/devices/meta"
 
 #define __MQTT_TOPIC_TIDILE_PREFIX "mt32/" DEVICE_ID "/" MT32_MODULE_NAME
 #define __MQTT_TOPIC_TIDILE_CONFIG_PREFIX __MQTT_TOPIC_TIDILE_PREFIX "/config"
