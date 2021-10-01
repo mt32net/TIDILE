@@ -20,6 +20,7 @@ void MQTTHandler::setup(ClockConfig *config, Preferences *preferences, TIDILE *t
     ClockTime t = getTime();
     this->startupMins = t.minutes;
     this->startupSecs = t.seconds;
+    this->connectionAttempts = 0;
 
     client->setBufferSize(512);
 
@@ -57,9 +58,16 @@ void MQTTHandler::reconnect()
         {
             Serial.print("failed, rc=");
             Serial.print(client->state());
-            Serial.println(" try again in 5 seconds");
+            Serial.print(" try again in 0.1 seconds with try nr. ");
+            this->connectionAttempts++;
+            Serial.println(this->connectionAttempts);
             // Wait 5 seconds before retrying
-            delay(5000);
+            delay(100);
+        }
+        if (connectionAttempts >= 10)
+        {
+            Serial.println("Could not connect to MQTT server");
+            break;
         }
     }
 }

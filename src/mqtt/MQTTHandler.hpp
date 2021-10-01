@@ -42,6 +42,8 @@ private:
     int startupMins;
     int lastUpdateMin;
 
+    int connectionAttempts;
+
 private:
     friend class TIDILE;
 };
