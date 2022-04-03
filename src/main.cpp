@@ -18,6 +18,7 @@
 #include "helper/WiFiHelper.hpp"
 #include "helper/numbers.hpp"
 #include "config/config_includes.hpp"
+#include "SPIFFS.h"
 #ifdef RUN_TESTS
 #include "tests/tests.hpp"
 #endif
@@ -49,6 +50,13 @@ void setup()
 
   esp_log_level_set("wifi", ESP_LOG_ERROR);
   esp_log_level_set("task_wdt", ESP_LOG_ERROR);
+
+  if (!SPIFFS.begin())
+  {
+    Serial.println("Error starting SPIFFS");
+  }
+  // server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.html");
+  server.serveStatic("/", SPIFFS, "/static");
 
 #ifdef RUN_TESTS
   runTests();

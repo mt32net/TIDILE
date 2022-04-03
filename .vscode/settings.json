@@ -11,5 +11,9 @@
         "regex": "cpp",
         "list": "cpp",
         "string_view": "cpp"
-    }
+    },
+    "cSpell.words": [
+        "leds",
+        "tidile"
+    ]
 }

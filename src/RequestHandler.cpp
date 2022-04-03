@@ -1,10 +1,27 @@
 #include "RequestHandler.hpp"
-#include "html/index_file.hpp"
-#include "html/style.hpp"
 #include "TIDILE.hpp"
 #include "helper/color.hpp"
 #include "helper/time.hpp"
 #include "config/config_includes.hpp"
+#include "SPIFFS.h"
+
+#define COLORHOURKEYWORD "'colorHourKeyword'"
+#define COLORMINUTEKEYWORD "'colorMinuteKeyword'"
+#define COLORSECONDSKEYWORD "'colorSecondKeyword'"
+#define DIMMSECONDSKEYWORD "'dimmSecondsKeyword'"
+#define BRIGHTNESSKEYWORD "'brightnessKeyword'"
+#define COLORTEMPERATUREKEYWORD "'colorTemperatureKeyword'"
+#define COLORPRESSUREKEYWORD "'colorPressureKeyword'"
+#define SHOWSECONDSKEYWORD "'secondsEnabledKeyword'"
+#define NIGHTTIMESTARTKEYWORD "'nighttimeStartKeyword'"
+#define NIGHTTIMEENDKEYWORD "'nighttimeEndKeyword'"
+#define NIGHTTIMEENABLEDKEYWORD "'nightTimeEnabledKeyword'"
+#define INFLUENCEKEYWORD "'envLightInfluence'"
+#define CURRENTTIMEKEYWORD "'currentTimeKeyword'"
+#define MINUTESKEYWORD "'minutesKeyword'"
+#define HOURSKEYWORD "'hoursKeyword'"
+#define SECONDSKEYWORD "'secondsKeyword'"
+#define CLOCKFORMAT24HKEYWORD "'24HKeyword'"
 
 RequestHandler::RequestHandler()
 {
@@ -80,7 +97,8 @@ void RequestHandler::onOther(AsyncWebServerRequest *request)
 
 void RequestHandler::onIndex(AsyncWebServerRequest *request)
 {
-    String html = index_html;
+
+    String html = SPIFFS.open("/index.html").readString();
     html.replace(COLORHOURKEYWORD, colorToHex(this->config->colorHours));
     html.replace(COLORMINUTEKEYWORD, colorToHex(this->config->colorMinutes));
     html.replace(COLORSECONDSKEYWORD, colorToHex(this->config->colorSeconds));
@@ -125,15 +143,15 @@ void RequestHandler::onNightTime(AsyncWebServerRequest *request)
     this->config->serialize(preferences);
 }
 
-void RequestHandler::onStyleSheet(AsyncWebServerRequest *request)
-{
-    String html = style_css;
-    html.replace(COLORHOURKEYWORD, colorToHex(this->config->colorHours));
-    html.replace(COLORMINUTEKEYWORD, colorToHex(this->config->colorMinutes));
-    html.replace(COLORSECONDSKEYWORD, colorToHex(this->config->colorSeconds));
-    ClockTime time = getTime();
-    html.replace(MINUTESKEYWORD, String(time.minutes));
-    html.replace(HOURSKEYWORD, String(time.hours));
-    html.replace(SECONDSKEYWORD, String(time.seconds));
-    request->send(200, "text/css", html);
-}
+// void RequestHandler::onStyleSheet(AsyncWebServerRequest *request)
+// {
+//     String html = style_css;
+//     html.replace(COLORHOURKEYWORD, colorToHex(this->config->colorHours));
+//     html.replace(COLORMINUTEKEYWORD, colorToHex(this->config->colorMinutes));
+//     html.replace(COLORSECONDSKEYWORD, colorToHex(this->config->colorSeconds));
+//     ClockTime time = getTime();
+//     html.replace(MINUTESKEYWORD, String(time.minutes));
+//     html.replace(HOURSKEYWORD, String(time.hours));
+//     html.replace(SECONDSKEYWORD, String(time.seconds));
+//     request->send(200, "text/css", html);
+// }
