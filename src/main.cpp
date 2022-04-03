@@ -22,7 +22,7 @@
 #include "tests/tests.hpp"
 #endif
 
-//TODO update webserver
+// TODO update webserver
 
 #if defined(HUMIDITY_SENSOR) && defined(BME280)
 Adafruit_BME280 bmp; // I2C
@@ -38,16 +38,17 @@ AsyncWebServer server(HTTP_ENDPOINT_PORT);
 void tests();
 #endif
 
-extern "C" void app_main()
+void setup()
 {
-  initArduino();
+
+  Serial.begin(115200);
+
+  // initArduino();
 
   connectWiFi();
 
   esp_log_level_set("wifi", ESP_LOG_ERROR);
   esp_log_level_set("task_wdt", ESP_LOG_ERROR);
-
-  Serial.begin(115200);
 
 #ifdef RUN_TESTS
   runTests();
@@ -78,9 +79,9 @@ extern "C" void app_main()
 #if defined(HUMIDITY_SENSOR) && defined(BME280)
   tidile.addBMP(&bmp);
 #endif
+}
 
-  while (true)
-  {
-    tidile.update();
-  }
+void loop()
+{
+  tidile.update();
 }
