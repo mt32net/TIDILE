@@ -97,7 +97,6 @@ void RequestHandler::onOther(AsyncWebServerRequest *request)
 
 void RequestHandler::onIndex(AsyncWebServerRequest *request)
 {
-
     String html = SPIFFS.open("/index.html").readString();
     html.replace(COLORHOURKEYWORD, colorToHex(this->config->colorHours));
     html.replace(COLORMINUTEKEYWORD, colorToHex(this->config->colorMinutes));

@@ -20,7 +20,7 @@ struct Color
     {
     }
 
-    ///deserializes this Color from startPosition into this object
+    /// deserializes this Color from startPosition into this object
     ///@param preferences is the preference object
     void deserialize(Preferences *preferences, String name)
     {
@@ -29,7 +29,7 @@ struct Color
         blue = preferences->getInt((name + String("_b")).c_str());
     }
 
-    ///serializes this Color object into the given storage container
+    /// serializes this Color object into the given storage container
     ///@param preferences is the preference object
     void serialize(Preferences *preferences, String name)
     {
@@ -46,6 +46,16 @@ struct Color
     bool operator==(const Color &c)
     {
         return red == c.red && green == c.green && blue == c.blue;
+    }
+
+    Color operator*(const int factor)
+    {
+        red = this->red * factor;
+        green = this->green * factor;
+        blue = this->blue * factor;
+        return *this;
+        // TODO check for memory leak
+        // ??? delete this;
     }
 
     String toString()

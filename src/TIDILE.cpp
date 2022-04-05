@@ -88,18 +88,20 @@ void TIDILE::displayTime(ClockTime time)
     if (configuration.displaySeconds)
     {
 
+        // When seconds are "out of minutes" (?)
         if (mapToLEDs(time.seconds, 59) > mapToLEDs(time.minutes, 59))
         {
             for (int i = 0; i < LED_COUNT_FOR_ONE_SECOND(configuration.ledCount); i++)
             {
-                this->leds[mapToLEDs(time.seconds, 59) + i] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(DIMM_ADD_VALUE) : configuration.colorSeconds.toCRGB();
+                this->leds[mapToLEDs(time.seconds, 59) + i] = (configuration.dimmSeconds) ? (configuration.colorMinutes).toCRGB() : configuration.colorSeconds.toCRGB();
             }
         }
+        // When seconds are inside minutes (?)
         else
         {
             for (int i = 0; i < LED_COUNT_FOR_ONE_SECOND(configuration.ledCount); i++)
             {
-                this->leds[mapToLEDs(time.seconds, 59) + i] = (configuration.dimmSeconds) ? configuration.colorMinutes.toCRGB().subtractFromRGB(DIMM_VALUE) : configuration.colorSeconds.toCRGB();
+                this->leds[mapToLEDs(time.seconds, 59) + i] = (configuration.dimmSeconds) ? CRGB::Black : configuration.colorSeconds.toCRGB();
             }
         }
     }
@@ -107,6 +109,8 @@ void TIDILE::displayTime(ClockTime time)
     int hours = (configuration.format == ClockFormat::Format_24H || time.hours < 12) ? time.hours : time.hours - 12;
     for (int i = 0; i < LED_COUNT_FOR_ONE_SECOND(configuration.ledCount); i++)
         this->leds[mapToLEDs(hours, configuration.format) + i] = configuration.colorHours.toCRGB();
+
+    // Update leds
     FastLED.show();
 }
 
@@ -217,4 +221,8 @@ void TIDILE::mqttCallback(char *topic, byte *payload, unsigned int length)
     Serial.print("data:");
     Serial.write(payload, length);
     Serial.println();
+}
+
+String TIDILE::getConfigJson()
+{
 }

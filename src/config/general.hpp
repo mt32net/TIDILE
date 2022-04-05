@@ -12,5 +12,4 @@
 #define BLINK_BRIGHTNESS 0.7
 
 #define LED_COUNT_FOR_ONE_SECOND(ledCount) (int)((double)(ledCount) / 60.0)
-#define DIMM_VALUE 0xFF
-#define DIMM_ADD_VALUE 0xAA
+// #define DIMM_ADD_VALUE 0.7

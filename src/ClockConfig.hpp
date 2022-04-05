@@ -4,6 +4,7 @@
 #include "config/config_includes.hpp"
 #include <Preferences.h>
 #include "helper/color.hpp"
+#include "ArduinoJson.h"
 
 /**
  * @brief CHosen clock format
@@ -14,9 +15,12 @@ enum ClockFormat
   Format_12H = 11
 };
 
+// TODO The right one pls
+#define ENTRY_COUNTS 10
+
 /**
  * @brief Configuration class for TIDILE, will be saved and restored out of permanent storage at each reboot
- * 
+ *
  */
 struct ClockConfig
 {
@@ -37,7 +41,7 @@ struct ClockConfig
   ClockFormat format = ClockFormat::Format_24H;
   int ledCount = DEFAULT_LED_COUNT;
 
-  ///deserializes this ClockConfig from startPosition into this object
+  /// deserializes this ClockConfig from startPosition into this object
   ///@param preferences is the preference object
   void deserialize(Preferences *preferences)
   {
@@ -70,33 +74,45 @@ struct ClockConfig
     preferences->end();
   }
 
-  ///serializes this ClockConfig object into the given storage container
+  /// serializes this ClockConfig object into the given storage container
   ///@param preferences is the preference object
   void serialize(Preferences *preferences)
   {
-    preferences->begin("prefs", false);
-    preferences->putBool("valid", true);
 
-    preferences->putBool("displSecs", displaySeconds);
+    StaticJsonDocument<JSON_OBJECT_SIZE(ENTRY_COUNTS)> json;
 
-    colorHours.serialize(preferences, "hours");
-    colorMinutes.serialize(preferences, "minutes");
-    colorSeconds.serialize(preferences, "seconds");
-    preferences->putBool("dimmSecs", dimmSeconds);
+    // preferences->begin("prefs", false);
+    // preferences->putBool("valid", true);
+    json["valid"] = true;
+    // preferences->putBool("displSecs", displaySeconds);
+    json["displaySeconds"] = displaySeconds;
+    // preferences->putBool("dimmSecs", dimmSeconds);
+    json["dimmSeconds"] = dimmSeconds;
 
+    // Make these things serialize!
+    colorHours.serialize(json, "hours");
+    colorMinutes.serialize(json, "minutes");
+    colorSeconds.serialize(json, "seconds");
     colorHumidity.serialize(preferences, "humid");
     colorTemperature.serialize(preferences, "temper");
     colorPressure.serialize(preferences, "pressure");
 
-    preferences->putBool("nightLight", nightTimeEnabled);
-    preferences->putInt("nightTimeBegin", nightTimeBegin);
-    preferences->putInt("nightTimeEnd", nightTimeEnd);
-    preferences->putInt("brightness", brightness);
-    preferences->putInt("lightInflu", lightInfluence);
+    // preferences->putBool("nightLight", nightTimeEnabled);
+    json["nightTimeEnabled"] = nightTimeEnabled;
+    json["nightTimeBegin"] = nightTimeBegin;
+    json["nightTimeEnd"] = nightTimeEnd;
+    json["brightness"] = brightness;
+    json["lightInfluence"] = lightInfluence;
+    // preferences->putInt("nightTimeBegin", nightTimeBegin);
+    // preferences->putInt("nightTimeEnd", nightTimeEnd);
+    // preferences->putInt("brightness", brightness);
+    // preferences->putInt("lightInflu", lightInfluence);
 
-    preferences->putInt("ledCount", ledCount);
+    // preferences->putInt("ledCount", ledCount);
+    json["ledCount"] = ledCount;
 
-    preferences->putInt("format", format);
-    preferences->end();
+    // preferences->putInt("format", format);
+    json["format"] = format;
+    // preferences->end();
   }
 };
