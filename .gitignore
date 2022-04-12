@@ -9,3 +9,4 @@ config.hpp
 wifi_config.hpp
 build
 confidential.hpp
+src/config/confidential.hpp

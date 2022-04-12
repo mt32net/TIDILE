@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include <Preferences.h>
 #include <FastLED.h>
+#include <ArduinoJson.h>
 
 struct Color
 {
@@ -20,22 +21,18 @@ struct Color
     {
     }
 
-    /// deserializes this Color from startPosition into this object
-    ///@param preferences is the preference object
-    void deserialize(Preferences *preferences, String name)
+    void deserialize(JsonObject *json)
     {
-        red = preferences->getInt((name + String("_r")).c_str());
-        green = preferences->getInt((name + String("_g")).c_str());
-        blue = preferences->getInt((name + String("_b")).c_str());
+        red = (*json)["red"];
+        green = (*json)["green"];
+        blue = (*json)["blue"];
     }
 
-    /// serializes this Color object into the given storage container
-    ///@param preferences is the preference object
-    void serialize(Preferences *preferences, String name)
+    void serialize(JsonObject *json)
     {
-        preferences->putInt((name + String("_r")).c_str(), red);
-        preferences->putInt((name + String("_g")).c_str(), green);
-        preferences->putInt((name + String("_b")).c_str(), blue);
+        (*json)["r"] = red;
+        (*json)["g"] = green;
+        (*json)["b"] = blue;
     }
 
     CRGB toCRGB()

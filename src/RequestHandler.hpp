@@ -7,13 +7,13 @@ class TIDILE;
 
 /**
  * @brief used for asynchronous webserver to handle incoming requests
- * 
+ *
  */
 class RequestHandler
 {
 public:
     RequestHandler();
-    void setup(ClockConfig *config, TIDILE *tidile, Preferences *preferences);
+    void setup(ClockConfig *config, TIDILE *tidile);
     void onColors(AsyncWebServerRequest *request);
     void onIndex(AsyncWebServerRequest *request);
     void onEnvColors(AsyncWebServerRequest *request);
@@ -23,8 +23,8 @@ public:
     void onManual(AsyncWebServerRequest *request);
     void onLamp(AsyncWebServerRequest *request);
 
-    //void onEnv(AsyncWebServerRequest *request);
-    //void onTimes(AsyncWebServerRequest *request);
+    // void onEnv(AsyncWebServerRequest *request);
+    // void onTimes(AsyncWebServerRequest *request);
 private:
     ClockConfig *config;
     TIDILE *tidile;

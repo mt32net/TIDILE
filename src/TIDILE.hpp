@@ -22,12 +22,7 @@ class TIDILE
 public:
     TIDILE();
 
-    /**
-     * @brief Loads the configuration from the Prefernces flash, if not available, the default config will be saved and used
-     *
-     * @return a pointer to the Configuration inside of TIDILE
-     */
-    ClockConfig *loadClockConfig();
+    void loadClockConfig();
     /**
      * @brief Setup function
      *
@@ -44,7 +39,6 @@ public:
      */
     void displaCustom(Color colorCode, ClockTime until);
 
-    String getConfigJson();
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
     /**
      * @brief add BME280 sensor to tidile
@@ -83,7 +77,7 @@ public:
 private:
     // FastLED Array
     CRGB *leds;
-    ClockConfig configuration;
+    ClockConfig configuration = ClockConfig();
     RequestHandler requestHandler;
     Preferences preferences;
     Webserver webserver;

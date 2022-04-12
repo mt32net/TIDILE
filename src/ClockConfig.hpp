@@ -39,80 +39,77 @@ struct ClockConfig
   bool dimmSeconds = DEFAULT_DIMM_SECONDS;
   bool tempOverwriteNightTime = false;
   ClockFormat format = ClockFormat::Format_24H;
-  int ledCount = DEFAULT_LED_COUNT;
+  int ledCount = LED_COUNT;
 
-  /// deserializes this ClockConfig from startPosition into this object
-  ///@param preferences is the preference object
-  void deserialize(Preferences *preferences)
+  void deserialize(JsonObject *json)
   {
-    preferences->begin("prefs");
-    if (!preferences->getBool("valid", false))
-    {
-      serialize(preferences);
-      return;
-    }
-    displaySeconds = preferences->getBool("displSecs", DEFAULT_DISPLAY_SECONDS);
-    colorHours.deserialize(preferences, "hours");
-    colorMinutes.deserialize(preferences, "minutes");
-    colorSeconds.deserialize(preferences, "seconds");
-    dimmSeconds = preferences->getBool("dimmSecs", DEFAULT_DIMM_SECONDS);
+    JsonObject hours = (*json).getMember("hours");
+    colorHours.deserialize(&hours);
+    JsonObject minutes = (*json).getMember("minutes");
+    colorMinutes.deserialize(&minutes);
+    JsonObject seconds = (*json).getMember("seconds");
+    colorSeconds.deserialize(&seconds);
 
-    colorHumidity.deserialize(preferences, "humid");
-    colorTemperature.deserialize(preferences, "temper");
-    colorPressure.deserialize(preferences, "pressure");
+    displaySeconds = (*json)["displaySeconds"];
+    dimmSeconds = (*json)["dimmSeconds"];
 
-    nightTimeEnabled = preferences->getBool("nightLight", DEFAULT_NIGHT_TIME_ENABLED);
-    nightTimeBegin = preferences->getInt("nightTimeBegin", DEFAULT_NIGHT_TIME_BEGIN);
-    nightTimeEnd = preferences->getInt("nightTimeEnd", DEFAULT_NIGHT_TIME_END);
-    brightness = preferences->getInt("brightness", DEFAULT_BRIGHTNESS);
-    lightInfluence = preferences->getInt("lightInflu", DEFAULT_LIGHT_INFLUENCE);
+    // colorHumidity.deserialize(preferences, "humid");
+    // colorTemperature.deserialize(preferences, "temper");
+    // colorPressure.deserialize(preferences, "pressure");
 
-    format = (preferences->getInt("format") == ClockFormat::Format_24H) ? ClockFormat::Format_24H : ClockFormat::Format_12H;
+    nightTimeEnabled = (*json)["nightTimeEnabled"];
+    nightTimeBegin = (*json)["nightTimeBegin"];
+    nightTimeEnd = (*json)["nightTimeEnd"];
+    brightness = (*json)["brightness"];
+    lightInfluence = (*json)["lightInfluence"];
+    format = (*json)["format"];
 
-    ledCount = preferences->getInt("ledCount", DEFAULT_LED_COUNT);
+    // format = (preferences->getInt("format") == ClockFormat::Format_24H) ? ClockFormat::Format_24H : ClockFormat::Format_12H;
 
-    preferences->end();
+    // ledCount = json["ledCount"];
   }
 
-  /// serializes this ClockConfig object into the given storage container
-  ///@param preferences is the preference object
-  void serialize(Preferences *preferences)
+  void serialize(JsonObject *json)
   {
-
-    StaticJsonDocument<JSON_OBJECT_SIZE(ENTRY_COUNTS)> json;
 
     // preferences->begin("prefs", false);
     // preferences->putBool("valid", true);
-    json["valid"] = true;
+    (*json)["valid"] = true;
     // preferences->putBool("displSecs", displaySeconds);
-    json["displaySeconds"] = displaySeconds;
+    (*json)["displaySeconds"] = displaySeconds;
     // preferences->putBool("dimmSecs", dimmSeconds);
-    json["dimmSeconds"] = dimmSeconds;
+    (*json)["dimmSeconds"] = dimmSeconds;
 
     // Make these things serialize!
-    colorHours.serialize(json, "hours");
-    colorMinutes.serialize(json, "minutes");
-    colorSeconds.serialize(json, "seconds");
-    colorHumidity.serialize(preferences, "humid");
-    colorTemperature.serialize(preferences, "temper");
-    colorPressure.serialize(preferences, "pressure");
+
+    JsonObject hours = (*json).getOrAddMember("hours").to<JsonObject>();
+    colorHours.serialize(&hours);
+    JsonObject minutes = (*json).getOrAddMember("minutes").to<JsonObject>();
+    colorMinutes.serialize(&minutes);
+    JsonObject seconds = (*json).getOrAddMember("seconds").to<JsonObject>();
+    colorSeconds.serialize(&seconds);
+    // (*json)["humidity"] = colorHumidity.serialize();
+    // (*json)["temperature"] = colorTemperature.serialize();
+    // (*json)["pressure"] = colorPressure.serialize();
 
     // preferences->putBool("nightLight", nightTimeEnabled);
-    json["nightTimeEnabled"] = nightTimeEnabled;
-    json["nightTimeBegin"] = nightTimeBegin;
-    json["nightTimeEnd"] = nightTimeEnd;
-    json["brightness"] = brightness;
-    json["lightInfluence"] = lightInfluence;
+    (*json)["nightTimeEnabled"] = nightTimeEnabled;
+    (*json)["nightTimeBegin"] = nightTimeBegin;
+    (*json)["nightTimeEnd"] = nightTimeEnd;
+    (*json)["brightness"] = brightness;
+    (*json)["lightInfluence"] = lightInfluence;
     // preferences->putInt("nightTimeBegin", nightTimeBegin);
     // preferences->putInt("nightTimeEnd", nightTimeEnd);
     // preferences->putInt("brightness", brightness);
     // preferences->putInt("lightInflu", lightInfluence);
 
     // preferences->putInt("ledCount", ledCount);
-    json["ledCount"] = ledCount;
+    // (*json)["ledCount"] = ledCount;
 
     // preferences->putInt("format", format);
-    json["format"] = format;
+    (*json)["format"] = format;
     // preferences->end();
+
+    // serializeJsonPretty(json, Serial);
   }
 };

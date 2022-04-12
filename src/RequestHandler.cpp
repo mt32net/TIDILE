@@ -27,11 +27,10 @@ RequestHandler::RequestHandler()
 {
 }
 
-void RequestHandler::setup(ClockConfig *config, TIDILE *tidile, Preferences *preferences)
+void RequestHandler::setup(ClockConfig *config, TIDILE *tidile)
 {
     this->config = config;
     this->tidile = tidile;
-    this->preferences = preferences;
 }
 
 void RequestHandler::onColors(AsyncWebServerRequest *request)
@@ -45,7 +44,7 @@ void RequestHandler::onColors(AsyncWebServerRequest *request)
         this->config->dimmSeconds = request->getParam("dimm_seconds")->value().equals("on");
     }
     request->redirect("/");
-    this->config->serialize(preferences);
+    // this->config->serialize(preferences);
 }
 
 void RequestHandler::onEnvColors(AsyncWebServerRequest *request)
@@ -53,7 +52,7 @@ void RequestHandler::onEnvColors(AsyncWebServerRequest *request)
     this->config->colorTemperature = hexToColor(request->getParam("color_temp")->value());
     this->config->colorPressure = hexToColor(request->getParam("color_press")->value());
     request->redirect("/");
-    this->config->serialize(preferences);
+    // this->config->serialize(preferences);
 }
 
 void RequestHandler::onManual(AsyncWebServerRequest *request)
@@ -92,7 +91,7 @@ void RequestHandler::onOther(AsyncWebServerRequest *request)
         this->config->format = ClockFormat::Format_24H;
     }
     request->redirect("/");
-    this->config->serialize(preferences);
+    // this->config->serialize(preferences);
 }
 
 void RequestHandler::onIndex(AsyncWebServerRequest *request)
@@ -139,18 +138,18 @@ void RequestHandler::onNightTime(AsyncWebServerRequest *request)
         this->config->tempOverwriteNightTime = true;
     }
     request->redirect("/");
-    this->config->serialize(preferences);
+    // this->config->serialize(preferences);
 }
 
-// void RequestHandler::onStyleSheet(AsyncWebServerRequest *request)
-// {
-//     String html = style_css;
-//     html.replace(COLORHOURKEYWORD, colorToHex(this->config->colorHours));
-//     html.replace(COLORMINUTEKEYWORD, colorToHex(this->config->colorMinutes));
-//     html.replace(COLORSECONDSKEYWORD, colorToHex(this->config->colorSeconds));
-//     ClockTime time = getTime();
-//     html.replace(MINUTESKEYWORD, String(time.minutes));
-//     html.replace(HOURSKEYWORD, String(time.hours));
-//     html.replace(SECONDSKEYWORD, String(time.seconds));
-//     request->send(200, "text/css", html);
-// }
+void RequestHandler::onStyleSheet(AsyncWebServerRequest *request)
+{
+    String html = style_css;
+    html.replace(COLORHOURKEYWORD, colorToHex(this->config->colorHours));
+    html.replace(COLORMINUTEKEYWORD, colorToHex(this->config->colorMinutes));
+    html.replace(COLORSECONDSKEYWORD, colorToHex(this->config->colorSeconds));
+    ClockTime time = getTime();
+    html.replace(MINUTESKEYWORD, String(time.minutes));
+    html.replace(HOURSKEYWORD, String(time.hours));
+    html.replace(SECONDSKEYWORD, String(time.seconds));
+    request->send(200, "text/css", html);
+}

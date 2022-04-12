@@ -32,7 +32,6 @@ Adafruit_BME280 bmp; // I2C
 CRGB *leds;
 
 TIDILE tidile;
-ClockConfig *tidileConfig;
 AsyncWebServer server(HTTP_ENDPOINT_PORT);
 
 #ifdef RUN_TESTS
@@ -74,16 +73,15 @@ void setup()
 #endif
 #endif
 
-  tidileConfig = tidile.loadClockConfig();
-  leds = new CRGB[tidileConfig->ledCount];
+  leds = new CRGB[LED_COUNT];
 
 #ifdef ESP32
   FastPin<LED_PIN>::lo();
 #endif
-  FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, tidileConfig->ledCount);
+  FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, LED_COUNT);
   FastLED.setDither(DISABLE_DITHER);
 
-  tidile.setup(leds, tidileConfig->ledCount, &server);
+  tidile.setup(leds, LED_COUNT, &server);
 #if defined(HUMIDITY_SENSOR) && defined(BME280)
   tidile.addBMP(&bmp);
 #endif

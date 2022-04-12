@@ -1,6 +1,5 @@
 #pragma once
 
-#define DEFAULT_LED_COUNT 144
 #define DEFAULT_BLINK_BRIGHTNESS 0.7
 #define DEFAULT_DISPLAY_SECONDS true
 #define DEFAULT_NIGHT_TIME_ENABLED true

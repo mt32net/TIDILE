@@ -1,3 +1,5 @@
+#include <SPIFFS.h>
+#include <ArduinoJson.h>
 #include "TIDILE.hpp"
 #include "helper/time.hpp"
 #include "helper/color.hpp"
@@ -5,10 +7,21 @@
 
 TIDILE::TIDILE() {}
 
-ClockConfig *TIDILE::loadClockConfig()
+void TIDILE::loadClockConfig()
 {
-    configuration.deserialize(&preferences);
-    return &configuration;
+    Serial.println("Loading config...");
+    String configString = SPIFFS.open(CONFIG_FILE_NAME).readString();
+    // I hope this works
+    DynamicJsonDocument jsonConfig(2000);
+    DeserializationError err = deserializeJson(jsonConfig, configString);
+    if (err != DeserializationError::Ok)
+    {
+        Serial.print("Config deserialization error: ");
+        Serial.println(err.code());
+    }
+    JsonObject obj = jsonConfig.as<JsonObject>();
+    configuration.deserialize(&obj);
+    jsonConfig.garbageCollect();
 }
 
 void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server)
@@ -17,12 +30,23 @@ void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server)
     this->numberLEDs = numberLEDs;
     this->server = server;
 
+#ifdef PRINT_DEFAULT_CONFIG
+    Serial.println("-------------- Default Config -------------");
+    DynamicJsonDocument doc(2000);
+    JsonObject obj = doc.to<JsonObject>();
+    ClockConfig().serialize(&obj);
+    serializeJsonPretty(obj, Serial);
+    doc.garbageCollect();
+    Serial.println();
+    Serial.println("-------------------------------------------");
+#endif
+
     customDisplayTil = {0, 0, 0, 0, 0, 0};
+    loadClockConfig();
 
     configTime(3600, 3600, ntpServer);
     getTime();
 
-    loadClockConfig();
     requestHandler.setup(&configuration, this, &preferences);
     webserver.setup(&requestHandler, server);
     mqtt.setup(&configuration, &preferences, this, MQTT_URI, MQTT_PORT);
@@ -64,7 +88,7 @@ void TIDILE::startupLEDs(int delayTime)
         if (i % 5 == 0)
             Serial.print(".");
     }
-    Serial.println("finished");
+    Serial.println("  Finished");
 }
 
 ClockConfig *TIDILE::getConfig()
@@ -221,8 +245,4 @@ void TIDILE::mqttCallback(char *topic, byte *payload, unsigned int length)
     Serial.print("data:");
     Serial.write(payload, length);
     Serial.println();
-}
-
-String TIDILE::getConfigJson()
-{
 }

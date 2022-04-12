@@ -35,7 +35,8 @@ public:
                    { requestHandler->onLamp(request); });
         // server->on("/env", HTTP_GET, [requestHandler](AsyncWebServerRequest *request){handler->onEnv(request);});
         // server->on("/times", HTTP_GET, [requestHandler](AsyncWebServerRequest *request){handler->onTimes(request);});
-        // server->on("/styles.css", HTTP_GET, [requestHandler](AsyncWebServerRequest *request) { requestHandler->onStyleSheet(request); });
+        server->on("/styles.css", HTTP_GET, [requestHandler](AsyncWebServerRequest *request)
+                   { requestHandler->onStyleSheet(request); });
 
         server->onNotFound([](AsyncWebServerRequest *request)
                            { request->send(404); });

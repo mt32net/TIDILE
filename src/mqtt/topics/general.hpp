@@ -10,7 +10,7 @@ struct General
     bool format24H = true;
     uint16_t brightness = 10;
     uint16_t lightSensorInfluence = 50;
-    int ledCount = DEFAULT_LED_COUNT;
+    int ledCount = LED_COUNT;
 
     void deserializeFromJSON(JsonDocument &doc)
     {

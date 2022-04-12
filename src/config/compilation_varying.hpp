@@ -2,12 +2,15 @@
 
 // #define FASTSTARTUP //uncomment when the startup animation shouldn´t be displayed each startup
 
-#define RUN_TESTS //uncomment when simple test programms should not be performed
+#define RUN_TESTS // uncomment when simple test programms should not be performed
 
 // Touch Pin
 #define THRESHOLD 25
 #define SMOOTH_LOOPS 50
 #define TOUCH_PIN 4
+
+// DEBUG AND DEV
+#define PRINT_DEFAULT_CONFIG
 
 // #pragma region display settings
 //#define DISPLAY_TEMPERATURE

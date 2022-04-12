@@ -1,0 +1,26 @@
+{
+    "valid": true,
+    "displaySeconds": true,
+    "dimmSeconds": false,
+    "hours": {
+      "r": 255,
+      "g": 0,
+      "b": 0
+    },
+    "minutes": {
+      "r": 0,
+      "g": 255,
+      "b": 0
+    },
+    "seconds": {
+      "r": 0,
+      "g": 0,
+      "b": 255
+    },
+    "nightTimeEnabled": true,
+    "nightTimeBegin": 2300,
+    "nightTimeEnd": 600,
+    "brightness": 10,
+    "lightInfluence": 50,
+    "format": 23
+  }
