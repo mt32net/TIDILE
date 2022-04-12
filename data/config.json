@@ -1,7 +1,7 @@
 {
     "valid": true,
     "displaySeconds": true,
-    "dimmSeconds": true,
+    "dimmSeconds": false,
     "hours": {
       "r": 255,
       "g": 0,

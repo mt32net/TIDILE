@@ -1,5 +1,6 @@
 #include <SPIFFS.h>
 #include <ArduinoJson.h>
+#include <StreamUtils.h>
 #include "TIDILE.hpp"
 #include "helper/time.hpp"
 #include "helper/color.hpp"
@@ -245,4 +246,18 @@ void TIDILE::mqttCallback(char *topic, byte *payload, unsigned int length)
     Serial.print("data:");
     Serial.write(payload, length);
     Serial.println();
+}
+
+void TIDILE::flushConfig()
+{
+    // TODO calc size
+    DynamicJsonDocument doc(2000);
+    JsonObject json = doc.to<JsonObject>();
+    configuration.serialize(&json);
+    File configFile = SPIFFS.open(CONFIG_FILE_NAME, FILE_WRITE);
+    WriteBufferingStream bufferedFile(configFile, 64);
+    // TODO change back to file
+    serializeJson(json, bufferedFile);
+    bufferedFile.flush();
+    configFile.close();
 }

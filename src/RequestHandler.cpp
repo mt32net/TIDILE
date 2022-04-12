@@ -44,6 +44,7 @@ void RequestHandler::onColors(AsyncWebServerRequest *request)
         this->config->dimmSeconds = request->getParam("dimm_seconds")->value().equals("on");
     }
     request->redirect("/");
+    this->tidile->flushConfig();
     // this->config->serialize(preferences);
 }
 
@@ -52,6 +53,7 @@ void RequestHandler::onEnvColors(AsyncWebServerRequest *request)
     this->config->colorTemperature = hexToColor(request->getParam("color_temp")->value());
     this->config->colorPressure = hexToColor(request->getParam("color_press")->value());
     request->redirect("/");
+    this->tidile->flushConfig();
     // this->config->serialize(preferences);
 }
 
@@ -61,6 +63,7 @@ void RequestHandler::onManual(AsyncWebServerRequest *request)
     time.seconds = time.seconds + request->getParam("last")->value().toInt();
     tidile->displaCustom(hexToColor(request->getParam("color")->value()), time);
     request->redirect("/");
+    this->tidile->flushConfig();
 }
 
 void RequestHandler::onLamp(AsyncWebServerRequest *request)
@@ -68,6 +71,7 @@ void RequestHandler::onLamp(AsyncWebServerRequest *request)
     tidile->clockMode = (!tidile->clockMode);
     tidile->displaCustom(hexToColor(request->getParam("color")->value()), getTime());
     request->redirect("/");
+    this->tidile->flushConfig();
 }
 
 void RequestHandler::onOther(AsyncWebServerRequest *request)
@@ -92,6 +96,7 @@ void RequestHandler::onOther(AsyncWebServerRequest *request)
     }
     request->redirect("/");
     // this->config->serialize(preferences);
+    this->tidile->flushConfig();
 }
 
 void RequestHandler::onIndex(AsyncWebServerRequest *request)
@@ -139,6 +144,7 @@ void RequestHandler::onNightTime(AsyncWebServerRequest *request)
     }
     request->redirect("/");
     // this->config->serialize(preferences);
+    this->tidile->flushConfig();
 }
 
 void RequestHandler::onStyleSheet(AsyncWebServerRequest *request)

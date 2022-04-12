@@ -39,6 +39,8 @@ public:
      */
     void displaCustom(Color colorCode, ClockTime until);
 
+    void flushConfig();
+
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
     /**
      * @brief add BME280 sensor to tidile

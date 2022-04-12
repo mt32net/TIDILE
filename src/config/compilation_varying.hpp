@@ -10,7 +10,7 @@
 #define TOUCH_PIN 4
 
 // DEBUG AND DEV
-#define PRINT_DEFAULT_CONFIG
+// #define PRINT_DEFAULT_CONFIG
 
 // #pragma region display settings
 //#define DISPLAY_TEMPERATURE
