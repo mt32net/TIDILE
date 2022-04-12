@@ -23,9 +23,9 @@ struct Color
 
     void deserialize(JsonObject *json)
     {
-        red = (*json)["red"];
-        green = (*json)["green"];
-        blue = (*json)["blue"];
+        red = (*json)["r"];
+        green = (*json)["g"];
+        blue = (*json)["b"];
     }
 
     void serialize(JsonObject *json)

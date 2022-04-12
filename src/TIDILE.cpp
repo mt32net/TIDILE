@@ -47,7 +47,7 @@ void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server)
     configTime(3600, 3600, ntpServer);
     getTime();
 
-    requestHandler.setup(&configuration, this, &preferences);
+    requestHandler.setup(&configuration, this);
     webserver.setup(&requestHandler, server);
     mqtt.setup(&configuration, &preferences, this, MQTT_URI, MQTT_PORT);
 

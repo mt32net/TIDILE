@@ -28,5 +28,4 @@ public:
 private:
     ClockConfig *config;
     TIDILE *tidile;
-    Preferences *preferences;
 };

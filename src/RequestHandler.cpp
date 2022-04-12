@@ -143,7 +143,7 @@ void RequestHandler::onNightTime(AsyncWebServerRequest *request)
 
 void RequestHandler::onStyleSheet(AsyncWebServerRequest *request)
 {
-    String html = style_css;
+    String html = SPIFFS.open("/styles.css").readString();
     html.replace(COLORHOURKEYWORD, colorToHex(this->config->colorHours));
     html.replace(COLORMINUTEKEYWORD, colorToHex(this->config->colorMinutes));
     html.replace(COLORSECONDSKEYWORD, colorToHex(this->config->colorSeconds));

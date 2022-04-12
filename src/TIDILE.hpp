@@ -77,7 +77,7 @@ public:
 private:
     // FastLED Array
     CRGB *leds;
-    ClockConfig configuration = ClockConfig();
+    ClockConfig configuration;
     RequestHandler requestHandler;
     Preferences preferences;
     Webserver webserver;

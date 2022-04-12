@@ -43,7 +43,10 @@ struct ClockConfig
 
   void deserialize(JsonObject *json)
   {
-    JsonObject hours = (*json).getMember("hours");
+    JsonObject hours = json->getMember("hours");
+    // TODO remove
+    // serializeJson(hours, Serial);
+    // Serial.println();
     colorHours.deserialize(&hours);
     JsonObject minutes = (*json).getMember("minutes");
     colorMinutes.deserialize(&minutes);
@@ -52,11 +55,6 @@ struct ClockConfig
 
     displaySeconds = (*json)["displaySeconds"];
     dimmSeconds = (*json)["dimmSeconds"];
-
-    // colorHumidity.deserialize(preferences, "humid");
-    // colorTemperature.deserialize(preferences, "temper");
-    // colorPressure.deserialize(preferences, "pressure");
-
     nightTimeEnabled = (*json)["nightTimeEnabled"];
     nightTimeBegin = (*json)["nightTimeBegin"];
     nightTimeEnd = (*json)["nightTimeEnd"];
@@ -79,8 +77,6 @@ struct ClockConfig
     (*json)["displaySeconds"] = displaySeconds;
     // preferences->putBool("dimmSecs", dimmSeconds);
     (*json)["dimmSeconds"] = dimmSeconds;
-
-    // Make these things serialize!
 
     JsonObject hours = (*json).getOrAddMember("hours").to<JsonObject>();
     colorHours.serialize(&hours);
