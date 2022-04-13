@@ -6,7 +6,7 @@
 // #define FASTLED_ESP32_I2S 1
 
 #include "esp_system.h"
-#include "esp_wifi.h"
+// #include "esp_wifi.h"
 #include "esp_event.h"
 #include "esp_log.h"
 #include "driver/gpio.h"
@@ -33,6 +33,7 @@ CRGB *leds;
 
 TIDILE tidile;
 AsyncWebServer server(HTTP_ENDPOINT_PORT);
+WiFiHelper wifiHelper;
 
 #ifdef RUN_TESTS
 void tests();
@@ -41,11 +42,15 @@ void tests();
 void setup()
 {
 
+#ifdef TIDILE_LOGERR
+  esp_log_level_set("*", ESP_LOG_ERROR);
+#endif
+
   Serial.begin(115200);
 
   // initArduino();
 
-  connectWiFi();
+  wifiHelper.connectWiFi();
 
   esp_log_level_set("wifi", ESP_LOG_ERROR);
   esp_log_level_set("task_wdt", ESP_LOG_ERROR);
