@@ -118,7 +118,8 @@ void RequestHandler::onIndex(AsyncWebServerRequest *request)
     html.replace(NIGHTTIMEENDKEYWORD, timeIntToTimeString(this->config->nightTimeEnd));
     html.replace(NIGHTTIMEENABLEDKEYWORD, (this->config->nightTimeEnabled) ? "checked" : "");
     html.replace(INFLUENCEKEYWORD, String(this->config->lightInfluence));
-    html.replace(CURRENTTIMEKEYWORD, getDateTimeToString());
+    // Do not use getTime here -> timeout when server is not responding -> crash
+    // html.replace(CURRENTTIMEKEYWORD, getDateTimeToString());
     html.replace(CLOCKFORMAT24HKEYWORD, (this->config->format == ClockFormat::Format_24H) ? "checked" : "");
 
     request->send(200, "text/html", html);
@@ -157,10 +158,11 @@ void RequestHandler::onStyleSheet(AsyncWebServerRequest *request)
     html.replace(COLORHOURKEYWORD, colorToHex(this->config->colorHours));
     html.replace(COLORMINUTEKEYWORD, colorToHex(this->config->colorMinutes));
     html.replace(COLORSECONDSKEYWORD, colorToHex(this->config->colorSeconds));
-    ClockTime time;
-    getTime(&time);
-    html.replace(MINUTESKEYWORD, String(time.minutes));
-    html.replace(HOURSKEYWORD, String(time.hours));
-    html.replace(SECONDSKEYWORD, String(time.seconds));
+    // Do not use getTime here -> timeout when server is not responding -> crash
+    // ClockTime time;
+    // getTime(&time);
+    // html.replace(MINUTESKEYWORD, String(time.minutes));
+    // html.replace(HOURSKEYWORD, String(time.hours));
+    // html.replace(SECONDSKEYWORD, String(time.seconds));
     request->send(200, "text/css", html);
 }

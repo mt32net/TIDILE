@@ -14,7 +14,7 @@ class MQTTHandler
 {
 public:
     MQTTHandler();
-    void setup(ClockConfig *config, Preferences *preferences, TIDILE *tidile, String uri, int port);
+    void setup(ClockConfig *config, Preferences *preferences, TIDILE *tidile, String uri, int port, ClockTime currentTime);
     void callback(char *topic, byte *payload, unsigned int length);
 
 private:

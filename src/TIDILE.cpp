@@ -31,6 +31,7 @@ void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelpe
     this->leds = leds;
     this->numberLEDs = numberLEDs;
     this->server = server;
+    this->wifiHelper = wifiHelper;
 
 #ifdef PRINT_DEFAULT_CONFIG
     Serial.println("-------------- Default Config -------------");
@@ -57,7 +58,7 @@ void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelpe
     // Only start mqtt service when connected to a internet
     if (!wifiHelper->isAPMode())
     {
-        mqtt.setup(&configuration, &preferences, this, MQTT_URI, MQTT_PORT);
+        mqtt.setup(&configuration, &preferences, this, MQTT_URI, MQTT_PORT, time);
     }
 
     FastLED.setBrightness(configuration.brightness);
@@ -181,9 +182,10 @@ void TIDILE::displaCustom(Color colorCode, ClockTime until)
 
 void TIDILE::update()
 {
-    // Check if something else is displyed
     ClockTime currentTime;
-    getTime(&currentTime);
+    // TODO check
+    if (wifiHelper->isAPMode())
+        return;
     mqtt.loop(currentTime);
 
     int timeTil = hmsToTimeInt(customDisplayTil);

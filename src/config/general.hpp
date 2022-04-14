@@ -14,7 +14,7 @@
 
 #define CONFIG_FILE_NAME "/config.json"
 #define ACCESS_POINT_SSID "TIDILE-AP"
-#define WIFI_NUMBER_TRIES_BEFORE_AP 20
+#define WIFI_NUMBER_TRIES_BEFORE_AP 4
 
 #define LED_COUNT_FOR_ONE_SECOND(ledCount) (int)((double)(ledCount) / 60.0)
 // #define DIMM_ADD_VALUE 0.7

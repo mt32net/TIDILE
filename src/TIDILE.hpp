@@ -88,6 +88,7 @@ private:
     Webserver webserver;
     MQTTHandler mqtt;
     AsyncWebServer *server;
+    WiFiHelper *wifiHelper;
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
     Adafruit_BME280 *bmp;
 #endif
