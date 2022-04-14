@@ -7,6 +7,7 @@
 #include "Webserver.hpp"
 #include "mqtt/MQTTHandler.hpp"
 #include "config/config_includes.hpp"
+#include "helper/WiFiHelper.hpp"
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
@@ -29,7 +30,7 @@ public:
      * @param numberLEDS the number of LEDS within the array
      * @param configuration the pointer to thee configuration object where all settings are saved
      */
-    void setup(CRGB *leds, int numberLEDs, AsyncWebServer *server);
+    void setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelper *wifiHelper);
 
     /**
      * @brief way to diasply color on all leds until a certain time is reached
@@ -40,6 +41,8 @@ public:
     void displaCustom(Color colorCode, ClockTime until);
 
     void flushConfig();
+
+    void mqttCallback(char *topic, byte *payload, unsigned int length);
 
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
     /**
@@ -100,8 +103,6 @@ private:
      * @param delay the delay betwenn each LED operation in animation
      */
     void startupLEDs(int delay);
-
-    void mqttCallback(char *topic, byte *payload, unsigned int length);
 
     int lastSec = 0;
     ClockTime customDisplayTil;

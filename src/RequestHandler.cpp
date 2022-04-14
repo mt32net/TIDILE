@@ -59,7 +59,8 @@ void RequestHandler::onEnvColors(AsyncWebServerRequest *request)
 
 void RequestHandler::onManual(AsyncWebServerRequest *request)
 {
-    ClockTime time = getTime();
+    ClockTime time;
+    getTime(&time);
     time.seconds = time.seconds + request->getParam("last")->value().toInt();
     tidile->displaCustom(hexToColor(request->getParam("color")->value()), time);
     request->redirect("/");
@@ -69,7 +70,10 @@ void RequestHandler::onManual(AsyncWebServerRequest *request)
 void RequestHandler::onLamp(AsyncWebServerRequest *request)
 {
     tidile->clockMode = (!tidile->clockMode);
-    tidile->displaCustom(hexToColor(request->getParam("color")->value()), getTime());
+    ClockTime time;
+    // TODO necessry to get correct time here?
+    getTime(&time);
+    tidile->displaCustom(hexToColor(request->getParam("color")->value()), time);
     request->redirect("/");
     this->tidile->flushConfig();
 }
@@ -153,7 +157,8 @@ void RequestHandler::onStyleSheet(AsyncWebServerRequest *request)
     html.replace(COLORHOURKEYWORD, colorToHex(this->config->colorHours));
     html.replace(COLORMINUTEKEYWORD, colorToHex(this->config->colorMinutes));
     html.replace(COLORSECONDSKEYWORD, colorToHex(this->config->colorSeconds));
-    ClockTime time = getTime();
+    ClockTime time;
+    getTime(&time);
     html.replace(MINUTESKEYWORD, String(time.minutes));
     html.replace(HOURSKEYWORD, String(time.hours));
     html.replace(SECONDSKEYWORD, String(time.seconds));

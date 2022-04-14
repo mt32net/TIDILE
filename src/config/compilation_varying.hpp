@@ -2,7 +2,7 @@
 
 // #define FASTSTARTUP //uncomment when the startup animation shouldn´t be displayed each startup
 
-#define RUN_TESTS // uncomment when simple test programms should not be performed
+// #define RUN_TESTS // uncomment when simple test programms should not be performed
 
 // Touch Pin
 #define THRESHOLD 25

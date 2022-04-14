@@ -49,6 +49,10 @@ With the brightness control in the web interface you set the maximal brightness.
 
 > f_a(x)=ax+1-a
 
+# Notes
+
+If the AP does not work, try to erase the flash first.
+
 ## Questions and Improvements
 
 If you habe questions or ideas to improve TIDILE or you want to share your own build, please open an issue or a discussion.

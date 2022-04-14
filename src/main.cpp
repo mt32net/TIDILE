@@ -42,10 +42,6 @@ void tests();
 void setup()
 {
 
-#ifdef TIDILE_LOGERR
-  esp_log_level_set("*", ESP_LOG_ERROR);
-#endif
-
   Serial.begin(115200);
 
   // initArduino();
@@ -57,10 +53,8 @@ void setup()
 
   if (!SPIFFS.begin())
   {
-    Serial.println("Error starting SPIFFS");
+    Serial.println("Error starting SPIFFS.");
   }
-  // server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.html");
-  server.serveStatic("/", SPIFFS, "/static");
 
 #ifdef RUN_TESTS
   runTests();
@@ -86,7 +80,7 @@ void setup()
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, LED_COUNT);
   FastLED.setDither(DISABLE_DITHER);
 
-  tidile.setup(leds, LED_COUNT, &server);
+  tidile.setup(leds, LED_COUNT, &server, &wifiHelper);
 #if defined(HUMIDITY_SENSOR) && defined(BME280)
   tidile.addBMP(&bmp);
 #endif

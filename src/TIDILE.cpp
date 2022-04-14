@@ -1,6 +1,7 @@
 #include <SPIFFS.h>
 #include <ArduinoJson.h>
 #include <StreamUtils.h>
+#include "helper/WiFiHelper.hpp"
 #include "TIDILE.hpp"
 #include "helper/time.hpp"
 #include "helper/color.hpp"
@@ -25,7 +26,7 @@ void TIDILE::loadClockConfig()
     jsonConfig.garbageCollect();
 }
 
-void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server)
+void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelper *wifiHelper)
 {
     this->leds = leds;
     this->numberLEDs = numberLEDs;
@@ -46,11 +47,18 @@ void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server)
     loadClockConfig();
 
     configTime(3600, 3600, ntpServer);
-    getTime();
+    ClockTime time;
+    getTime(&time);
 
+    // server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.html");
+    server->serveStatic("/", SPIFFS, "/static");
     requestHandler.setup(&configuration, this);
     webserver.setup(&requestHandler, server);
-    mqtt.setup(&configuration, &preferences, this, MQTT_URI, MQTT_PORT);
+    // Only start mqtt service when connected to a internet
+    if (!wifiHelper->isAPMode())
+    {
+        mqtt.setup(&configuration, &preferences, this, MQTT_URI, MQTT_PORT);
+    }
 
     FastLED.setBrightness(configuration.brightness);
 
@@ -142,7 +150,9 @@ void TIDILE::displayTime(ClockTime time)
 void TIDILE::displayEnv(ClockEnv env)
 {
     clear();
-    if (isNightTime(configuration, getTime()))
+    ClockTime time;
+    getTime(&time);
+    if (isNightTime(configuration, time))
     {
         FastLED.show();
         return;
@@ -172,7 +182,8 @@ void TIDILE::displaCustom(Color colorCode, ClockTime until)
 void TIDILE::update()
 {
     // Check if something else is displyed
-    ClockTime currentTime = getTime();
+    ClockTime currentTime;
+    getTime(&currentTime);
     mqtt.loop(currentTime);
 
     int timeTil = hmsToTimeInt(customDisplayTil);

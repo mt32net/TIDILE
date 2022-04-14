@@ -17,7 +17,8 @@ void MQTTHandler::setup(ClockConfig *config, Preferences *preferences, TIDILE *t
     this->port = port;
     this->client = new PubSubClient(wifiClient);
     this->preferences = preferences;
-    ClockTime t = getTime();
+    ClockTime t;
+    getTime(&t);
     this->startupMins = t.minutes;
     this->startupSecs = t.seconds;
     this->connectionAttempts = 0;

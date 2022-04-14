@@ -22,19 +22,19 @@ int hmsToTimeInt(ClockTime time)
     return (digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes) + digitToTwoCharsDigit(time.seconds)).toInt();
 }
 
-ClockTime getTime()
+bool getTime(ClockTime *time)
 {
     struct tm timeinfo;
     if (!getLocalTime(&timeinfo))
     {
         Serial.println("Failed to obtain time");
-        timeTries++;
-        if (timeTries > 10)
-            ESP.restart();
-        return ClockTime{1, 1, 1, 1, 1, 1};
+        // timeTries++;
+        // if (timeTries > 10)
+        //     ESP.restart();
+        return false;
     }
-    //Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
-    return ClockTime{
+    // Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
+    *time = ClockTime{
         seconds : timeinfo.tm_sec,
         minutes : timeinfo.tm_min,
         hours : timeinfo.tm_hour,
@@ -42,31 +42,33 @@ ClockTime getTime()
         month : timeinfo.tm_mon,
         year : timeinfo.tm_year
     };
+    return true;
 }
 
 String getDateTimeToString()
 {
-    ClockTime time = getTime();
+    ClockTime time;
+    getTime(&time);
     return digitToTwoCharsDigit(time.hours) + ":" + digitToTwoCharsDigit(time.minutes) + ":" + digitToTwoCharsDigit(time.seconds) + " " + digitToTwoCharsDigit(time.day) + "/" + digitToTwoCharsDigit(time.month) + "/" + digitToTwoCharsDigit(time.year + 1900);
 }
 
 bool isNightTime(ClockConfig config, ClockTime time)
 {
-    //temporal night light overwrite
+    // temporal night light overwrite
     if (config.tempOverwriteNightTime)
         return true;
     if (!config.nightTimeEnabled)
         return false;
-    //converting current time to simple time format
+    // converting current time to simple time format
     String simpleCurTimeStr = digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes);
     int simpleCurTime = simpleCurTimeStr.toInt();
 
-    //true if timeinterval includes midnight
+    // true if timeinterval includes midnight
     bool daySwitchIncluded = config.nightTimeBegin >= config.nightTimeEnd;
 
     if (daySwitchIncluded)
     {
-        //shifting times to exclude the day switch (going over midnight)
+        // shifting times to exclude the day switch (going over midnight)
         int diffBeginMidnight = 2400 - config.nightTimeBegin;
         int adjBegin = 0; // config.nightTimeBegin + diffBeginMidnight % 2400
         int adjEnd = (config.nightTimeEnd + diffBeginMidnight) % 2400;
