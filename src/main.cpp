@@ -14,7 +14,7 @@
 #include "Arduino.h"
 #include <FastLED.h>
 #include "TIDILE.hpp"
-#include "RequestHandler.hpp"
+#include "http/RequestHandler.hpp"
 #include "helper/WiFiHelper.hpp"
 #include "helper/numbers.hpp"
 #include "config/config_includes.hpp"

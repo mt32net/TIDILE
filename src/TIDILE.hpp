@@ -3,8 +3,8 @@
 #include <FastLED.h>
 #include "ClockInfo.hpp"
 #include "ClockConfig.hpp"
-#include "RequestHandler.hpp"
-#include "Webserver.hpp"
+#include "http/RequestHandler.hpp"
+#include "http/Webserver.hpp"
 #include "mqtt/MQTTHandler.hpp"
 #include "config/config_includes.hpp"
 #include "helper/WiFiHelper.hpp"

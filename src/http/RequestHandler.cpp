@@ -1,5 +1,5 @@
-#include "RequestHandler.hpp"
-#include "TIDILE.hpp"
+#include "./RequestHandler.hpp"
+#include "../TIDILE.hpp"
 #include "helper/color.hpp"
 #include "helper/time.hpp"
 #include "config/config_includes.hpp"
