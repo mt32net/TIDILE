@@ -2,7 +2,7 @@
 #include "../config/config_includes.hpp"
 
 // Thank you stack overflow!
-Color hexToColor(String input)
+Color Color::hexToColor(String input)
 {
     long rgb = strtol(input.c_str() + 1, 0, 16); // parse as Hex, skipping the leading '#'
     int r = (rgb >> 16) & 0xFF;
@@ -11,7 +11,7 @@ Color hexToColor(String input)
     return Color(r, g, b);
 }
 
-String colorToHex(Color color)
+String Color::colorToHex(Color color)
 {
     return color.toHex();
 }

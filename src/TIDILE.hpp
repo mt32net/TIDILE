@@ -3,7 +3,6 @@
 #include <FastLED.h>
 #include "ClockInfo.hpp"
 #include "ClockConfig.hpp"
-#include "http/RequestHandler.hpp"
 #include "http/Webserver.hpp"
 #include "mqtt/MQTTHandler.hpp"
 #include "config/config_includes.hpp"
@@ -83,7 +82,6 @@ private:
     // FastLED Array
     CRGB *leds;
     ClockConfig configuration;
-    RequestHandler requestHandler;
     Preferences preferences;
     Webserver webserver;
     MQTTHandler mqtt;

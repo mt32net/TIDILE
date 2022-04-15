@@ -65,6 +65,9 @@ struct Color
         return "#" + toTwoChars(String(red, HEX)) + toTwoChars(String(green, HEX)) + toTwoChars(String(blue, HEX));
     }
 
+    static Color hexToColor(String input);
+    static String colorToHex(Color color);
+
 private:
     String toTwoChars(String s)
     {
@@ -75,5 +78,3 @@ private:
     }
 };
 
-Color hexToColor(String input);
-String colorToHex(Color color);

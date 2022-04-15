@@ -1,8 +1,8 @@
 #pragma once
 #include <Arduino.h>
 #include <ArduinoJson.h>
-#include "../../ClockConfig.hpp"
-#include "../../config/config_includes.hpp"
+#include "../ClockConfig.hpp"
+#include "../config/config_includes.hpp"
 
 struct NightTime
 {
@@ -17,6 +17,12 @@ struct NightTime
         end = doc[JSON_NAME_NIGHT_TIME_END].as<int>();
     }
 
+    void serializeToJson(JsonDocument &doc) {
+        doc[JSON_NAME_NIGHT_TIME_ENABLED] = enabled;
+        doc[JSON_NAME_NIGHT_TIME_BEGIN] = begin;
+        doc[JSON_NAME_NIGHT_TIME_END] = end;
+    }
+
     void saveToConfig(ClockConfig *config)
     {
         config->nightTimeEnabled = enabled;
@@ -24,10 +30,10 @@ struct NightTime
         config->nightTimeEnd = end;
     }
 
-    void loadFromConfig(ClockConfig &config)
+    void loadFromConfig(ClockConfig *config)
     {
-        enabled = config.nightTimeEnabled;
-        begin = config.nightTimeBegin;
-        end = config.nightTimeEnd;
+        enabled = config->nightTimeEnabled;
+        begin = config->nightTimeBegin;
+        end = config->nightTimeEnd;
     }
 };

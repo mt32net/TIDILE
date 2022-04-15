@@ -1,8 +1,8 @@
 #pragma once
 #include <Arduino.h>
 #include <ArduinoJson.h>
-#include "../../ClockConfig.hpp"
-#include "../../config/config_includes.hpp"
+#include "../ClockConfig.hpp"
+#include "../config/config_includes.hpp"
 
 struct General
 {
@@ -18,7 +18,15 @@ struct General
         format24H = doc[JSON_NAME_24H_FORMAT].as<bool>();
         brightness = doc[JSON_NAME_BRIGHTNESS].as<uint16_t>();
         lightSensorInfluence = doc[JSON_NAME_LIGHT_SENSOR_INFLUENCE].as<uint16_t>();
-        ledCount = doc[JSON_NAME_LED_COUNT].as<int>();
+        // ledCount = doc[JSON_NAME_LED_COUNT].as<int>();
+    }
+
+    void serializeToJson(JsonDocument &doc) {
+        doc[JSON_NAME_SHOW_SECONDS] = showSeconds;
+        doc[JSON_NAME_24H_FORMAT] = format24H;
+        doc[JSON_NAME_BRIGHTNESS] = brightness;
+        doc[JSON_NAME_LIGHT_SENSOR_INFLUENCE] = lightSensorInfluence;
+        // doc[JSON_NAME_LED_COUNT] = ledCount;
     }
 
     void saveToConfig(ClockConfig *config)
@@ -30,12 +38,12 @@ struct General
         config->ledCount = ledCount;
     }
 
-    void loadFromConfig(ClockConfig &config)
+    void loadFromConfig(ClockConfig *config)
     {
-        showSeconds = config.displaySeconds;
-        format24H = config.format == Format_24H;
-        brightness = config.brightness;
-        lightSensorInfluence = config.lightInfluence;
-        ledCount = config.ledCount;
+        showSeconds = config->displaySeconds;
+        format24H = config->format == Format_24H;
+        brightness = config->brightness;
+        lightSensorInfluence = config->lightInfluence;
+        ledCount = config->ledCount;
     }
 };
