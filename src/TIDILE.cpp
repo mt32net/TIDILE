@@ -53,7 +53,7 @@ void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelpe
 
     // server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.html");
     server->serveStatic("/", SPIFFS, "/static");
-    webserver.setup(server, &configuration);
+    webserver.setup(server, &configuration, wifiHelper);
     // Only start mqtt service when connected to a internet
     if (!wifiHelper->isAPMode())
     {

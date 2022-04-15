@@ -12,6 +12,7 @@ public:
     bool connectedWiFi();
     void setHostname(String name);
     void openAP(String name);
+    void setCredentials(String ssid, String password);
     bool isAPMode() { return apMode; };
 
 private:

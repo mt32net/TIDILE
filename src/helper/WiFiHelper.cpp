@@ -7,11 +7,11 @@ void WiFiHelper::connectWiFi()
 
     this->apMode = false;
     Serial.println("Initialising WiFi...");
-    WiFi.mode(WIFI_AP_STA);
     // TODO back in
-    // WiFi.enableIpV6();
+    WiFi.enableIpV6();
     // WiFi.disconnect();
-    // WiFi.setAutoReconnect(true);
+    WiFi.setAutoReconnect(true);
+    WiFi.begin();
     // WiFi.enableLongRange(true);
     delay(500);
 
@@ -34,6 +34,7 @@ void WiFiHelper::connectWiFi()
         tries++;
         if (tries > WIFI_NUMBER_TRIES_BEFORE_AP)
         {
+            Serial.println();
             Serial.println("Could not establish connection, opening access point...");
             openAP("TIDILEAP");
             return;
@@ -44,6 +45,28 @@ void WiFiHelper::connectWiFi()
     Serial.println("WiFi connected");
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
+}
+
+void WiFiHelper::setCredentials(String ssid, String password) {
+    WiFi.persistent(true);
+    Serial.println("Trying to connect to " + ssid + "...");
+    WiFi.begin(ssid.c_str(), password.c_str());
+    int tries = 0;
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        tries++;
+        Serial.print(".");
+        if (tries > WIFI_NUMBER_TRIES_BEFORE_AP)
+        {
+            Serial.println();
+            Serial.println("Could not establish connection, doing nothing...");
+            return;
+        }
+    }
+    Serial.println();
+    Serial.println("Connected to " + ssid + ". Restarting...");
+    delay(100);
+    ESP.restart();
 }
 
 bool WiFiHelper::connectedWiFi()
@@ -60,6 +83,7 @@ void WiFiHelper::openAP(String name)
 {
     // WiFi.stopSmartConfig();
     this->apMode = true;
+    WiFi.mode(WIFI_AP_STA);
     WiFi.disconnect();
     setHostname("tidile");
     dnsServer.start(DEFAULT_DNS_PORT, "*", apIP);

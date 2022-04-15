@@ -3,10 +3,11 @@
 #include <AsyncJson.h>
 #include "../topics/topicsInclude.hpp"
 
-void Webserver::setup(AsyncWebServer *server, ClockConfig *config)
+void Webserver::setup(AsyncWebServer *server, ClockConfig *config, WiFiHelper * wifiHelper)
 {
     this->config = config;
     this->server = server;
+    this->wifiHelper = wifiHelper;
 
     // // #pragma region HTTP requestHandler
     // server->on("/", HTTP_GET, [requestHandler](AsyncWebServerRequest *request)
@@ -104,4 +105,12 @@ void Webserver::initializeRoutes()
         request->send(200);
     });
     server->addHandler(handlerNightTIme);
+
+    AsyncCallbackJsonWebHandler *handlerCredentials = new AsyncCallbackJsonWebHandler(ENDPOINT_CREDENTIALS, [this](AsyncWebServerRequest *request, JsonVariant &json) {
+        String ssid = json["ssid"];
+        String password = json["password"];
+        request->send(200);
+        this->wifiHelper->setCredentials(ssid, password);
+    });
+    server->addHandler(handlerCredentials);
 }
