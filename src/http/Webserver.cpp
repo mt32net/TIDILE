@@ -2,6 +2,7 @@
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
 #include <StreamUtils.h>
+#include <SPIFFS.h>
 #include "../topics/topicsInclude.hpp"
 
 void Webserver::setup(AsyncWebServer *server, ClockConfig *config, WiFiHelper * wifiHelper)
@@ -10,25 +11,9 @@ void Webserver::setup(AsyncWebServer *server, ClockConfig *config, WiFiHelper * 
     this->server = server;
     this->wifiHelper = wifiHelper;
 
-    // // #pragma region HTTP requestHandler
-    // server->on("/", HTTP_GET, [requestHandler](AsyncWebServerRequest *request)
-    //            { requestHandler->onIndex(request); });
-    // server->on("/colors", HTTP_GET, [requestHandler](AsyncWebServerRequest *request)
-    //            { requestHandler->onColors(request); });
-    // server->on("/envcolors", HTTP_GET, [requestHandler](AsyncWebServerRequest *request)
-    //            { requestHandler->onEnvColors(request); });
-    // server->on("/other", HTTP_GET, [requestHandler](AsyncWebServerRequest *request)
-    //            { requestHandler->onOther(request); });
-    // server->on("/time", HTTP_GET, [requestHandler](AsyncWebServerRequest *request)
-    //            { requestHandler->onNightTime(request); });
-    // server->on("/manual", HTTP_GET, [requestHandler](AsyncWebServerRequest *request)
-    //            { requestHandler->onManual(request); });
-    // server->on("/toggleLamp", HTTP_GET, [requestHandler](AsyncWebServerRequest *request)
-    //            { requestHandler->onLamp(request); });
-    // // server->on("/env", HTTP_GET, [requestHandler](AsyncWebServerRequest *request){handler->onEnv(request);});
-    // // server->on("/times", HTTP_GET, [requestHandler](AsyncWebServerRequest *request){handler->onTimes(request);});
-    // server->on("/styles.css", HTTP_GET, [requestHandler](AsyncWebServerRequest *request)
-    //            { requestHandler->onStyleSheet(request); });
+    server->serveStatic("/css/", SPIFFS, "/dist/css/");
+    server->serveStatic("/js/", SPIFFS, "/dist/js/");
+    server->on("/", HTTP_GET, [=](AsyncWebServerRequest* request) { request->send(SPIFFS, "/dist/index.html", "text/html"); });
     initializeRoutes();
 
     server->onNotFound([](AsyncWebServerRequest *request)
@@ -41,41 +26,41 @@ void Webserver::initializeRoutes()
 {
 
     // COLOR
-    // server->on(ENDPOINT_COLORS, HTTP_GET, [this](AsyncWebServerRequest *request) {
-    //     AsyncResponseStream *response = request->beginResponseStream("application/json");
-    //     DynamicJsonDocument json(WEBSERVER_DEFAULT_DOC_SIZE);
-    //     Colors colors;
-    //     colors.loadFromConfig(config);
-    //     colors.serializeToJson(json);
-    //     serializeJson(json, *response);
-    //     request->send(response); 
-    //     json.garbageCollect();
-    // });
-
     server->on(ENDPOINT_COLORS, HTTP_GET, [this](AsyncWebServerRequest *request) {
-        Serial.println("----- GET ------");
-        // 0
-        Serial.println(millis());
-        AsyncJsonResponse *response = new AsyncJsonResponse();
+        AsyncResponseStream *response = request->beginResponseStream("application/json");
         DynamicJsonDocument json(WEBSERVER_DEFAULT_DOC_SIZE);
-        // 1
-        Serial.println(millis());
         Colors colors;
         colors.loadFromConfig(config);
-        // 2
-        Serial.println(millis());
         colors.serializeToJson(json);
-        // 3
-        Serial.println(millis());
-        response->getRoot().set(json);
-        response->setLength();
-        // 4
-        Serial.println(millis());
-        request->send(response);
-        // 5
-        Serial.println(millis());
-        //json.garbageCollect();
+        serializeJson(json, *response);
+        request->send(response); 
+        json.garbageCollect();
     });
+
+    // server->on(ENDPOINT_COLORS, HTTP_GET, [this](AsyncWebServerRequest *request) {
+    //     Serial.println("----- GET ------");
+    //     // 0
+    //     Serial.println(millis());
+    //     AsyncJsonResponse *response = new AsyncJsonResponse();
+    //     DynamicJsonDocument json(WEBSERVER_DEFAULT_DOC_SIZE);
+    //     // 1
+    //     Serial.println(millis());
+    //     Colors colors;
+    //     colors.loadFromConfig(config);
+    //     // 2
+    //     Serial.println(millis());
+    //     colors.serializeToJson(json);
+    //     // 3
+    //     Serial.println(millis());
+    //     response->getRoot().set(json);
+    //     response->setLength();
+    //     // 4
+    //     Serial.println(millis());
+    //     request->send(response);
+    //     // 5
+    //     Serial.println(millis());
+    //     //json.garbageCollect();
+    // });
 
     AsyncCallbackJsonWebHandler *handlerColor = new AsyncCallbackJsonWebHandler(ENDPOINT_COLORS, [this](AsyncWebServerRequest *request, JsonVariant &json) {
         Colors colors;
@@ -132,6 +117,7 @@ void Webserver::initializeRoutes()
     });
     server->addHandler(handlerNightTIme);
 
+    // CREDENTIALS
     AsyncCallbackJsonWebHandler *handlerCredentials = new AsyncCallbackJsonWebHandler(ENDPOINT_CREDENTIALS, [this](AsyncWebServerRequest *request, JsonVariant &json) {
         String ssid = json["ssid"];
         String password = json["password"];
@@ -139,4 +125,11 @@ void Webserver::initializeRoutes()
         this->wifiHelper->setCredentials(ssid, password);
     });
     server->addHandler(handlerCredentials);
+
+    // AP MODE
+    server->on(ENDPOINT_AP, HTTP_GET, [this](AsyncWebServerRequest *request) {
+        auto response = request->beginResponse(200, "application/text", wifiHelper->isAPMode() ? "true" : "false"); 
+        request->send(response);
+    });
+
 }

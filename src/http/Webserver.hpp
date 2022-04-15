@@ -12,6 +12,7 @@
 #define ENDPOINT_GENERAL "/general"
 #define ENDPOINT_NIGHT_TIME "/nightTime"
 #define ENDPOINT_CREDENTIALS "/credentials"
+#define ENDPOINT_AP "/isAP"
 
 /**
  * @brief Webser class to initialize the WEbserver for configuration
