@@ -185,6 +185,7 @@ void TIDILE::update()
     // TODO check
     if (wifiHelper->isAPMode())
         return;
+    getTime(&currentTime);
     mqtt.loop(currentTime);
 
     int timeTil = hmsToTimeInt(customDisplayTil);
