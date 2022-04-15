@@ -1,6 +1,7 @@
 #include "Webserver.hpp"
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
+#include <StreamUtils.h>
 #include "../topics/topicsInclude.hpp"
 
 void Webserver::setup(AsyncWebServer *server, ClockConfig *config, WiFiHelper * wifiHelper)
@@ -40,15 +41,40 @@ void Webserver::initializeRoutes()
 {
 
     // COLOR
+    // server->on(ENDPOINT_COLORS, HTTP_GET, [this](AsyncWebServerRequest *request) {
+    //     AsyncResponseStream *response = request->beginResponseStream("application/json");
+    //     DynamicJsonDocument json(WEBSERVER_DEFAULT_DOC_SIZE);
+    //     Colors colors;
+    //     colors.loadFromConfig(config);
+    //     colors.serializeToJson(json);
+    //     serializeJson(json, *response);
+    //     request->send(response); 
+    //     json.garbageCollect();
+    // });
+
     server->on(ENDPOINT_COLORS, HTTP_GET, [this](AsyncWebServerRequest *request) {
-        AsyncResponseStream *response = request->beginResponseStream("application/json");
+        Serial.println("----- GET ------");
+        // 0
+        Serial.println(millis());
+        AsyncJsonResponse *response = new AsyncJsonResponse();
         DynamicJsonDocument json(WEBSERVER_DEFAULT_DOC_SIZE);
+        // 1
+        Serial.println(millis());
         Colors colors;
         colors.loadFromConfig(config);
+        // 2
+        Serial.println(millis());
         colors.serializeToJson(json);
-        serializeJson(json, *response);
-        request->send(response); 
-        json.garbageCollect();
+        // 3
+        Serial.println(millis());
+        response->getRoot().set(json);
+        response->setLength();
+        // 4
+        Serial.println(millis());
+        request->send(response);
+        // 5
+        Serial.println(millis());
+        //json.garbageCollect();
     });
 
     AsyncCallbackJsonWebHandler *handlerColor = new AsyncCallbackJsonWebHandler(ENDPOINT_COLORS, [this](AsyncWebServerRequest *request, JsonVariant &json) {
