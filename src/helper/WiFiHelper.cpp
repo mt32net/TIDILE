@@ -53,6 +53,7 @@ void WiFiHelper::setCredentials(String ssid, String password) {
     Serial.println("Trying to connect to " + ssid + "...");
     WiFi.begin(ssid.c_str(), password.c_str());
     int tries = 0;
+    // Not working!
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
         tries++;

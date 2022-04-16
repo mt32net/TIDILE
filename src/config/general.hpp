@@ -11,6 +11,7 @@
 #define LED_PIN 5
 #define LED_COUNT 120
 #define BLINK_BRIGHTNESS 0.7
+#define NUMER_STATUS_LEDS 10
 
 #define CONFIG_FILE_NAME "/config.json"
 #define ACCESS_POINT_SSID "TIDILE-AP"

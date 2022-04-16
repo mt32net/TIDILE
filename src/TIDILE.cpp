@@ -183,9 +183,14 @@ void TIDILE::displaCustom(Color colorCode, ClockTime until)
 void TIDILE::update()
 {
     ClockTime currentTime;
-    // TODO check
-    if (wifiHelper->isAPMode())
+    if (wifiHelper->isAPMode()) {
+        for (int i = 0; i < NUMER_STATUS_LEDS; i++)
+        {
+            this->leds[i] = ((millis() / 1000) % 2 == 0) ? CRGB::White : CRGB::Black;
+        }
+        FastLED.show();
         return;
+    } 
     getTime(&currentTime);
     mqtt.loop(currentTime);
 
