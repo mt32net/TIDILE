@@ -1,7 +1,7 @@
 {
     "valid": true,
     "displaySeconds": true,
-    "dimmSeconds": false,
+    "dimmSeconds": true,
     "hours": {
       "r": 255,
       "g": 0,
@@ -21,6 +21,6 @@
     "nightTimeBegin": 2300,
     "nightTimeEnd": 600,
     "brightness": 10,
-    "lightInfluence": 50,
+    "lightInfluence": 0,
     "format": 23
   }

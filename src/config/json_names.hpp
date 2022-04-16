@@ -2,7 +2,7 @@
 
 //#region General settings
 #define JSON_NAME_SHOW_SECONDS "show_seconds"
-#define JSON_NAME_24H_FORMAT "24h_format"
+#define JSON_NAME_24H_FORMAT "format_24"
 #define JSON_NAME_BRIGHTNESS "brightness"
 #define JSON_NAME_LIGHT_SENSOR_INFLUENCE "light_sensor_influence"
 #define JSON_NAME_LED_COUNT "led_count"

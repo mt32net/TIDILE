@@ -1,5 +1,6 @@
 #include "WiFiHelper.hpp"
 #include "../config/config_includes.hpp"
+#include "esp_wifi.h"
 #include <WiFi.h>
 
 void WiFiHelper::connectWiFi()
@@ -93,4 +94,24 @@ void WiFiHelper::openAP(String name)
     IPAddress ownIp = WiFi.softAPIP();
     Serial.print("TIDILE AP IP: ");
     Serial.println(ownIp);
+}
+
+std::vector<Network> WiFiHelper::getReachableNets() {
+    std::vector<Network> nets = {};
+    int n = WiFi.scanNetworks(false, false, false, 80U);
+    for(int i = 0; i < n; i++) {
+        auto net = Network {
+            ssid: WiFi.SSID(i),
+            rssi: WiFi.RSSI(i),
+        };
+        nets.push_back(net);
+    }
+    return nets;
+}
+
+Network WiFiHelper::getCurrentNetwork() {
+    return Network {
+        ssid: WiFi.SSID(),
+        rssi: (float)WiFi.RSSI(),
+    };
 }

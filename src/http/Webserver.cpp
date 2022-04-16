@@ -127,9 +127,21 @@ void Webserver::initializeRoutes()
     server->addHandler(handlerCredentials);
 
     // AP MODE
-    server->on(ENDPOINT_AP, HTTP_GET, [this](AsyncWebServerRequest *request) {
-        auto response = request->beginResponse(200, "application/text", wifiHelper->isAPMode() ? "true" : "false"); 
-        request->send(response);
+    server->on(ENDPOINT_WIFI, HTTP_GET, [this](AsyncWebServerRequest *request) {
+        AsyncResponseStream *response = request->beginResponseStream("application/json");
+        DynamicJsonDocument json(WEBSERVER_DEFAULT_DOC_SIZE);
+        json["apMode"] = this->wifiHelper->isAPMode();
+        int i = 0;
+        for (auto net : this->wifiHelper->getReachableNets()) {
+            json["available"][i]["ssid"] = net.ssid;
+            json["available"][i]["rssi"] = net.rssi;
+            i++;
+        }
+        Network current = this->wifiHelper->getCurrentNetwork();
+        json["current"]["ssid"] = current.ssid;
+        json["current"]["rssi"] = current.rssi;
+        serializeJson(json, *response);
+        request->send(response); 
+        json.garbageCollect();
     });
-
 }
