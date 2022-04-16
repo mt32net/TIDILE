@@ -69,6 +69,7 @@ void Webserver::initializeRoutes()
         colors.deserializeFromJSON(doc);
         colors.saveToConfig(config);
         request->send(200);
+        config->flushConfig();
     });
     server->addHandler(handlerColor);
 
@@ -91,6 +92,7 @@ void Webserver::initializeRoutes()
         general.deserializeFromJSON(doc);
         general.saveToConfig(config);
         request->send(200);
+        config->flushConfig();
     });
     server->addHandler(handlerGeneral);
 
@@ -114,6 +116,7 @@ void Webserver::initializeRoutes()
         nightTime.deserializeFromJSON(doc);
         nightTime.saveToConfig(config);
         request->send(200);
+        config->flushConfig();
     });
     server->addHandler(handlerNightTIme);
 
@@ -126,7 +129,7 @@ void Webserver::initializeRoutes()
     });
     server->addHandler(handlerCredentials);
 
-    // AP MODE
+    // WIFI INFO
     server->on(ENDPOINT_WIFI, HTTP_GET, [this](AsyncWebServerRequest *request) {
         AsyncResponseStream *response = request->beginResponseStream("application/json");
         DynamicJsonDocument json(WEBSERVER_DEFAULT_DOC_SIZE);

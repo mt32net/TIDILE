@@ -40,7 +40,7 @@ public:
      */
     void displaCustom(Color colorCode, ClockTime until);
 
-    void flushConfig();
+    // void flushConfig();
 
     void mqttCallback(char *topic, byte *payload, unsigned int length);
 

@@ -5,6 +5,8 @@
 #include <Preferences.h>
 #include "helper/color.hpp"
 #include "ArduinoJson.h"
+#include <SPIFFS.h>
+#include <StreamUtils.h>
 
 /**
  * @brief CHosen clock format
@@ -107,5 +109,20 @@ struct ClockConfig
     // preferences->end();
 
     // serializeJsonPretty(json, Serial);
+  }
+
+  void flushConfig()
+  {
+    // TODO calc size
+    DynamicJsonDocument doc(2000);
+    JsonObject json = doc.to<JsonObject>();
+    serialize(&json);
+    File configFile = SPIFFS.open(CONFIG_FILE_NAME, FILE_WRITE);
+    WriteBufferingStream bufferedFile(configFile, 64);
+    // TODO change back to file
+    serializeJson(json, bufferedFile);
+    bufferedFile.flush();
+    configFile.close();
+    Serial.println("Wrote config to file.");
   }
 };
