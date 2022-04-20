@@ -8,6 +8,7 @@
 #include "mqtt/MQTTHandler.hpp"
 #include "config/config_includes.hpp"
 #include "helper/WiFiHelper.hpp"
+#include "LEDController.hpp"
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
@@ -88,6 +89,8 @@ private:
     MQTTHandler mqtt;
     AsyncWebServer *server;
     WiFiHelper *wifiHelper;
+    LEDController ledController;
+    short numberZones = NUMBER_ZONES;
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
     Adafruit_BME280 *bmp;
 #endif
