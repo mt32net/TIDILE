@@ -6,6 +6,7 @@
 #define JSON_NAME_BRIGHTNESS "brightness"
 #define JSON_NAME_LIGHT_SENSOR_INFLUENCE "light_sensor_influence"
 #define JSON_NAME_LED_COUNT "led_count"
+#define JSON_NAME_REVERSE_DIRECTION "reverse_direction"
 //#endregion
 
 // #pragma region color settings

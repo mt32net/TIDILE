@@ -10,7 +10,8 @@ struct General
     bool format24H = true;
     uint16_t brightness = 10;
     uint16_t lightSensorInfluence = 50;
-    int ledCount = LED_COUNT;
+    // int ledCount = LED_COUNT;
+    bool reverseDirection = false;
 
     void deserializeFromJSON(JsonDocument &doc)
     {
@@ -18,6 +19,7 @@ struct General
         format24H = doc[JSON_NAME_24H_FORMAT].as<bool>();
         brightness = doc[JSON_NAME_BRIGHTNESS].as<uint16_t>();
         lightSensorInfluence = doc[JSON_NAME_LIGHT_SENSOR_INFLUENCE].as<uint16_t>();
+        reverseDirection = doc[JSON_NAME_REVERSE_DIRECTION].as<bool>();
         // ledCount = doc[JSON_NAME_LED_COUNT].as<int>();
     }
 
@@ -26,6 +28,7 @@ struct General
         doc[JSON_NAME_24H_FORMAT] = format24H;
         doc[JSON_NAME_BRIGHTNESS] = brightness;
         doc[JSON_NAME_LIGHT_SENSOR_INFLUENCE] = lightSensorInfluence;
+        doc[JSON_NAME_REVERSE_DIRECTION] = reverseDirection;
         // doc[JSON_NAME_LED_COUNT] = ledCount;
     }
 
@@ -35,7 +38,8 @@ struct General
         config->format = format24H ? Format_24H : Format_12H;
         config->brightness = brightness;
         config->lightInfluence = lightSensorInfluence;
-        config->ledCount = ledCount;
+        config->reverseDirection = reverseDirection;
+        // config->ledCount = ledCount;
     }
 
     void loadFromConfig(ClockConfig *config)
@@ -44,6 +48,7 @@ struct General
         format24H = config->format == Format_24H;
         brightness = config->brightness;
         lightSensorInfluence = config->lightInfluence;
-        ledCount = config->ledCount;
+        reverseDirection = config->reverseDirection;
+        // ledCount = config->ledCount;
     }
 };

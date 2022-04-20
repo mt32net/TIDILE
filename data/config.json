@@ -22,5 +22,6 @@
     "nightTimeEnd": 600,
     "brightness": 10,
     "lightInfluence": 0,
-    "format": 23
+    "format": 23,
+    "reverseDirection": false
   }

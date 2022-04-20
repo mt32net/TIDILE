@@ -42,6 +42,7 @@ struct ClockConfig
   bool tempOverwriteNightTime = false;
   ClockFormat format = ClockFormat::Format_24H;
   int ledCount = LED_COUNT;
+  bool reverseDirection = false;
 
   void deserialize(JsonObject *json)
   {
@@ -63,6 +64,7 @@ struct ClockConfig
     brightness = (*json)["brightness"];
     lightInfluence = (*json)["lightInfluence"];
     format = (*json)["format"];
+    reverseDirection = (*json)["reverse_direction"];
 
     // format = (preferences->getInt("format") == ClockFormat::Format_24H) ? ClockFormat::Format_24H : ClockFormat::Format_12H;
 
@@ -106,6 +108,7 @@ struct ClockConfig
 
     // preferences->putInt("format", format);
     (*json)["format"] = format;
+    (*json)["reverse_direction"] = reverseDirection;
     // preferences->end();
 
     // serializeJsonPretty(json, Serial);

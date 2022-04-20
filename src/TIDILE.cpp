@@ -210,6 +210,8 @@ void TIDILE::update()
         FastLED.show();
     }
 
+    // Will remain 1, if light sensor not defined
+    double factor = 1;
     if (loopI >= SMOOTH_LOOPS)
     {
 #if defined(DISPLAY_HUMIDIY) || defined(DISPLAY_TEMPERATURE) || defined(DISPLAY_PRESSURE)
@@ -221,12 +223,8 @@ void TIDILE::update()
         lightAvg = lightAvg / SMOOTH_LOOPS;
         double lightPercent = (double)map(lightAvg, 0, 4095, 0, 100) / (double)100;
         double influence = (double)getConfig()->lightInfluence / (double)100;
-
 #ifdef LIGHT_SENSOR
-        double factor = influence * lightPercent + (1 - influence);
-        FastLED.setBrightness(getConfig()->brightness * factor);
-#else
-        FastLED.setBrightness(getConfig()->brightness);
+        factor = influence * lightPercent + (1 - influence);
 #endif
         loopI = 0;
         touchAverage = 0;
@@ -237,6 +235,7 @@ void TIDILE::update()
         touchAverage += touchRead(TOUCH_PIN);
         lightAvg += analogRead(PHOTORESISTOR_PIN);
     }
+    FastLED.setBrightness(getConfig()->brightness * factor);
     loopI++;
 }
 

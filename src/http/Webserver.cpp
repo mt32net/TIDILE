@@ -91,7 +91,7 @@ void Webserver::initializeRoutes()
         doc.set(json);
         general.deserializeFromJSON(doc);
         general.saveToConfig(config);
-        request->send(200);
+        request->send(200); 
         config->flushConfig();
     });
     server->addHandler(handlerGeneral);
