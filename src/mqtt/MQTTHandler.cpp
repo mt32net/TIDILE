@@ -9,14 +9,13 @@ MQTTHandler::MQTTHandler()
 {
 }
 
-void MQTTHandler::setup(ClockConfig *config, Preferences *preferences, TIDILE *tidile, String uri, int port, ClockTime currentTime)
+void MQTTHandler::setup(ClockConfig *config, TIDILE *tidile, String uri, int port, ClockTime currentTime)
 {
     this->config = config;
     this->tidile = tidile;
     this->uri = uri;
     this->port = port;
     this->client = new PubSubClient(wifiClient);
-    this->preferences = preferences;
     ClockTime t = currentTime;
     this->startupMins = t.minutes;
     this->startupSecs = t.seconds;

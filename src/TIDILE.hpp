@@ -7,6 +7,7 @@
 #include "http/Webserver.hpp"
 #include "mqtt/MQTTHandler.hpp"
 #include "config/config_includes.hpp"
+#include "topics/topicsInclude.hpp"
 #include "helper/WiFiHelper.hpp"
 #include "LEDController.hpp"
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
@@ -33,14 +34,6 @@ public:
      */
     void setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelper *wifiHelper);
 
-    /**
-     * @brief way to diasply color on all leds until a certain time is reached
-     *
-     * @param colorCode the color all leds should have
-     * @param until the time until normal operation is returned
-     */
-    void displaCustom(Color colorCode, ClockTime until);
-
     // void flushConfig();
 
     void mqttCallback(char *topic, byte *payload, unsigned int length);
@@ -60,7 +53,7 @@ public:
     ClockEnv getEnv();
 #endif
     /**
-     * @brief update method, call this method to update tidile
+     * @brief update method, call this method to update tidile in the loop
      *
      */
     void update();
@@ -77,20 +70,19 @@ public:
      */
     void displayEnv(ClockEnv env);
     ClockConfig *getConfig();
-    bool clockMode = true;
     Color lmapColor = Color(255, 255, 255);
 
 private:
     // FastLED Array
     CRGB *leds;
     ClockConfig configuration;
-    Preferences preferences;
     Webserver webserver;
     MQTTHandler mqtt;
     AsyncWebServer *server;
     WiFiHelper *wifiHelper;
     LEDController ledController;
     short numberZones = NUMBER_ZONES;
+    Custom custom;
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
     Adafruit_BME280 *bmp;
 #endif
@@ -107,8 +99,8 @@ private:
      */
     void startupLEDs(int delay);
 
+    // Loop variables
     int lastSec = 0;
-    ClockTime customDisplayTil;
     int loopI = 0;
     int touchAverage = 30;
     long lightAvg = 0;

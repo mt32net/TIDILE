@@ -3,13 +3,13 @@
 #include <AsyncJson.h>
 #include <StreamUtils.h>
 #include <SPIFFS.h>
-#include "../topics/topicsInclude.hpp"
 
-void Webserver::setup(AsyncWebServer *server, ClockConfig *config, WiFiHelper * wifiHelper)
+void Webserver::setup(AsyncWebServer *server, ClockConfig *config, WiFiHelper * wifiHelper, Custom* custom)
 {
     this->config = config;
     this->server = server;
     this->wifiHelper = wifiHelper;
+    this->custom = custom;
 
     server->serveStatic("/css/", SPIFFS, "/dist/css/");
     server->serveStatic("/js/", SPIFFS, "/dist/js/");
@@ -147,4 +147,14 @@ void Webserver::initializeRoutes()
         request->send(response); 
         json.garbageCollect();
     });
+
+    // CUSTOM
+    AsyncCallbackJsonWebHandler *handlerCustom = new AsyncCallbackJsonWebHandler(ENDPOINT_CUSTOM, [this](AsyncWebServerRequest *request, JsonVariant &json) {
+        DynamicJsonDocument doc(WEBSERVER_DEFAULT_DOC_SIZE);
+        doc.set(json);
+        this->custom->deserializeFromJSON(doc);
+        request->send(200);
+        doc.garbageCollect();
+    });
+    server->addHandler(handlerCustom);
 }

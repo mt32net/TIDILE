@@ -14,7 +14,7 @@ class MQTTHandler
 {
 public:
     MQTTHandler();
-    void setup(ClockConfig *config, Preferences *preferences, TIDILE *tidile, String uri, int port, ClockTime currentTime);
+    void setup(ClockConfig *config, TIDILE *tidile, String uri, int port, ClockTime currentTime);
     void callback(char *topic, byte *payload, unsigned int length);
 
 private:
@@ -36,7 +36,6 @@ private:
     WiFiClient wifiClient;
     PubSubClient *client;
     std::vector<String> subscribedTopics;
-    Preferences *preferences;
 
     int startupSecs;
     int startupMins;

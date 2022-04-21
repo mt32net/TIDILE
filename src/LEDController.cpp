@@ -9,6 +9,12 @@ LEDController::LEDController(short numberLEDs, CRGB * leds, ClockConfig * config
     this->multiplier = numberLEDs / numberZones;
 }
 
+void LEDController::setAll(Color color) {
+    for (int i = 0; i < this->numberLeds; i++) {
+        leds[i] = color.toCRGB();
+    }
+}
+
 void LEDController::setZone(short index, Color color) {
     for (int i = 0; i < multiplier; i++) {
         leds[mapIndex(index) + i] = color.toCRGB();

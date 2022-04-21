@@ -45,7 +45,6 @@ void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelpe
     Serial.println("-------------------------------------------");
 #endif
 
-    customDisplayTil = {0, 0, 0, 0, 0, 0};
     loadClockConfig();
 
     configTime(3600, 3600, ntpServer);
@@ -55,11 +54,11 @@ void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelpe
     // CAUTION makes GETs increadibly slow
     // server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.html");
     // server->serveStatic("/", SPIFFS, "/static");
-    webserver.setup(server, &configuration, wifiHelper);
+    webserver.setup(server, &configuration, wifiHelper, &custom);
     // Only start mqtt service when connected to a internet
     if (!wifiHelper->isAPMode())
     {
-        mqtt.setup(&configuration, &preferences, this, MQTT_URI, MQTT_PORT, time);
+        mqtt.setup(&configuration, this, MQTT_URI, MQTT_PORT, time);
     }
 
     FastLED.setBrightness(configuration.brightness);
@@ -149,8 +148,6 @@ void TIDILE::displayTime(ClockTime time)
         // this->leds[mapToLEDs(hours, configuration.format) + i] = configuration.colorHours.toCRGB();
         ledController.setZone(mapToLEDs(hours, numberZones), configuration.colorHours);
 
-    // Update leds
-    FastLED.show();
 }
 
 void TIDILE::displayEnv(ClockEnv env)
@@ -178,16 +175,11 @@ void TIDILE::displayEnv(ClockEnv env)
     delay(ENV_DISPLAY_TIME);
 }
 
-void TIDILE::displaCustom(Color colorCode, ClockTime until)
-{
-    this->customDisplayTil = until;
-    this->lmapColor = colorCode;
-    FastLED.show();
-}
 
 void TIDILE::update()
 {
-    ClockTime currentTime;
+    // AP MODE
+
     if (wifiHelper->isAPMode()) {
         for (int i = 0; i < NUMER_STATUS_LEDS; i++)
         {
@@ -195,28 +187,28 @@ void TIDILE::update()
         }
         FastLED.show();
         return;
-    } 
-    getTime(&currentTime);
-    mqtt.loop(currentTime);
+    }
 
-    int timeTil = hmsToTimeInt(customDisplayTil);
-    int curr = hmsToTimeInt(currentTime);
-    if (curr >= timeTil && this->clockMode)
-    {
-        displayTime(currentTime);
+    // GET AND DISPLAY TIME
+
+    ClockTime currentTime;
+    getTime(&currentTime);
+
+    // Reset mode if time is over
+    if (currentTime.millis > custom.millisEnd)
+        custom.mode = NORMAL;
+
+    switch (custom.mode) {
+        case NORMAL: displayTime(currentTime); break;
+        case TIME: displayTime(custom.customTime); break;
+        case COLOR: ledController.setAll(custom.color); break;
     }
-    else
-    {
-        clear();
-        for (int i = 0; i < this->numberLEDs; i++)
-        {
-            this->leds[i] = this->lmapColor.toCRGB();
-        }
-        FastLED.show();
-    }
+
+    // LIGHT SENSOR AND ENV STUFF
 
     // Will remain 1, if light sensor not defined
     double factor = 1;
+
     if (loopI >= SMOOTH_LOOPS)
     {
 #if defined(DISPLAY_HUMIDIY) || defined(DISPLAY_TEMPERATURE) || defined(DISPLAY_PRESSURE)
@@ -240,7 +232,11 @@ void TIDILE::update()
         touchAverage += touchRead(TOUCH_PIN);
         lightAvg += analogRead(PHOTORESISTOR_PIN);
     }
+
+    // LOOPING STUFF
     FastLED.setBrightness(getConfig()->brightness * factor);
+    mqtt.loop(currentTime);
+    FastLED.show();
     loopI++;
 }
 

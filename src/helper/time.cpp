@@ -22,9 +22,10 @@ int hmsToTimeInt(ClockTime time)
     return (digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes) + digitToTwoCharsDigit(time.seconds)).toInt();
 }
 
-bool getTime(ClockTime *time)
+bool getTime(ClockTime * currentTime)
 {
     struct tm timeinfo;
+    time_t now;
     if (!getLocalTime(&timeinfo))
     {
         Serial.println("Failed to obtain time");
@@ -33,14 +34,17 @@ bool getTime(ClockTime *time)
         //     ESP.restart();
         return false;
     }
+    time(&now);
     // Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
-    *time = ClockTime{
+    *currentTime = ClockTime{
         seconds : timeinfo.tm_sec,
         minutes : timeinfo.tm_min,
         hours : timeinfo.tm_hour,
         day : timeinfo.tm_mday,
         month : timeinfo.tm_mon,
-        year : timeinfo.tm_year
+        year : timeinfo.tm_year,
+        // TODO impl
+        millis : (long)now,
     };
     return true;
 }

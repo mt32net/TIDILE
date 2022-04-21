@@ -10,6 +10,7 @@ public:
     LEDController(short numberLEDs, CRGB * leds, ClockConfig * config, short numberZones);
     void setZone(short index, Color color);
     void setBrightness(byte brightness);
+    void setAll(Color color);
 private:
     ClockConfig * config;
     CRGB * leds;

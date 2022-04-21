@@ -35,7 +35,7 @@ struct ClockConfig
   Color colorPressure = Color();
   bool nightTimeEnabled = DEFAULT_NIGHT_TIME_ENABLED;
   uint16_t lightInfluence = DEFAULT_LIGHT_INFLUENCE;
-  uint16_t nightTimeBegin = DEFAULT_NIGHT_TIME_BEGIN; //(13:30 -> 1330, 06:24 -> 624)
+  uint16_t nightTimeBegin = DEFAULT_NIGHT_TIME_BEGIN; // (13:30 -> 1330, 06:24 -> 624)
   uint16_t nightTimeEnd = DEFAULT_NIGHT_TIME_END;
   uint8_t brightness = DEFAULT_BRIGHTNESS;
   bool dimmSeconds = DEFAULT_DIMM_SECONDS;

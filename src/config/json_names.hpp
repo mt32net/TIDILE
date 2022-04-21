@@ -28,3 +28,8 @@
 #define JSON_NAME_META_VERSION "version"
 #define JSON_NAME_META_MODULE_TYPE "module_type"
 // #pragma endregion
+
+#define JSON_NAME_CUSTOM_MODE "mode"
+#define JSON_NAME_CUSTOM_END "end"
+#define JSON_NAME_CUSTOM_COLOR "color"
+#define JSON_NAME_CUSTOM_TIME "time"
