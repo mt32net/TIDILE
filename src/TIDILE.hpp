@@ -87,7 +87,6 @@ private:
     Adafruit_BME280 *bmp;
 #endif
     int numberLEDs;
-    int mapToLEDs(int value, int max);
     /**
      * @brief set all LEDs to black
      */

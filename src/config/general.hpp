@@ -19,5 +19,4 @@
 #define LED_COUNT 118
 #define NUMBER_ZONES 59
 
-#define LED_COUNT_FOR_ONE_SECOND(ledCount) (int)((double)(ledCount) / 60.0)
 // #define DIMM_ADD_VALUE 0.7

@@ -16,6 +16,7 @@ void LEDController::setAll(Color color) {
 }
 
 void LEDController::setZone(short index, Color color) {
+    if (index < 0) return;
     for (int i = 0; i < multiplier; i++) {
         leds[mapIndex(index) + i] = color.toCRGB();
     }
@@ -23,10 +24,9 @@ void LEDController::setZone(short index, Color color) {
 
 short LEDController::mapIndex(short zoneIndex) {
     short i = zoneIndex;
-    i *= multiplier;
     if (config->reverseDirection) {
-        // TODO check
-        i = numberLeds - 1 - i;
+        i = numberZones - 1 - i;
     }
+    i *= multiplier;
     return i;
 }

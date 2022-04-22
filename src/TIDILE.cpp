@@ -68,11 +68,6 @@ void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelpe
 #endif
 }
 
-int TIDILE::mapToLEDs(int value, int max)
-{
-    return (int)mapd(value, 0, max, 0, this->numberLEDs - 1);
-}
-
 void TIDILE::clear()
 {
     for (int i = 0; i < numberLEDs; i++)
@@ -121,58 +116,40 @@ void TIDILE::displayTime(ClockTime time)
     // Seconds
     if (configuration.displaySeconds)
     {
-
         // When seconds are "out of minutes"
         if (time.seconds > time.minutes)
-        {
-            for (int i = 0; i < LED_COUNT_FOR_ONE_SECOND(configuration.ledCount); i++)
-            {
-                //this->leds[mapToLEDs(time.seconds, 59) + i] = (configuration.dimmSeconds) ? (configuration.colorMinutes).toCRGB() : configuration.colorSeconds.toCRGB();
-                ledController.setZone(time.seconds, (configuration.dimmSeconds) ? (configuration.colorMinutes) : configuration.colorSeconds);
-            }
-        }
+            ledController.setZone(time.seconds - 1, (configuration.dimmSeconds) ? (configuration.colorMinutes) : configuration.colorSeconds);
         // When seconds are inside minutes
         else
-        {
-            for (int i = 0; i < LED_COUNT_FOR_ONE_SECOND(configuration.ledCount); i++)
-            {
-                // this->leds[mapToLEDs(time.seconds, 59) + i] = (configuration.dimmSeconds) ? CRGB::Black : configuration.colorSeconds.toCRGB();
-                ledController.setZone(time.seconds, (configuration.dimmSeconds) ? Color(0, 0, 0) : configuration.colorSeconds);
-
-            }
-        }
+            ledController.setZone(time.seconds - 1, (configuration.dimmSeconds) ? Color(0, 0, 0) : configuration.colorSeconds);
     }
     // Hours
-    int hours = (configuration.format == ClockFormat::Format_24H || time.hours < 12) ? time.hours : time.hours - 12;
-    for (int i = 0; i < LED_COUNT_FOR_ONE_SECOND(configuration.ledCount); i++)
-        // this->leds[mapToLEDs(hours, configuration.format) + i] = configuration.colorHours.toCRGB();
-        ledController.setZone(mapToLEDs(hours, numberZones), configuration.colorHours);
-
+    ledController.setZone(map(time.hours, 0, (long)configuration.format, 0, numberZones) - 1, configuration.colorHours);
 }
 
 void TIDILE::displayEnv(ClockEnv env)
 {
-    clear();
-    ClockTime time;
-    getTime(&time);
-    if (isNightTime(configuration, time))
-    {
-        FastLED.show();
-        return;
-    }
-    for (int i = 0; i < mapToLEDs(env.temperature, 50); i++)
-    {
-        this->leds[i] = configuration.colorTemperature.toCRGB();
-    }
-    FastLED.show();
-    delay(ENV_DISPLAY_TIME);
-    clear();
-    for (int i = 0; i < mapToLEDs(env.pressure, 10000); i++)
-    {
-        this->leds[i] = configuration.colorPressure.toCRGB();
-    }
-    FastLED.show();
-    delay(ENV_DISPLAY_TIME);
+    // clear();
+    // ClockTime time;
+    // getTime(&time);
+    // if (isNightTime(configuration, time))
+    // {
+    //     FastLED.show();
+    //     return;
+    // }
+    // for (int i = 0; i < mapToLEDs(env.temperature, 50); i++)
+    // {
+    //     this->leds[i] = configuration.colorTemperature.toCRGB();
+    // }
+    // FastLED.show();
+    // delay(ENV_DISPLAY_TIME);
+    // clear();
+    // for (int i = 0; i < mapToLEDs(env.pressure, 10000); i++)
+    // {
+    //     this->leds[i] = configuration.colorPressure.toCRGB();
+    // }
+    // FastLED.show();
+    // delay(ENV_DISPLAY_TIME);
 }
 
 
