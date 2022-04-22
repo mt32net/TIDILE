@@ -12,7 +12,7 @@ struct ClockTime
     int day;
     int month;
     int year;
-    long millis;
+    long unixTime;
 
     /*bool operator <(const ClockTime& t) {
         return year > t.year || month > t.month || day > t.day || hours > t.hours || minutes > t.minutes || seconds > t.seconds;

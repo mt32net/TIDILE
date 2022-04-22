@@ -107,7 +107,6 @@ void TIDILE::displayTime(ClockTime time)
     resetOverwriteNightTimeIfLegit(configuration, time);
     if (isNightTime(configuration, time))
     {
-        FastLED.show();
         return;
     }
     // Minutes
@@ -172,7 +171,7 @@ void TIDILE::update()
     getTime(&currentTime);
 
     // Reset mode if time is over
-    if (currentTime.millis > custom.millisEnd)
+    if (currentTime.unixTime > custom.unixEnd)
         custom.mode = NORMAL;
 
     switch (custom.mode) {
@@ -186,6 +185,7 @@ void TIDILE::update()
     // Will remain 1, if light sensor not defined
     double factor = 1;
 
+    // TODO overflows?
     if (loopI >= SMOOTH_LOOPS)
     {
 #if defined(DISPLAY_HUMIDIY) || defined(DISPLAY_TEMPERATURE) || defined(DISPLAY_PRESSURE)

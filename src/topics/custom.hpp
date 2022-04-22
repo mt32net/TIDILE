@@ -17,7 +17,7 @@ enum ClockMode {
 struct Custom
 {
     ClockMode mode = NORMAL;
-    long millisEnd = 0;
+    long unixEnd = 0;
     Color color = Color(0, 0, 255);
     // in format HHMM, HH: 0 - 24
     ClockTime customTime = ClockTime();
@@ -31,7 +31,7 @@ struct Custom
             mode = COLOR;
         else
             mode = NORMAL;
-        millisEnd = doc[JSON_NAME_CUSTOM_END].as<long>();
+        unixEnd = doc[JSON_NAME_CUSTOM_END].as<long>();
         color = Color::hexToColor(doc[JSON_NAME_CUSTOM_COLOR].as<String>());
         customTime = ClockTime {
             seconds: doc[JSON_NAME_CUSTOM_TIME]["seconds"],

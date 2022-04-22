@@ -44,7 +44,7 @@ bool getTime(ClockTime * currentTime)
         month : timeinfo.tm_mon,
         year : timeinfo.tm_year,
         // TODO impl
-        millis : (long)now,
+        unixTime : (long)now,
     };
     return true;
 }
