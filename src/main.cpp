@@ -9,6 +9,7 @@
 // #include "esp_wifi.h"
 #include "esp_event.h"
 #include "esp_log.h"
+#include "esp_heap_caps.h"
 #include "driver/gpio.h"
 #include "nvs_flash.h"
 #include "Arduino.h"
@@ -88,4 +89,5 @@ void setup()
 void loop()
 {
   tidile.update();
+  // heap_caps_print_heap_info(0);
 }

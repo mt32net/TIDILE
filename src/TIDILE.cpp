@@ -58,7 +58,9 @@ void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelpe
     // Only start mqtt service when connected to a internet
     if (!wifiHelper->isAPMode())
     {
+#ifdef TIDILE_MQTT
         mqtt.setup(&configuration, this, MQTT_URI, MQTT_PORT, time);
+#endif
     }
 
     FastLED.setBrightness(configuration.brightness);
@@ -212,7 +214,9 @@ void TIDILE::update()
 
     // LOOPING STUFF
     FastLED.setBrightness(getConfig()->brightness * factor);
+#ifdef TIDILE_MQTT
     mqtt.loop(currentTime);
+#endif
     FastLED.show();
     loopI++;
 }

@@ -77,7 +77,9 @@ private:
     CRGB *leds;
     ClockConfig configuration;
     Webserver webserver;
+#ifdef TIDILE_MQTT
     MQTTHandler mqtt;
+#endif
     AsyncWebServer *server;
     WiFiHelper *wifiHelper;
     LEDController ledController;
