@@ -14,6 +14,7 @@
 #define ENDPOINT_NIGHT_TIME "/nightTime"
 #define ENDPOINT_CREDENTIALS "/credentials"
 #define ENDPOINT_WIFI "/wifi"
+#define ENDPOINT_NETWORKS "/networks"
 #define ENDPOINT_CUSTOM "/custom"
 
 
@@ -34,5 +35,7 @@ private:
     WiFiHelper* wifiHelper;
     Custom* custom;
 
+    long lastRequestMillis = 0;
     void initializeRoutes();
+    bool isRateLimited(AsyncWebServerRequest* request);
 };

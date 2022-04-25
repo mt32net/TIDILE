@@ -17,6 +17,7 @@
 #define CONFIG_FILE_NAME "/config.json"
 #define ACCESS_POINT_SSID "TIDILE-AP"
 #define WIFI_NUMBER_TRIES_BEFORE_AP 20
+#define RATE_LIMIT_MILLIS 50
 
 #define LED_COUNT 118
 #define NUMBER_ZONES 59

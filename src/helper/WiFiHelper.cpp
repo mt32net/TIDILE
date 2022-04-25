@@ -99,7 +99,7 @@ void WiFiHelper::openAP(String name)
 
 std::vector<Network> WiFiHelper::getReachableNets() {
     std::vector<Network> nets = {};
-    int n = WiFi.scanNetworks(false, false, false, 80U);
+    int n = WiFi.scanNetworks();
     for(int i = 0; i < n; i++) {
         auto net = Network {
             ssid: WiFi.SSID(i),
