@@ -125,7 +125,9 @@ void TIDILE::displayTime(ClockTime time)
             ledController.setZone(time.seconds - 1, (configuration.dimmSeconds) ? Color(0, 0, 0) : configuration.colorSeconds);
     }
     // Hours
-    ledController.setZone(map(time.hours, 0, (long)configuration.format, 0, numberZones) - 1, configuration.colorHours);
+    int hours = time.hours;
+    if (configuration.format == ClockFormat::Format_12H) hours = time.hours % 12;
+    ledController.setZone(map(hours, 0, (long)configuration.format, 0, numberZones) - 1, configuration.colorHours);
 }
 
 void TIDILE::displayEnv(ClockEnv env)
