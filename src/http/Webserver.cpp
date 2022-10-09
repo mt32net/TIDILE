@@ -188,6 +188,16 @@ void Webserver::initializeRoutes()
         // doc.garbageCollect();
     });
     server->addHandler(handlerCustom);
+
+    server->on(ENDPOINT_CUSTOM, HTTP_GET, [this](AsyncWebServerRequest *request) {
+        // if (this->isRateLimited(request)) return;
+        AsyncResponseStream *response = request->beginResponseStream("application/json");
+        DynamicJsonDocument json(WEBSERVER_DEFAULT_DOC_SIZE);
+        int i = 0;
+        this->custom->serializeToJson(json);
+        serializeJson(json, *response);
+        request->send(response); 
+    });
 }
 
 bool Webserver::isRateLimited(AsyncWebServerRequest* request) {

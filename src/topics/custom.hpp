@@ -41,10 +41,11 @@ struct Custom
     }
 
 
-    // void serializeToJson(JsonDocument &doc) {
-    //     switch (mode) {
-    //         case NORMAL: doc[JSON_NAME_CUSTOM_MODE] = "NORMAL"; break;
-    //         case COLOR: doc[JSON_NAME_CUSTOM_MODE] = "COLOR"; break;
-    //     }
-    // }
+    void serializeToJson(JsonDocument &doc) {
+        switch (mode) {
+            case NORMAL: doc[JSON_NAME_CUSTOM_MODE] = "NORMAL"; break;
+            case COLOR: doc[JSON_NAME_CUSTOM_MODE] = "COLOR"; break;
+            case TIME: doc[JSON_NAME_CUSTOM_MODE] = "TIME"; break;
+       }
+    }
 };

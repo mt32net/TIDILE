@@ -2,6 +2,8 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <DNSServer.h>
+#include "vector"
+
 
 #define AP_DEFAULT_SUBNET_MASK IPAddress(255, 255, 255, 0)
 #define DEFAULT_DNS_PORT 53
