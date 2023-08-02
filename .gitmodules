@@ -1,0 +1,3 @@
+[submodule "tidile-web"]
+	path = tidile-web
+	url = https://git.mt32.net/mt32/tidile-web.git
