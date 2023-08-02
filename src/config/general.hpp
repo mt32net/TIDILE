@@ -1,5 +1,7 @@
 #pragma once
 
+#define DEBUG
+
 #define TIDILE_VERSION "1.0"
 
 #define ntpServer "pool.ntp.org"
@@ -11,6 +13,8 @@
 #define STARTUP_ANIMATION_DELAY 8
 
 #define LED_PIN 5
+#define NIGHT_BUTTON_PIN 25
+#define DEBOUNCE_THRESHOLD 100
 #define BLINK_BRIGHTNESS 0.7
 #define NUMER_STATUS_LEDS 10
 

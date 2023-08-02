@@ -8,7 +8,6 @@ void WiFiHelper::connectWiFi()
 
     this->apMode = false;
     Serial.println("Initialising WiFi...");
-    // TODO back in
     WiFi.enableIpV6();
     // WiFi.disconnect();
     WiFi.setAutoReconnect(true);

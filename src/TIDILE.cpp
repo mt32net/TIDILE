@@ -7,7 +7,12 @@
 #include "helper/color.hpp"
 #include "helper/numbers.hpp"
 
-TIDILE::TIDILE() {}
+TIDILE::TIDILE() {
+    TIDILE::instance = this;
+}
+
+TIDILE * TIDILE::instance = nullptr;
+
 
 void TIDILE::loadClockConfig()
 {
@@ -26,6 +31,9 @@ void TIDILE::loadClockConfig()
     jsonConfig.garbageCollect();
 }
 
+long lastTime = 0;
+bool lastState = false;
+
 void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelper *wifiHelper)
 {
     this->leds = leds;
@@ -33,6 +41,11 @@ void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelpe
     this->server = server;
     this->wifiHelper = wifiHelper;
     this->ledController = LEDController(numberLEDs, leds, &configuration, numberZones);
+    
+    this->nightButton = new Debouncer((gpio_num_t) NIGHT_BUTTON_PIN, [](){
+        TIDILE::instance->handleNightButtonPress();
+    });
+
 
 #ifdef PRINT_DEFAULT_CONFIG
     Serial.println("-------------- Default Config -------------");
@@ -155,6 +168,10 @@ void TIDILE::displayEnv(ClockEnv env)
     // delay(ENV_DISPLAY_TIME);
 }
 
+void TIDILE::handleNightButtonPress()
+{
+    this->configuration.tempOverwriteNightTime = !this->configuration.tempOverwriteNightTime;
+}
 
 void TIDILE::update()
 {

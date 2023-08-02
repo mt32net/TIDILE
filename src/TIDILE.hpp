@@ -2,6 +2,7 @@
 
 #include "Arduino.h"
 #include <FastLED.h>
+#include <AceButton.h>
 #include "ClockInfo.hpp"
 #include "ClockConfig.hpp"
 #include "http/Webserver.hpp"
@@ -10,6 +11,7 @@
 #include "topics/topicsInclude.hpp"
 #include "helper/WiFiHelper.hpp"
 #include "LEDController.hpp"
+#include "helper/debounce.hpp"
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
@@ -24,6 +26,7 @@ class TIDILE
 {
 public:
     TIDILE();
+    static TIDILE * instance;
 
     void loadClockConfig();
     /**
@@ -69,6 +72,7 @@ public:
      * @param env
      */
     void displayEnv(ClockEnv env);
+    void handleNightButtonPress();
     ClockConfig *getConfig();
     Color lmapColor = Color(255, 255, 255);
 
@@ -85,6 +89,7 @@ private:
     LEDController ledController;
     short numberZones = NUMBER_ZONES;
     Custom custom;
+    Debouncer* nightButton = nullptr;
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
     Adafruit_BME280 *bmp;
 #endif
