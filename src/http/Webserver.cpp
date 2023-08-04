@@ -3,6 +3,7 @@
 #include <AsyncJson.h>
 #include <StreamUtils.h>
 #include <SPIFFS.h>
+#include "helper/vectorSerialization.hpp"
 
 void Webserver::setup(AsyncWebServer *server, ClockConfig *config, WiFiHelper * wifiHelper, Custom* custom)
 {
@@ -177,7 +178,6 @@ void Webserver::initializeRoutes()
         request->send(response); 
     });
 
-
     // CUSTOM
     AsyncCallbackJsonWebHandler *handlerCustom = new AsyncCallbackJsonWebHandler(ENDPOINT_CUSTOM, [this](AsyncWebServerRequest *request, JsonVariant &json) {
         // if (this->isRateLimited(request)) return;
@@ -198,6 +198,35 @@ void Webserver::initializeRoutes()
         serializeJson(json, *response);
         request->send(response); 
     });
+
+    // PRESENCE
+
+    server->on(ENDPOINT_PRESENCE, HTTP_GET, [this](AsyncWebServerRequest *request) {
+        AsyncResponseStream *response = request->beginResponseStream("application/json");
+        DynamicJsonDocument json(WEBSERVER_DEFAULT_DOC_SIZE);
+        json["enabled"] = this->config->presenceDetection;
+        JsonArray devices = json.createNestedArray("devices");
+        for (String &s : this->config->presenceDeviceHostnames) {
+            JsonObject o = devices.createNestedObject();
+            o["address"] = s;
+            o["online"] = true;
+        }
+        serializeJson(json, *response);
+        request->send(response);
+    });
+    
+    AsyncCallbackJsonWebHandler *handlerPresence = new AsyncCallbackJsonWebHandler(ENDPOINT_PRESENCE, [this](AsyncWebServerRequest *request, JsonVariant &json) {
+        if (this->isRateLimited(request)) return;
+        this->config->presenceDetection = json["enabled"];
+        this->config->presenceDeviceHostnames.clear();
+        for (auto a : json["devices"].as<JsonArray>()) {
+            this->config->presenceDeviceHostnames.push_back(a.as<String>());
+        }   
+        this->config->flushConfig();
+        request->send(200);
+    });
+    server->addHandler(handlerPresence);
+
 }
 
 bool Webserver::isRateLimited(AsyncWebServerRequest* request) {

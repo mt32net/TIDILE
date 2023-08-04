@@ -16,6 +16,7 @@
 #define ENDPOINT_WIFI "/wifi"
 #define ENDPOINT_NETWORKS "/networks"
 #define ENDPOINT_CUSTOM "/custom"
+#define ENDPOINT_PRESENCE "/presence"
 
 
 /**
