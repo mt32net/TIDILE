@@ -23,5 +23,10 @@
     "brightness": 10,
     "lightInfluence": 0,
     "format": 23,
-    "reverseDirection": false
+    "reverseDirection": false,
+    "presenceDetection": true,
+    "presenceDeviceHostnames": [
+      "192.168.1.26",
+      "fritz.box"
+    ]
   }
