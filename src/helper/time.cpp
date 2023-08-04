@@ -56,10 +56,10 @@ String getDateTimeToString()
     return digitToTwoCharsDigit(time.hours) + ":" + digitToTwoCharsDigit(time.minutes) + ":" + digitToTwoCharsDigit(time.seconds) + " " + digitToTwoCharsDigit(time.day) + "/" + digitToTwoCharsDigit(time.month) + "/" + digitToTwoCharsDigit(time.year + 1900);
 }
 
-bool isNightTime(ClockConfig config, ClockTime time)
+bool isNightTime(ClockConfig& config, ClockTime time, bool considerNightOverwrite)
 {
     // temporal night light overwrite
-    if (config.tempOverwriteNightTime)
+    if (config.tempOverwriteNightTime && considerNightOverwrite)
         return true;
     if (!config.nightTimeEnabled)
         return false;
@@ -89,8 +89,14 @@ bool isNightTime(ClockConfig config, ClockTime time)
            config.nightTimeLight; */
 }
 
-void resetOverwriteNightTimeIfLegit(ClockConfig config, ClockTime time)
+void resetOverwriteNightTimeIfLegit(ClockConfig& config, ClockTime time)
 {
-    if (!isNightTime(config, time) && (digitToTwoCharsDigit(time.hours) + digitToTwoCharsDigit(time.minutes)).toInt() >= config.nightTimeEnd)
+    int currentTime = hmsToTimeInt(time);
+    // only check on different seconds value
+    if(currentTime == config.lastNightTimeOverwriteCheckTime) return;
+    // (*100 to accommodate different precisions)
+    if (currentTime >= config.nightTimeEnd * 100 && config.lastNightTimeOverwriteCheckTime - 2 < config.nightTimeEnd * 100){
         config.tempOverwriteNightTime = false;
+    }
+    config.lastNightTimeOverwriteCheckTime = currentTime;
 }

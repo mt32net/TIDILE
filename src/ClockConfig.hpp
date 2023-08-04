@@ -43,6 +43,7 @@ struct ClockConfig
   ClockFormat format = ClockFormat::Format_24H;
   int ledCount = LED_COUNT;
   bool reverseDirection = false;
+  int lastNightTimeOverwriteCheckTime = 0;
 
   void deserialize(JsonObject *json)
   {

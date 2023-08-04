@@ -3,6 +3,7 @@
 #include <ArduinoJson.h>
 #include "../ClockConfig.hpp"
 #include "../config/config_includes.hpp"
+#include "../helper/time.hpp"
 
 struct NightTime
 {
@@ -19,8 +20,8 @@ struct NightTime
 
     void serializeToJson(JsonDocument &doc) {
         doc[JSON_NAME_NIGHT_TIME_ENABLED] = enabled;
-        doc[JSON_NAME_NIGHT_TIME_BEGIN] = begin;
-        doc[JSON_NAME_NIGHT_TIME_END] = end;
+        doc[JSON_NAME_NIGHT_TIME_BEGIN] = timeIntToTimeString(begin);
+        doc[JSON_NAME_NIGHT_TIME_END] = timeIntToTimeString(end);
     }
 
     void saveToConfig(ClockConfig *config)

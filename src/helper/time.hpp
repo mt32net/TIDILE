@@ -47,11 +47,11 @@ String getDateTimeToString();
  * @return true if time is in night time interval
  * @return false if time is outside of night time interval
  */
-bool isNightTime(ClockConfig config, ClockTime time);
+bool isNightTime(ClockConfig& config, ClockTime time, bool considerNightOverwrite = true);
 /**
  * @brief passive method to run regulary, checks wether the temporary overwrite of night time can be reset
  *
  * @param config clock config for nighttime and temporary overwrite
  * @param time current time
  */
-void resetOverwriteNightTimeIfLegit(ClockConfig config, ClockTime time);
+void resetOverwriteNightTimeIfLegit(ClockConfig& config, ClockTime time);
