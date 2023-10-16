@@ -6,6 +6,7 @@
 #include "config/config_includes.hpp"
 #include "../topics/topicsInclude.hpp"
 #include "../ClockConfig.hpp"
+#include "http/PingManager.hpp"
 
 #define WEBSERVER_DEFAULT_DOC_SIZE 1024
 
@@ -16,6 +17,7 @@
 #define ENDPOINT_WIFI "/wifi"
 #define ENDPOINT_NETWORKS "/networks"
 #define ENDPOINT_CUSTOM "/custom"
+#define ENDPOINT_PRESENCE "/presence"
 
 
 /**
@@ -27,13 +29,14 @@ class Webserver
 public:
     Webserver(){};
 
-    void setup(AsyncWebServer* server, ClockConfig* config, WiFiHelper* wifiHelper, Custom* custom);
+    void setup(AsyncWebServer* server, ClockConfig* config, WiFiHelper* wifiHelper, Custom* custom, PingManager * ping);
 
 private:
     AsyncWebServer* server;
     ClockConfig* config;
     WiFiHelper* wifiHelper;
     Custom* custom;
+    PingManager * pingManager;
 
     long lastRequestMillis = 0;
     void initializeRoutes();

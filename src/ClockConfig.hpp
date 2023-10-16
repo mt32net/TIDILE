@@ -7,6 +7,8 @@
 #include "ArduinoJson.h"
 #include <SPIFFS.h>
 #include <StreamUtils.h>
+#include <vector>
+#include "helper/vectorSerialization.hpp"
 
 /**
  * @brief CHosen clock format
@@ -44,13 +46,12 @@ struct ClockConfig
   int ledCount = LED_COUNT;
   bool reverseDirection = false;
   int lastNightTimeOverwriteCheckTime = 0;
+  bool presenceDetection = false;
+  std::vector<String> presenceDeviceHostnames = {};
 
   void deserialize(JsonObject *json)
   {
     JsonObject hours = json->getMember("hours");
-    // TODO remove
-    // serializeJson(hours, Serial);
-    // Serial.println();
     colorHours.deserialize(&hours);
     JsonObject minutes = (*json).getMember("minutes");
     colorMinutes.deserialize(&minutes);
@@ -66,6 +67,10 @@ struct ClockConfig
     lightInfluence = (*json)["lightInfluence"];
     format = (*json)["format"];
     reverseDirection = (*json)["reverse_direction"];
+    presenceDetection = (*json)["presenceDetection"];
+    // Why does this work? Does this work?
+    JsonArray hostnames = (*json)["presenceDeviceHostnames"];
+    presenceDeviceHostnames = deserializeVector(hostnames);
 
     // format = (preferences->getInt("format") == ClockFormat::Format_24H) ? ClockFormat::Format_24H : ClockFormat::Format_12H;
 
@@ -111,6 +116,10 @@ struct ClockConfig
     (*json)["format"] = format;
     (*json)["reverse_direction"] = reverseDirection;
     // preferences->end();
+
+    (*json)["presenceDetection"] = presenceDetection;
+    JsonArray array = serializeVector(presenceDeviceHostnames);
+    (*json)["presenceDeviceHostnames"] = array;
 
     // serializeJsonPretty(json, Serial);
   }

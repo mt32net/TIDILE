@@ -54,7 +54,9 @@
         "streambuf": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "mutex": "cpp",
+        "condition_variable": "cpp"
     },
     "cSpell.words": [
         "leds",
