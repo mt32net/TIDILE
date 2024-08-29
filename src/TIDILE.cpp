@@ -28,7 +28,9 @@ void TIDILE::loadClockConfig()
     }
     JsonObject obj = jsonConfig.as<JsonObject>();
     configuration.deserialize(&obj);
+    Serial.println("Config loaded, garbage collecting...");
     jsonConfig.garbageCollect();
+    Serial.println("Garbage Collected.");
 }
 
 long lastTime = 0;

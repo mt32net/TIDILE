@@ -4,8 +4,8 @@
 #include <ESP32Ping.h>
 #include <vector>
 #include "ClockConfig.hpp"
-// #include "freertos/task.h"
-// #include "helper/mutex.hpp"
+#include "freertos/task.h"
+#include "helper/mutex.hpp"
 
 struct PresenceDevice {
     String address;
@@ -21,7 +21,7 @@ struct PingThreadData {
 
 class PingManager {
     
-    std::vector<PresenceDevice> allDevices;
+    std::vector<PresenceDevice> devicesLastCheck;
     ClockConfig * config;
     int lastTimeChecked;
     int intervalHms;

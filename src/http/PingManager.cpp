@@ -1,7 +1,7 @@
 #include "PingManager.hpp"
 
 PingManager::PingManager(ClockConfig * config) {
-    this->allDevices = {};
+    this->devicesLastCheck = {};
     this->config = config;
     this->lastTimeChecked = 0;
     this->intervalHms = DEFAULT_PRESENCE_INTERVAL;
@@ -25,19 +25,19 @@ void pingThread(void* args) {
 }
 
 void PingManager::updateDevices() {
-    // if(pingTask != NULL) Serial.println(eTaskGetState(pingTask));
-    // xTaskCreate(pingThread, "ping thread", 2048, &this->threadData, 6, &pingTask);
-    // allDevices.clear();
-    // for (auto& dev : config->presenceDeviceHostnames) {
-    //     allDevices.push_back({ .address = dev, .online = false });
-    // }
-    pingThread(&this->threadData);
+    if(pingTask != NULL) Serial.println(eTaskGetState(pingTask));
+    xTaskCreate(pingThread, "ping thread", 2048, &this->threadData, 6, &pingTask);
+    allDevices.clear();
+    for (auto& dev : config->presenceDeviceHostnames) {
+        allDevices.push_back({ .address = dev, .online = false });
+    }*/
+    //pingThread(&this->threadData);
 }
 
 std::vector<PresenceDevice> PingManager::getDevices() {
     std::vector<PresenceDevice> devices = {};
     // m.lock();
-    devices.insert(devices.begin(), allDevices.begin(), allDevices.end());
+    devices.insert(devices.begin(), devicesLastCheck.begin(), devicesLastCheck.end());
     // m.unlock();
     return devices;
 }
@@ -51,7 +51,7 @@ void PingManager::loop(int currentTimeHms) {
 }
 
 bool PingManager::isAnyDeviceOnline() {
-    for (auto &d : allDevices) {
+    for (auto &d : devicesLastCheck) {
         if (d.online) return true;
     }
     return false;
@@ -59,9 +59,9 @@ bool PingManager::isAnyDeviceOnline() {
 
 void PingManager::registerPings(std::vector<PresenceDevice> &devices) {
     // m.lock();
-    this->allDevices.clear();
+    this->devicesLastCheck.clear();
     for(auto d : devices) {
-        this->allDevices.push_back(d);
+        this->devicesLastCheck.push_back(d);
     }
     // m.unlock();
 }
