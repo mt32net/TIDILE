@@ -5,18 +5,20 @@
 #include <SPIFFS.h>
 #include "helper/vectorSerialization.hpp"
 
-void Webserver::setup(AsyncWebServer *server, ClockConfig *config, WiFiHelper * wifiHelper, Custom* custom)
+void Webserver::setup(AsyncWebServer *server, ClockConfig *config, WiFiHelper *wifiHelper, Custom *custom, PingManager *ping)
 {
     this->config = config;
     this->server = server;
     this->wifiHelper = wifiHelper;
     this->custom = custom;
+    this->pingManager = ping;
 
     initializeRoutes();
 
     server->serveStatic("/css/", SPIFFS, "/dist/css/");
     server->serveStatic("/js/", SPIFFS, "/dist/js/");
-    server->on("/", HTTP_GET, [=](AsyncWebServerRequest* request) { request->send(SPIFFS, "/dist/index.html", "text/html"); });
+    server->on("/", HTTP_GET, [=](AsyncWebServerRequest *request)
+               { request->send(SPIFFS, "/dist/index.html", "text/html"); });
 
     server->onNotFound([](AsyncWebServerRequest *request)
                        { request->send(404); });
@@ -28,7 +30,8 @@ void Webserver::initializeRoutes()
 {
 
     // COLOR
-    server->on(ENDPOINT_COLORS, HTTP_GET, [this](AsyncWebServerRequest *request) {
+    server->on(ENDPOINT_COLORS, HTTP_GET, [this](AsyncWebServerRequest *request)
+               {
         // if (this->isRateLimited(request)) return;
         // Serial.println("-- GET COLORS --");
         // Serial.println(millis());
@@ -40,8 +43,7 @@ void Webserver::initializeRoutes()
         serializeJson(json, *response);
         request->send(response);
         // Serial.println(millis());
-        json.garbageCollect();
-    });
+        json.garbageCollect(); });
 
     // server->on(ENDPOINT_COLORS, HTTP_GET, [this](AsyncWebServerRequest *request) {
     //     Serial.println("----- GET ------");
@@ -68,60 +70,66 @@ void Webserver::initializeRoutes()
     //     //json.garbageCollect();
     // });
 
-    AsyncCallbackJsonWebHandler *handlerColor = new AsyncCallbackJsonWebHandler(ENDPOINT_COLORS, [this](AsyncWebServerRequest *request, JsonVariant &json) {
-        if (this->isRateLimited(request)) return;
-        Colors colors;
-        DynamicJsonDocument doc(WEBSERVER_DEFAULT_DOC_SIZE);
-        doc.set(json);
-        colors.deserializeFromJSON(doc);
-        colors.saveToConfig(config);
-        request->send(200);
-        config->flushConfig();
-        // doc.garbageCollect();
-    });
+    AsyncCallbackJsonWebHandler *handlerColor = new AsyncCallbackJsonWebHandler(ENDPOINT_COLORS, [this](AsyncWebServerRequest *request, JsonVariant &json)
+                                                                                {
+                                                                                    if (this->isRateLimited(request))
+                                                                                        return;
+                                                                                    Colors colors;
+                                                                                    DynamicJsonDocument doc(WEBSERVER_DEFAULT_DOC_SIZE);
+                                                                                    doc.set(json);
+                                                                                    colors.deserializeFromJSON(doc);
+                                                                                    colors.saveToConfig(config);
+                                                                                    request->send(200);
+                                                                                    config->flushConfig();
+                                                                                    // doc.garbageCollect();
+                                                                                });
     server->addHandler(handlerColor);
 
     // GENERAL
-    server->on(ENDPOINT_GENERAL, HTTP_GET, [this](AsyncWebServerRequest *request) {
-        // if (this->isRateLimited(request)) return;
-        AsyncResponseStream *response = request->beginResponseStream("application/json");
-        DynamicJsonDocument json(WEBSERVER_DEFAULT_DOC_SIZE);
-        General general;
-        general.loadFromConfig(config);
-        general.serializeToJson(json);
-        serializeJson(json, *response);
-        request->send(response); 
-        // json.garbageCollect();
-    });
+    server->on(ENDPOINT_GENERAL, HTTP_GET, [this](AsyncWebServerRequest *request)
+               {
+                   // if (this->isRateLimited(request)) return;
+                   AsyncResponseStream *response = request->beginResponseStream("application/json");
+                   DynamicJsonDocument json(WEBSERVER_DEFAULT_DOC_SIZE);
+                   General general;
+                   general.loadFromConfig(config);
+                   general.serializeToJson(json);
+                   serializeJson(json, *response);
+                   request->send(response);
+                   // json.garbageCollect();
+               });
 
-    AsyncCallbackJsonWebHandler *handlerGeneral = new AsyncCallbackJsonWebHandler(ENDPOINT_GENERAL, [this](AsyncWebServerRequest *request, JsonVariant &json) {
-        if (this->isRateLimited(request)) return;
-        General general;
-        DynamicJsonDocument doc(WEBSERVER_DEFAULT_DOC_SIZE);
-        doc.set(json);
-        general.deserializeFromJSON(doc);
-        general.saveToConfig(config);
-        request->send(200); 
-        config->flushConfig();
-        // doc.garbageCollect();
-    });
+    AsyncCallbackJsonWebHandler *handlerGeneral = new AsyncCallbackJsonWebHandler(ENDPOINT_GENERAL, [this](AsyncWebServerRequest *request, JsonVariant &json)
+                                                                                  {
+                                                                                      if (this->isRateLimited(request))
+                                                                                          return;
+                                                                                      General general;
+                                                                                      DynamicJsonDocument doc(WEBSERVER_DEFAULT_DOC_SIZE);
+                                                                                      doc.set(json);
+                                                                                      general.deserializeFromJSON(doc);
+                                                                                      general.saveToConfig(config);
+                                                                                      request->send(200);
+                                                                                      config->flushConfig();
+                                                                                      // doc.garbageCollect();
+                                                                                  });
     server->addHandler(handlerGeneral);
 
-
     // NIGHT TIME
-    server->on(ENDPOINT_NIGHT_TIME, HTTP_GET, [this](AsyncWebServerRequest *request) {
-        // if (this->isRateLimited(request)) return;
-        AsyncResponseStream *response = request->beginResponseStream("application/json");
-        DynamicJsonDocument json(WEBSERVER_DEFAULT_DOC_SIZE);
-        NightTime nightTime;
-        nightTime.loadFromConfig(config);
-        nightTime.serializeToJson(json);
-        serializeJson(json, *response);
-        request->send(response); 
-        // json.garbageCollect();
-    });
+    server->on(ENDPOINT_NIGHT_TIME, HTTP_GET, [this](AsyncWebServerRequest *request)
+               {
+                   // if (this->isRateLimited(request)) return;
+                   AsyncResponseStream *response = request->beginResponseStream("application/json");
+                   DynamicJsonDocument json(WEBSERVER_DEFAULT_DOC_SIZE);
+                   NightTime nightTime;
+                   nightTime.loadFromConfig(config);
+                   nightTime.serializeToJson(json);
+                   serializeJson(json, *response);
+                   request->send(response);
+                   // json.garbageCollect();
+               });
 
-    AsyncCallbackJsonWebHandler *handlerNightTIme = new AsyncCallbackJsonWebHandler(ENDPOINT_NIGHT_TIME, [this](AsyncWebServerRequest *request, JsonVariant &json) {
+    AsyncCallbackJsonWebHandler *handlerNightTIme = new AsyncCallbackJsonWebHandler(ENDPOINT_NIGHT_TIME, [this](AsyncWebServerRequest *request, JsonVariant &json)
+                                                                                    {
         if (this->isRateLimited(request)) return;
         NightTime nightTime;
         DynamicJsonDocument doc(WEBSERVER_DEFAULT_DOC_SIZE);
@@ -129,42 +137,43 @@ void Webserver::initializeRoutes()
         nightTime.deserializeFromJSON(doc);
         nightTime.saveToConfig(config);
         request->send(200);
-        config->flushConfig();
-    });
+        config->flushConfig(); });
     server->addHandler(handlerNightTIme);
 
     // CREDENTIALS
-    AsyncCallbackJsonWebHandler *handlerCredentials = new AsyncCallbackJsonWebHandler(ENDPOINT_CREDENTIALS, [this](AsyncWebServerRequest *request, JsonVariant &json) {
+    AsyncCallbackJsonWebHandler *handlerCredentials = new AsyncCallbackJsonWebHandler(ENDPOINT_CREDENTIALS, [this](AsyncWebServerRequest *request, JsonVariant &json)
+                                                                                      {
         // if (this->isRateLimited(request)) return;
         String ssid = json["ssid"];
         String password = json["password"];
         request->send(200);
-        this->wifiHelper->setCredentials(ssid, password);
-    });
+        this->wifiHelper->setCredentials(ssid, password); });
     server->addHandler(handlerCredentials);
 
     // WIFI INFO
-    server->on(ENDPOINT_WIFI, HTTP_GET, [this](AsyncWebServerRequest *request) {
-        // if (this->isRateLimited(request)) return;
-        AsyncResponseStream *response = request->beginResponseStream("application/json");
-        DynamicJsonDocument json(WEBSERVER_DEFAULT_DOC_SIZE);
-        json["apMode"] = this->wifiHelper->isAPMode();
-        // int i = 0;
-        // for (auto net : this->wifiHelper->getReachableNets()) {
-        //     json["available"][i]["ssid"] = net.ssid;
-        //     json["available"][i]["rssi"] = net.rssi;
-        //     i++;
-        // }
-        Network current = this->wifiHelper->getCurrentNetwork();
-        json["current"]["ssid"] = current.ssid;
-        json["current"]["rssi"] = current.rssi;
-        serializeJson(json, *response);
-        request->send(response); 
-        // json.garbageCollect();
-    });
+    server->on(ENDPOINT_WIFI, HTTP_GET, [this](AsyncWebServerRequest *request)
+               {
+                   // if (this->isRateLimited(request)) return;
+                   AsyncResponseStream *response = request->beginResponseStream("application/json");
+                   DynamicJsonDocument json(WEBSERVER_DEFAULT_DOC_SIZE);
+                   json["apMode"] = this->wifiHelper->isAPMode();
+                   // int i = 0;
+                   // for (auto net : this->wifiHelper->getReachableNets()) {
+                   //     json["available"][i]["ssid"] = net.ssid;
+                   //     json["available"][i]["rssi"] = net.rssi;
+                   //     i++;
+                   // }
+                   Network current = this->wifiHelper->getCurrentNetwork();
+                   json["current"]["ssid"] = current.ssid;
+                   json["current"]["rssi"] = current.rssi;
+                   serializeJson(json, *response);
+                   request->send(response);
+                   // json.garbageCollect();
+               });
 
     // WIFI INFO
-    server->on(ENDPOINT_NETWORKS, HTTP_GET, [this](AsyncWebServerRequest *request) {
+    server->on(ENDPOINT_NETWORKS, HTTP_GET, [this](AsyncWebServerRequest *request)
+               {
         // if (this->isRateLimited(request)) return;
         AsyncResponseStream *response = request->beginResponseStream("application/json");
         DynamicJsonDocument json(WEBSERVER_DEFAULT_DOC_SIZE);
@@ -175,47 +184,48 @@ void Webserver::initializeRoutes()
             i++;
         }
         serializeJson(json, *response);
-        request->send(response); 
-    });
+        request->send(response); });
 
     // CUSTOM
-    AsyncCallbackJsonWebHandler *handlerCustom = new AsyncCallbackJsonWebHandler(ENDPOINT_CUSTOM, [this](AsyncWebServerRequest *request, JsonVariant &json) {
-        // if (this->isRateLimited(request)) return;
-        DynamicJsonDocument doc(WEBSERVER_DEFAULT_DOC_SIZE);
-        doc.set(json);
-        this->custom->deserializeFromJSON(doc);
-        request->send(200);
-        // doc.garbageCollect();
-    });
+    AsyncCallbackJsonWebHandler *handlerCustom = new AsyncCallbackJsonWebHandler(ENDPOINT_CUSTOM, [this](AsyncWebServerRequest *request, JsonVariant &json)
+                                                                                 {
+                                                                                     // if (this->isRateLimited(request)) return;
+                                                                                     DynamicJsonDocument doc(WEBSERVER_DEFAULT_DOC_SIZE);
+                                                                                     doc.set(json);
+                                                                                     this->custom->deserializeFromJSON(doc);
+                                                                                     request->send(200);
+                                                                                     // doc.garbageCollect();
+                                                                                 });
     server->addHandler(handlerCustom);
 
-    server->on(ENDPOINT_CUSTOM, HTTP_GET, [this](AsyncWebServerRequest *request) {
+    server->on(ENDPOINT_CUSTOM, HTTP_GET, [this](AsyncWebServerRequest *request)
+               {
         // if (this->isRateLimited(request)) return;
         AsyncResponseStream *response = request->beginResponseStream("application/json");
         DynamicJsonDocument json(WEBSERVER_DEFAULT_DOC_SIZE);
         int i = 0;
         this->custom->serializeToJson(json);
         serializeJson(json, *response);
-        request->send(response); 
-    });
+        request->send(response); });
 
     // PRESENCE
 
-    server->on(ENDPOINT_PRESENCE, HTTP_GET, [this](AsyncWebServerRequest *request) {
+    server->on(ENDPOINT_PRESENCE, HTTP_GET, [this](AsyncWebServerRequest *request)
+               {
         AsyncResponseStream *response = request->beginResponseStream("application/json");
         DynamicJsonDocument json(WEBSERVER_DEFAULT_DOC_SIZE);
         json["enabled"] = this->config->presenceDetection;
         JsonArray devices = json.createNestedArray("devices");
-        for (String &s : this->config->presenceDeviceHostnames) {
+        for (PresenceDevice &d : this->pingManager->getDevices()) {
             JsonObject o = devices.createNestedObject();
-            o["address"] = s;
-            o["online"] = true;
+            o["address"] = d.address;
+            o["online"] = d.online;
         }
         serializeJson(json, *response);
-        request->send(response);
-    });
-    
-    AsyncCallbackJsonWebHandler *handlerPresence = new AsyncCallbackJsonWebHandler(ENDPOINT_PRESENCE, [this](AsyncWebServerRequest *request, JsonVariant &json) {
+        request->send(response); });
+
+    AsyncCallbackJsonWebHandler *handlerPresence = new AsyncCallbackJsonWebHandler(ENDPOINT_PRESENCE, [this](AsyncWebServerRequest *request, JsonVariant &json)
+                                                                                   {
         if (this->isRateLimited(request)) return;
         this->config->presenceDetection = json["enabled"];
         this->config->presenceDeviceHostnames.clear();
@@ -223,16 +233,18 @@ void Webserver::initializeRoutes()
             this->config->presenceDeviceHostnames.push_back(a.as<String>());
         }   
         this->config->flushConfig();
-        request->send(200);
-    });
+        this->pingManager->updateDevices();
+        request->send(200); });
     server->addHandler(handlerPresence);
-
 }
 
-bool Webserver::isRateLimited(AsyncWebServerRequest* request) {
+bool Webserver::isRateLimited(AsyncWebServerRequest *request)
+{
     bool limited = true;
-    if (lastRequestMillis + RATE_LIMIT_MILLIS < millis()) limited = false;
-    if (limited) {
+    if (lastRequestMillis + RATE_LIMIT_MILLIS < millis())
+        limited = false;
+    if (limited)
+    {
         request->send(429);
     }
     lastRequestMillis = millis();

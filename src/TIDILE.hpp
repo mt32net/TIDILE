@@ -2,7 +2,6 @@
 
 #include "Arduino.h"
 #include <FastLED.h>
-#include <AceButton.h>
 #include "ClockInfo.hpp"
 #include "ClockConfig.hpp"
 #include "http/Webserver.hpp"
@@ -12,6 +11,7 @@
 #include "helper/WiFiHelper.hpp"
 #include "LEDController.hpp"
 #include "helper/debounce.hpp"
+#include "http/PingManager.hpp"
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
@@ -90,6 +90,7 @@ private:
     short numberZones = NUMBER_ZONES;
     Custom custom;
     Debouncer* nightButton = nullptr;
+    PingManager pingManager;
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
     Adafruit_BME280 *bmp;
 #endif

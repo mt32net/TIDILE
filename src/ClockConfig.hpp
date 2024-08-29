@@ -51,6 +51,7 @@ struct ClockConfig
 
   void deserialize(JsonObject *json)
   {
+    Serial.println("Deserializing config");
     JsonObject hours = json->getMember("hours");
     colorHours.deserialize(&hours);
     JsonObject minutes = (*json).getMember("minutes");

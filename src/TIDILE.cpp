@@ -28,7 +28,9 @@ void TIDILE::loadClockConfig()
     }
     JsonObject obj = jsonConfig.as<JsonObject>();
     configuration.deserialize(&obj);
+    Serial.println("Config loaded, garbage collecting...");
     jsonConfig.garbageCollect();
+    Serial.println("Garbage Collected.");
 }
 
 long lastTime = 0;
@@ -41,6 +43,7 @@ void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelpe
     this->server = server;
     this->wifiHelper = wifiHelper;
     this->ledController = LEDController(numberLEDs, leds, &configuration, numberZones);
+    this->pingManager = PingManager(&configuration);
     
     this->nightButton = new Debouncer((gpio_num_t) NIGHT_BUTTON_PIN, [](){
         TIDILE::instance->handleNightButtonPress();
@@ -60,6 +63,8 @@ void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelpe
 
     loadClockConfig();
 
+    pingManager.updateDevices();
+
     configTime(3600, 3600, ntpServer);
     ClockTime time;
     getTime(&time);
@@ -67,7 +72,7 @@ void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelpe
     // CAUTION makes GETs increadibly slow
     // server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.html");
     // server->serveStatic("/", SPIFFS, "/static");
-    webserver.setup(server, &configuration, wifiHelper, &custom);
+    webserver.setup(server, &configuration, wifiHelper, &custom, &pingManager);
     // Only start mqtt service when connected to a internet
     if (!wifiHelper->isAPMode())
     {
@@ -120,9 +125,9 @@ void TIDILE::displayTime(ClockTime time)
 {
     clear();
     resetOverwriteNightTimeIfLegit(configuration, time);
-    if (isNightTime(configuration, time))
-    {
-        return;
+    if (isNightTime(configuration, time)) return;
+    if (configuration.presenceDetection) {
+        if (!pingManager.isAnyDeviceOnline()) return;
     }
     // Minutes
     for (int i = 0; i < time.minutes; i++)
@@ -237,6 +242,7 @@ void TIDILE::update()
     mqtt.loop(currentTime);
 #endif
     FastLED.show();
+    if (configuration.presenceDetection) pingManager.loop(hmsToTimeInt(currentTime));
     loopI++;
 }
 
