@@ -63,8 +63,6 @@ void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelpe
 
     loadClockConfig();
 
-    pingManager.updateDevices();
-
     configTime(3600, 3600, ntpServer);
     ClockTime time;
     getTime(&time);
@@ -86,6 +84,8 @@ void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelpe
 #ifndef FASTSTARTUP
     startupLEDs(STARTUP_ANIMATION_DELAY);
 #endif
+
+    pingManager.updateDevices();
 }
 
 void TIDILE::clear()

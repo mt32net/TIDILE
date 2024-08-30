@@ -1,45 +1,44 @@
 #include "PingManager.hpp"
+#include "esp_task_wdt.h"
+#include "freertos/task.h"
+
+static PingThreadData threadData;
 
 PingManager::PingManager(ClockConfig * config) {
-    this->devicesLastCheck = {};
+    this->devicesLastCheckedSize = config->presenceDeviceHostnames.size();
+    this->devicesLastChecked = (PresenceDevice*) calloc(this->devicesLastCheckedSize, sizeof(PresenceDevice));
     this->config = config;
     this->lastTimeChecked = 0;
     this->intervalHms = DEFAULT_PRESENCE_INTERVAL;
-    this->threadData = {this, this->config};
+    threadData = {this, this->config};
+    xMutex = xSemaphoreCreateMutex();
 }
 
-void pingThread(void* args) {
+void devicesPingThread(void* args) {
+    Serial.println("THREAD: Starting thread...");
     std::vector<PresenceDevice> devices = {};
-    PingThreadData* data = (PingThreadData*) args; 
-    for (String &s : data->config->presenceDeviceHostnames) {
-        PresenceDevice d = {
-            s,
-            Ping.ping(s.c_str(), 1),
-        };
+    Serial.println("THREAD: Device vector initialized.");
+    for (String &s : threadData.config->presenceDeviceHostnames) {
+        // TODO revert
+        bool pingValue = true; //Ping.ping(s.c_str(), 1);
+        PresenceDevice d = { s, pingValue };
         devices.push_back(d);
         Serial.print(d.address);
         Serial.print("\t");
         Serial.println(d.online);
     }
-    data->ping->registerPings(devices);
+    threadData.ping->registerPings(&devices);
+    Serial.println("THREAD: Stopping thread...");
+    vTaskDelete(NULL);
 }
 
 void PingManager::updateDevices() {
-    if(pingTask != NULL) Serial.println(eTaskGetState(pingTask));
-    xTaskCreate(pingThread, "ping thread", 2048, &this->threadData, 6, &pingTask);
-    allDevices.clear();
-    for (auto& dev : config->presenceDeviceHostnames) {
-        allDevices.push_back({ .address = dev, .online = false });
-    }*/
-    //pingThread(&this->threadData);
-}
-
-std::vector<PresenceDevice> PingManager::getDevices() {
-    std::vector<PresenceDevice> devices = {};
-    // m.lock();
-    devices.insert(devices.begin(), devicesLastCheck.begin(), devicesLastCheck.end());
-    // m.unlock();
-    return devices;
+    static TaskHandle_t pingThreadHandler;
+    Serial.println("Starting Device Presence Update...");
+    xTaskCreate(devicesPingThread, "async_ping", 8192 * 2, NULL, 3, &pingThreadHandler);
+    //pthread_create(&pingThreadID, NULL, devicesPingThread, NULL);
+    Serial.println("Device Presence Update done.");
+    //devicesPingThread(&this->threadData);
 }
 
 void PingManager::loop(int currentTimeHms) {
@@ -51,17 +50,28 @@ void PingManager::loop(int currentTimeHms) {
 }
 
 bool PingManager::isAnyDeviceOnline() {
-    for (auto &d : devicesLastCheck) {
-        if (d.online) return true;
+    //m.lock();
+    for (int i = 0; i < this->devicesLastCheckedSize; i++) {
+        if (devicesLastChecked[i].online) return true;
     }
+    //m.unlock();
     return false;
 }
 
-void PingManager::registerPings(std::vector<PresenceDevice> &devices) {
-    // m.lock();
-    this->devicesLastCheck.clear();
-    for(auto d : devices) {
-        this->devicesLastCheck.push_back(d);
+void PingManager::registerPings(std::vector<PresenceDevice>* devices) {
+    //m.lock();
+    //this->devicesLastCheck.clear();
+    //delete devicesLastChecked;
+    //devicesLastCheckedSize = devices->size();
+    //devicesLastChecked = (PresenceDevice*) calloc(devicesLastCheckedSize, sizeof(PresenceDevice));
+    for(int i = 0; i < devicesLastCheckedSize; i++) {
+        //this->devicesLastCheck.push_back(d);
+        devicesLastChecked[i] = (*devices)[i];
     }
-    // m.unlock();
+    //m.unlock();
+}
+
+std::vector<PresenceDevice> PingManager::getDevices() {
+    return std::vector<PresenceDevice>(this->devicesLastChecked, this->devicesLastChecked + this->devicesLastCheckedSize);
+
 }
