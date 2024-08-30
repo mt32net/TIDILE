@@ -15,11 +15,11 @@ struct General
 
     void deserializeFromJSON(JsonDocument &doc)
     {
-        showSeconds = doc[JSON_NAME_SHOW_SECONDS].as<bool>();
-        format24H = doc[JSON_NAME_24H_FORMAT].as<bool>();
-        brightness = doc[JSON_NAME_BRIGHTNESS].as<uint16_t>();
-        lightSensorInfluence = doc[JSON_NAME_LIGHT_SENSOR_INFLUENCE].as<uint16_t>();
-        reverseDirection = doc[JSON_NAME_REVERSE_DIRECTION].as<bool>();
+        showSeconds = doc[JSON_NAME_SHOW_SECONDS] | true;
+        format24H = doc[JSON_NAME_24H_FORMAT] | true;
+        brightness = doc[JSON_NAME_BRIGHTNESS] | 10;
+        lightSensorInfluence = doc[JSON_NAME_LIGHT_SENSOR_INFLUENCE] | 50;
+        reverseDirection = doc[JSON_NAME_REVERSE_DIRECTION] | false;
         // ledCount = doc[JSON_NAME_LED_COUNT].as<int>();
     }
 

@@ -38,7 +38,7 @@ private:
     Custom* custom;
     PingManager * pingManager;
 
-    long lastRequestMillis = 0;
+    unsigned long lastRequestMillis = 0;
     void initializeRoutes();
     bool isRateLimited(AsyncWebServerRequest* request);
 };

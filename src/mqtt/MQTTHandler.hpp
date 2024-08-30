@@ -29,19 +29,19 @@ private:
     bool handle(String topic, String payload);
 
 private:
-    ClockConfig *config;
-    TIDILE *tidile;
+    ClockConfig *config{};
+    TIDILE *tidile{};
     String uri;
-    int port;
+    int port{};
     WiFiClient wifiClient;
-    PubSubClient *client;
+    PubSubClient *client{};
     std::vector<String> subscribedTopics;
 
-    int startupSecs;
-    int startupMins;
-    int lastUpdateMin;
+    int startupSecs{};
+    int startupMins{};
+    int lastUpdateMin{};
 
-    int connectionAttempts;
+    int connectionAttempts{};
 
 private:
     friend class TIDILE;

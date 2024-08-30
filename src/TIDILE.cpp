@@ -1,4 +1,4 @@
-#include <SPIFFS.h>
+#include <LittleFS.h>
 #include <ArduinoJson.h>
 #include <StreamUtils.h>
 #include "TIDILE.hpp"
@@ -17,9 +17,10 @@ TIDILE * TIDILE::instance = nullptr;
 void TIDILE::loadClockConfig()
 {
     Serial.println("Loading config...");
-    String configString = SPIFFS.open(CONFIG_FILE_NAME).readString();
+    String configString = readFile(LittleFS, CONFIG_FILE_NAME);
+    Serial.println(configString);
     // I hope this works
-    DynamicJsonDocument jsonConfig(2000);
+    JsonDocument jsonConfig;
     DeserializationError err = deserializeJson(jsonConfig, configString);
     if (err != DeserializationError::Ok)
     {
@@ -28,9 +29,9 @@ void TIDILE::loadClockConfig()
     }
     JsonObject obj = jsonConfig.as<JsonObject>();
     configuration.deserialize(&obj);
-    Serial.println("Config loaded, garbage collecting...");
-    jsonConfig.garbageCollect();
-    Serial.println("Garbage Collected.");
+    Serial.println("Config loaded");
+    configuration.toSerial();
+    //jsonConfig.garbageCollect();
 }
 
 long lastTime = 0;

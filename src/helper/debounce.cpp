@@ -1,9 +1,12 @@
 #include "debounce.hpp"
+
+#include <rom/gpio.h>
+
 #include "Arduino.h"
 #include "vector"
 
 std::vector<Debouncer *> debouncers = std::vector<Debouncer *>();
-xQueueHandle interruptQueue;
+QueueHandle_t interruptQueue;
 bool queueCreated = false;
 
 void debouncer_handler_isr(void *args)
@@ -73,7 +76,7 @@ int Debouncer::getPin()
 
 void Debouncer::handle(int state)
 {
-    long now = millis();
+    unsigned long now = millis();
     if(lastMillis + delay < now){
         this->func();
     }

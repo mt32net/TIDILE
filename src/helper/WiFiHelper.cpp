@@ -5,10 +5,9 @@
 
 void WiFiHelper::connectWiFi()
 {
-
     this->apMode = false;
     Serial.println("Initialising WiFi...");
-    WiFi.enableIpV6();
+    WiFi.enableIPv6();
     // WiFi.disconnect();
     WiFi.setAutoReconnect(true);
     WiFi.begin();
@@ -96,22 +95,22 @@ void WiFiHelper::openAP(String name)
     Serial.println(ownIp);
 }
 
-std::vector<Network> WiFiHelper::getReachableNets() {
-    std::vector<Network> nets = {};
+std::vector<NetworkInfo> WiFiHelper::getReachableNets() {
+    std::vector<NetworkInfo> nets = {};
     int n = WiFi.scanNetworks(false, false, false, 150U);
     for(int i = 0; i < n; i++) {
-        auto net = Network {
-            ssid: WiFi.SSID(i),
-            rssi: WiFi.RSSI(i),
+        auto net = NetworkInfo {\
+            WiFi.SSID(i),
+            WiFi.RSSI(i),
         };
         nets.push_back(net);
     }
     return nets;
 }
 
-Network WiFiHelper::getCurrentNetwork() {
-    return Network {
-        ssid: WiFi.SSID(),
-        rssi: (float)WiFi.RSSI(),
+NetworkInfo WiFiHelper::getCurrentNetwork() {
+    return NetworkInfo {
+        WiFi.SSID(),
+        WiFi.RSSI(),
     };
 }

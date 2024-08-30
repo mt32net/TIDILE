@@ -65,5 +65,6 @@
         "wifi",
         "WIFI"
     ],
-    "cmake.sourceDirectory": "/Users/universum/Developer/mt32/TIDILE/src"
+    "cmake.sourceDirectory": "/Users/universum/Developer/mt32/TIDILE/src",
+    "idf.adapterTargetName": "esp32h2"
 }

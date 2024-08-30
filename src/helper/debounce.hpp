@@ -17,5 +17,5 @@ private:
     long delay = 100;
     int pin;
 
-    long lastMillis = 0;
+    unsigned long lastMillis = 0;
 };

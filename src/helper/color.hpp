@@ -1,16 +1,15 @@
 #pragma once
 #include <Arduino.h>
-#include <Preferences.h>
 #include <FastLED.h>
 #include <ArduinoJson.h>
 
 struct Color
 {
-    byte red = 0;
-    byte green = 0;
-    byte blue = 0;
+    unsigned char red = 0;
+    unsigned char green = 0;
+    unsigned char blue = 0;
 
-    Color(byte r, byte g, byte b)
+    Color(unsigned char r, unsigned char g, unsigned char b)
     {
         red = r;
         green = g;

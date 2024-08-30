@@ -1,5 +1,6 @@
 #include "vectorSerialization.hpp"
 
+#pragma deprecated()
 JsonArray serializeVector(std::vector<String> &vector) {
     DynamicJsonDocument doc(1024);
     JsonArray arr = doc.to<JsonArray>();
