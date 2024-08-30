@@ -4,13 +4,14 @@
 
 static PingThreadData threadData;
 
+static SemaphoreHandle_t xMutex = NULL;
+
 PingManager::PingManager(ClockConfig * config) {
-    this->devicesLastCheckedSize = config->presenceDeviceHostnames.size();
-    this->devicesLastChecked = (PresenceDevice*) calloc(this->devicesLastCheckedSize, sizeof(PresenceDevice));
     this->config = config;
     this->lastTimeChecked = 0;
     this->intervalHms = DEFAULT_PRESENCE_INTERVAL;
-    threadData = {this, this->config};
+    this->anyOnline = true;
+    threadData = {this, this->config, {}, true};
     xMutex = xSemaphoreCreateMutex();
 }
 
@@ -19,8 +20,7 @@ void devicesPingThread(void* args) {
     std::vector<PresenceDevice> devices = {};
     Serial.println("THREAD: Device vector initialized.");
     for (String &s : threadData.config->presenceDeviceHostnames) {
-        // TODO revert
-        bool pingValue = true; //Ping.ping(s.c_str(), 1);
+        bool pingValue = Ping.ping(s.c_str(), 1);
         PresenceDevice d = { s, pingValue };
         devices.push_back(d);
         Serial.print(d.address);
@@ -28,6 +28,15 @@ void devicesPingThread(void* args) {
         Serial.println(d.online);
     }
     threadData.ping->registerPings(&devices);
+    // Set flag if any device online
+    bool flag = false;
+    for (auto d : threadData.devicesList) {
+        if (d.online) {
+            flag = true;
+            break;
+        }
+    }
+    threadData.anyOnline = flag;
     Serial.println("THREAD: Stopping thread...");
     vTaskDelete(NULL);
 }
@@ -50,28 +59,39 @@ void PingManager::loop(int currentTimeHms) {
 }
 
 bool PingManager::isAnyDeviceOnline() {
-    //m.lock();
-    for (int i = 0; i < this->devicesLastCheckedSize; i++) {
-        if (devicesLastChecked[i].online) return true;
+/*     if (xSemaphoreTake(xMutex, portTICK_PERIOD_MS * 100) == pdTRUE) {
+        for (auto device : threadData.devicesList) {
+            if (device.online) return true;
+        }
+        xSemaphoreGive(xMutex);
+    } else {
+        Serial.println("Ping devices thread blocked resource for too long....");
     }
-    //m.unlock();
-    return false;
+    return false; */
+    return threadData.anyOnline;
 }
 
 void PingManager::registerPings(std::vector<PresenceDevice>* devices) {
     //m.lock();
-    //this->devicesLastCheck.clear();
-    //delete devicesLastChecked;
-    //devicesLastCheckedSize = devices->size();
-    //devicesLastChecked = (PresenceDevice*) calloc(devicesLastCheckedSize, sizeof(PresenceDevice));
-    for(int i = 0; i < devicesLastCheckedSize; i++) {
-        //this->devicesLastCheck.push_back(d);
-        devicesLastChecked[i] = (*devices)[i];
+    Serial.println("THREAD: Writing to devices list...");
+    if (xSemaphoreTake(xMutex, portTICK_PERIOD_MS * 10) == pdTRUE) {
+        Serial.println("THREAD: Got mutex to write list...");
+        threadData.devicesList.clear();
+        for(auto device : *devices) {
+            threadData.devicesList.push_back(device);
+        }
+        xSemaphoreGive(xMutex);
+    } else {
+        Serial.println("THREAD: Resource is still blocked by web server/main thread.");
     }
     //m.unlock();
 }
 
 std::vector<PresenceDevice> PingManager::getDevices() {
-    return std::vector<PresenceDevice>(this->devicesLastChecked, this->devicesLastChecked + this->devicesLastCheckedSize);
-
+    if (xSemaphoreTake(xMutex, portTICK_PERIOD_MS * 500) == pdTRUE) {
+        return threadData.devicesList;
+        xSemaphoreGive(xMutex);
+    } else {
+        return {};
+    }
 }

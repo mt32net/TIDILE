@@ -17,18 +17,19 @@ class PingManager;
 struct PingThreadData {
     PingManager* ping;
     ClockConfig* config;
+    std::vector<PresenceDevice> devicesList;
+    bool anyOnline;
 };
 
 class PingManager {
     
-    PresenceDevice* devicesLastChecked;
-    int devicesLastCheckedSize;
+    //std::vector<PresenceDevice> devicesLastChecked;
     ClockConfig * config;
     int lastTimeChecked;
     int intervalHms;
     pthread_t pingThreadID;
+    bool anyOnline;
     //Mutex m;
-    SemaphoreHandle_t xMutex = NULL;
 public:
 
     PingManager() = default;
