@@ -64,5 +64,6 @@
         "tidile",
         "wifi",
         "WIFI"
-    ]
+    ],
+    "cmake.sourceDirectory": "/Users/universum/Developer/mt32/TIDILE/src"
 }

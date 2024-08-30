@@ -10,3 +10,5 @@ wifi_config.hpp
 build
 confidential.hpp
 src/config/confidential.hpp
+.idea/
+.vscode/
