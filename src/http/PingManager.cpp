@@ -74,7 +74,7 @@ bool PingManager::isAnyDeviceOnline() {
 void PingManager::registerPings(std::vector<PresenceDevice>* devices) {
     //m.lock();
     Serial.println("THREAD: Writing to devices list...");
-    if (xSemaphoreTake(xMutex, portTICK_PERIOD_MS * 10) == pdTRUE) {
+    if (xSemaphoreTake(xMutex, 100) == pdTRUE) {
         Serial.println("THREAD: Got mutex to write list...");
         threadData.devicesList.clear();
         for(auto device : *devices) {
@@ -88,10 +88,5 @@ void PingManager::registerPings(std::vector<PresenceDevice>* devices) {
 }
 
 std::vector<PresenceDevice> PingManager::getDevices() {
-    if (xSemaphoreTake(xMutex, portTICK_PERIOD_MS * 500) == pdTRUE) {
-        return threadData.devicesList;
-        xSemaphoreGive(xMutex);
-    } else {
-        return {};
-    }
+    return threadData.devicesList;
 }
