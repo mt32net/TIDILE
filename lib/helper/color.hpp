@@ -17,8 +17,7 @@ struct Color
     }
 
     Color()
-    {
-    }
+    = default;
 
     void deserialize(JsonObject *json)
     {
@@ -27,19 +26,19 @@ struct Color
         blue = (*json)["b"];
     }
 
-    void serialize(JsonObject *json)
+    void serialize(JsonObject *json) const
     {
         (*json)["r"] = red;
         (*json)["g"] = green;
         (*json)["b"] = blue;
     }
 
-    CRGB toCRGB()
+    CRGB toCRGB() const
     {
         return CRGB(red, green, blue);
     }
 
-    bool operator==(const Color &c)
+    bool operator==(const Color &c) const
     {
         return red == c.red && green == c.green && blue == c.blue;
     }
@@ -68,7 +67,7 @@ struct Color
     static String colorToHex(Color color);
 
 private:
-    String toTwoChars(String s)
+    static String toTwoChars(String s)
     {
         if (s.length() < 2)
             return String("0") + s;

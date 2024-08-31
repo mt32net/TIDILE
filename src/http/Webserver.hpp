@@ -2,10 +2,11 @@
 
 #include <Arduino.h>
 #include <ESPAsyncWebServer.h>
-#include "../helper/WiFiHelper.hpp"
-#include "config/config_includes.hpp"
-#include "../topics/topicsInclude.hpp"
-#include "../ClockConfig.hpp"
+#include "../topics/custom.hpp"
+
+
+#include "WiFiHelper.hpp"
+#include "ClockConfig.hpp"
 #include "http/PingManager.hpp"
 
 #define WEBSERVER_DEFAULT_DOC_SIZE 1024

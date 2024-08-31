@@ -16,11 +16,11 @@ struct NetworkInfo {
 class WiFiHelper
 {
 public:
-    void connectWiFi();
+    void connectWiFi(int maxRetriesBeforeAP = 10);
     bool connectedWiFi();
     void setHostname(String name);
     void openAP(String name);
-    void setCredentials(String ssid, String password);
+    void setCredentials(String ssid, String password, int maxRetriesBeforeAP = 10);
     bool isAPMode() { return apMode; };
     std::vector<NetworkInfo> getReachableNets();
     NetworkInfo getCurrentNetwork();

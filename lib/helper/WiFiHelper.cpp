@@ -1,9 +1,8 @@
 #include "WiFiHelper.hpp"
-#include "../config/config_includes.hpp"
 #include "esp_wifi.h"
 #include <WiFi.h>
 
-void WiFiHelper::connectWiFi()
+void WiFiHelper::connectWiFi(int maxRetriesBeforeAP)
 {
     this->apMode = false;
     Serial.println("Initialising WiFi...");
@@ -31,7 +30,7 @@ void WiFiHelper::connectWiFi()
         // Serial.println(WiFi.smartConfigDone());
 #endif
         tries++;
-        if (tries > WIFI_NUMBER_TRIES_BEFORE_AP)
+        if (tries > maxRetriesBeforeAP)
         {
             Serial.println();
             Serial.println("Could not establish connection, opening access point...");
@@ -46,7 +45,7 @@ void WiFiHelper::connectWiFi()
     Serial.println(WiFi.localIP());
 }
 
-void WiFiHelper::setCredentials(String ssid, String password) {
+void WiFiHelper::setCredentials(String ssid, String password, int maxRetriesBeforeAP) {
     WiFi.persistent(true);
     Serial.println("Trying to connect to " + ssid + "...");
     WiFi.begin(ssid.c_str(), password.c_str());
@@ -56,7 +55,7 @@ void WiFiHelper::setCredentials(String ssid, String password) {
         delay(500);
         tries++;
         Serial.print(".");
-        if (tries > WIFI_NUMBER_TRIES_BEFORE_AP)
+        if (tries > maxRetriesBeforeAP)
         {
             Serial.println();
             Serial.println("Could not establish connection, doing nothing...");

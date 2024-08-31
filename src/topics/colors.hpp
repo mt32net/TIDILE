@@ -1,8 +1,8 @@
 #pragma once
 #include <Arduino.h>
-#include "../helper/color.hpp"
+#include "color.hpp"
 #include <ArduinoJson.h>
-#include "../ClockConfig.hpp"
+#include "ClockConfig.hpp"
 #include "../config/config_includes.hpp"
 
 struct Colors

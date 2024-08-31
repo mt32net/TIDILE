@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
 #include <ArduinoJson.h>
-#include "../ClockConfig.hpp"
+#include "ClockConfig.hpp"
 #include "../config/config_includes.hpp"
 
 struct General

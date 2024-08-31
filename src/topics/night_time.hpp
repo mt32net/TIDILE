@@ -1,9 +1,9 @@
 #pragma once
 #include <Arduino.h>
 #include <ArduinoJson.h>
-#include "../ClockConfig.hpp"
+#include "ClockConfig.hpp"
 #include "../config/config_includes.hpp"
-#include "../helper/time.hpp"
+#include "time.hpp"
 
 struct NightTime
 {

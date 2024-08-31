@@ -2,10 +2,10 @@
 #include <ArduinoJson.h>
 #include <StreamUtils.h>
 #include "TIDILE.hpp"
-#include "helper/WiFiHelper.hpp"
-#include "helper/time.hpp"
-#include "helper/color.hpp"
-#include "helper/numbers.hpp"
+#include "WiFiHelper.hpp"
+#include "time.hpp"
+#include "color.hpp"
+#include "numbers.hpp"
 
 TIDILE::TIDILE() {
     TIDILE::instance = this;

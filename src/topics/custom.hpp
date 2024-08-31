@@ -1,12 +1,9 @@
 #pragma once
 #include "../config/config_includes.hpp"
-
-#pragma once
 #include <Arduino.h>
 #include <ArduinoJson.h>
-#include "../ClockConfig.hpp"
-#include "../config/config_includes.hpp"
-#include "../helper/time.hpp"
+#include "ClockConfig.hpp"
+#include "time.hpp"
 
 enum ClockMode {
     NORMAL,
@@ -34,9 +31,9 @@ struct Custom
         unixEnd = doc[JSON_NAME_CUSTOM_END].as<long>();
         color = Color::hexToColor(doc[JSON_NAME_CUSTOM_COLOR].as<String>());
         customTime = ClockTime {
-            seconds: doc[JSON_NAME_CUSTOM_TIME]["seconds"],
-            minutes: doc[JSON_NAME_CUSTOM_TIME]["minutes"],
-            hours: doc[JSON_NAME_CUSTOM_TIME]["hours"],
+            doc[JSON_NAME_CUSTOM_TIME]["seconds"],
+            doc[JSON_NAME_CUSTOM_TIME]["minutes"],
+            doc[JSON_NAME_CUSTOM_TIME]["hours"],
         };
     }
 

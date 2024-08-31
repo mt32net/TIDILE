@@ -3,14 +3,13 @@
 #include <FastLED.h>
 #include <LittleFS.h>
 
-#include "config/config_includes.hpp"
-#include "helper/color.hpp"
+#include <color.hpp>
 #include "ArduinoJson.h"
 #include <StreamUtils.h>
 #include <vector>
-#include <helper/file.hpp>
+#include <file.hpp>
 
-#include "helper/vectorSerialization.hpp"
+#include "vectorSerialization.hpp"
 
 /**
  * @brief CHosen clock format
@@ -22,6 +21,17 @@ enum ClockFormat {
 
 // TODO The right one pls
 #define ENTRY_COUNTS 10
+
+#define CONFIG_FILE_NAME "/config.json"
+#define DEFAULT_BLINK_BRIGHTNESS 0.7
+#define DEFAULT_DISPLAY_SECONDS true
+#define DEFAULT_NIGHT_TIME_ENABLED true
+#define DEFAULT_LIGHT_INFLUENCE 50
+#define DEFAULT_NIGHT_TIME_BEGIN 2300
+#define DEFAULT_NIGHT_TIME_END 600
+#define DEFAULT_BRIGHTNESS 10
+#define DEFAULT_DIMM_SECONDS false
+#define DEFAULT_PRESENCE_INTERVAL 100
 
 /**
  * @brief Configuration class for TIDILE, will be saved and restored out of permanent storage at each reboot
@@ -43,7 +53,6 @@ struct ClockConfig {
     bool dimmSeconds = DEFAULT_DIMM_SECONDS;
     bool tempOverwriteNightTime = false;
     ClockFormat format = ClockFormat::Format_24H;
-    int ledCount = LED_COUNT;
     bool reverseDirection = false;
     int lastNightTimeOverwriteCheckTime = 0;
     bool presenceDetection = false;
@@ -99,7 +108,7 @@ struct ClockConfig {
 
         (*json)["presenceDetection"] = presenceDetection;
         JsonArray array = (*json)["presenceDeviceHostnames"].to<JsonArray>();
-        for (String &s : presenceDeviceHostnames) {
+        for (String &s: presenceDeviceHostnames) {
             array.add(s);
         }
     }
@@ -122,26 +131,43 @@ struct ClockConfig {
     }
 
     void toSerial() {
-        Serial.print("displaySeconds: "); Serial.println(displaySeconds);
-        Serial.print("colorHours: "); Serial.println(colorHours.toString());
-        Serial.print("colorMinutes: "); Serial.println(colorMinutes.toString());
-        Serial.print("colorSeconds: "); Serial.println(colorSeconds.toString());
-        Serial.print("colorHumidity: "); Serial.println(colorHumidity.toString());
-        Serial.print("colorTemperature: "); Serial.println(colorTemperature.toString());
-        Serial.print("colorPressure: "); Serial.println(colorPressure.toString());
-        Serial.print("nightTimeEnabled: "); Serial.println(nightTimeEnabled);
-        Serial.print("lightInfluence: "); Serial.println(lightInfluence);
-        Serial.print("nightTimeBegin: "); Serial.println(nightTimeBegin);
-        Serial.print("nightTimeEnd: "); Serial.println(nightTimeEnd);
-        Serial.print("brightness: "); Serial.println(brightness);
-        Serial.print("dimmSeconds: "); Serial.println(dimmSeconds);
-        Serial.print("tempOverwriteNightTime: "); Serial.println(tempOverwriteNightTime);
-        Serial.print("format: "); Serial.println(format);
-        Serial.print("ledCount: "); Serial.println(ledCount);
-        Serial.print("reverseDirection: "); Serial.println(reverseDirection);
-        Serial.print("lastNightTimeOverwriteCheckTime: "); Serial.println(lastNightTimeOverwriteCheckTime);
-        Serial.print("presenceDetection: "); Serial.println(presenceDetection);
-        Serial.print("presenceDeviceHostnames: "); Serial.println(presenceDeviceHostnames.size());
-
+        Serial.print("displaySeconds: ");
+        Serial.println(displaySeconds);
+        Serial.print("colorHours: ");
+        Serial.println(colorHours.toString());
+        Serial.print("colorMinutes: ");
+        Serial.println(colorMinutes.toString());
+        Serial.print("colorSeconds: ");
+        Serial.println(colorSeconds.toString());
+        Serial.print("colorHumidity: ");
+        Serial.println(colorHumidity.toString());
+        Serial.print("colorTemperature: ");
+        Serial.println(colorTemperature.toString());
+        Serial.print("colorPressure: ");
+        Serial.println(colorPressure.toString());
+        Serial.print("nightTimeEnabled: ");
+        Serial.println(nightTimeEnabled);
+        Serial.print("lightInfluence: ");
+        Serial.println(lightInfluence);
+        Serial.print("nightTimeBegin: ");
+        Serial.println(nightTimeBegin);
+        Serial.print("nightTimeEnd: ");
+        Serial.println(nightTimeEnd);
+        Serial.print("brightness: ");
+        Serial.println(brightness);
+        Serial.print("dimmSeconds: ");
+        Serial.println(dimmSeconds);
+        Serial.print("tempOverwriteNightTime: ");
+        Serial.println(tempOverwriteNightTime);
+        Serial.print("format: ");
+        Serial.println(format);
+        Serial.print("reverseDirection: ");
+        Serial.println(reverseDirection);
+        Serial.print("lastNightTimeOverwriteCheckTime: ");
+        Serial.println(lastNightTimeOverwriteCheckTime);
+        Serial.print("presenceDetection: ");
+        Serial.println(presenceDetection);
+        Serial.print("presenceDeviceHostnames: ");
+        Serial.println(presenceDeviceHostnames.size());
     }
 };

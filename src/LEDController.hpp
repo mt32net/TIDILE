@@ -1,7 +1,7 @@
 #pragma once
 
 #include <FastLED.h>
-#include "helper/color.hpp"
+#include "color.hpp"
 #include "ClockConfig.hpp"
 
 class LEDController {

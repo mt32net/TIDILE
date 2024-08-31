@@ -15,8 +15,8 @@
 #include "Arduino.h"
 #include <FastLED.h>
 #include "TIDILE.hpp"
-#include "helper/WiFiHelper.hpp"
-#include "helper/numbers.hpp"
+#include "WiFiHelper.hpp"
+#include "numbers.hpp"
 #include "config/config_includes.hpp"
 #include "LittleFS.h"
 #ifdef RUN_TESTS
@@ -46,7 +46,7 @@ void setup()
 
   // initArduino();
 
-  wifiHelper.connectWiFi();
+  wifiHelper.connectWiFi(WIFI_NUMBER_TRIES_BEFORE_AP);
 
   esp_log_level_set("wifi", ESP_LOG_ERROR);
   esp_log_level_set("task_wdt", ESP_LOG_ERROR);

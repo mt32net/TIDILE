@@ -8,9 +8,9 @@
 #include "mqtt/MQTTHandler.hpp"
 #include "config/config_includes.hpp"
 #include "topics/topicsInclude.hpp"
-#include "helper/WiFiHelper.hpp"
+#include "WiFiHelper.hpp"
 #include "LEDController.hpp"
-#include "helper/debounce.hpp"
+#include "debounce.hpp"
 #include "http/PingManager.hpp"
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
 #include <Wire.h>

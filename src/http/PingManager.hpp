@@ -5,7 +5,7 @@
 #include <vector>
 #include "ClockConfig.hpp"
 #include <pthread.h>
-#include "helper/mutex.hpp"
+#include "mutex.hpp"
 
 struct PresenceDevice {
     String address;

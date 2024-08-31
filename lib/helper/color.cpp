@@ -1,5 +1,4 @@
 #include "color.hpp"
-#include "../config/config_includes.hpp"
 
 // Thank you stack overflow!
 Color Color::hexToColor(String input)

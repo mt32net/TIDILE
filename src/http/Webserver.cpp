@@ -2,7 +2,11 @@
 #include <ArduinoJson.h>
 #include <AsyncJson.h>
 #include <StreamUtils.h>
-#include "helper/vectorSerialization.hpp"
+#include "../topics/night_time.hpp"
+#include "../topics/general.hpp"
+#include "../topics/colors.hpp"
+
+#include "vectorSerialization.hpp"
 
 void Webserver::setup(AsyncWebServer *server, ClockConfig *config, WiFiHelper *wifiHelper, Custom *custom,
                       PingManager *ping) {
