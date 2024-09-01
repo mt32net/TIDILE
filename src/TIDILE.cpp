@@ -5,7 +5,8 @@
 #include "WiFiHelper.hpp"
 #include "time.hpp"
 #include "color.hpp"
-#include "numbers.hpp"
+#include <Arduino.h>
+#include "config/compilation_varying.hpp"
 
 TIDILE::TIDILE() {
     TIDILE::instance = this;
@@ -37,11 +38,13 @@ void TIDILE::loadClockConfig()
 long lastTime = 0;
 bool lastState = false;
 
-void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelper *wifiHelper)
+void TIDILE::setup(CRGB *leds, int numberLEDs, WiFiHelper *wifiHelper)
 {
     this->leds = leds;
     this->numberLEDs = numberLEDs;
-    this->server = server;
+#ifdef FEATURE_WEB_SERVER
+    this->server = new AsyncWebServer(HTTP_ENDPOINT_PORT);
+#endif
     this->wifiHelper = wifiHelper;
     this->ledController = LEDController(numberLEDs, leds, &configuration, numberZones);
     this->pingManager = PingManager(&configuration);
@@ -68,9 +71,6 @@ void TIDILE::setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelpe
     ClockTime time;
     getTime(&time);
 
-    // CAUTION makes GETs increadibly slow
-    // server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.html");
-    // server->serveStatic("/", SPIFFS, "/static");
     webserver.setup(server, &configuration, wifiHelper, &custom, &pingManager);
     // Only start mqtt service when connected to a internet
     if (!wifiHelper->isAPMode())
@@ -233,7 +233,9 @@ void TIDILE::update()
     }
     else
     {
+#if !CONFIG_IDF_TARGET_ESP32H2
         touchAverage += touchRead(TOUCH_PIN);
+#endif
         lightAvg += analogRead(PHOTORESISTOR_PIN);
     }
 

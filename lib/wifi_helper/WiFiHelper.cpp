@@ -2,6 +2,7 @@
 #include "esp_wifi.h"
 #include <WiFi.h>
 
+#if SOC_WIFI_SUPPORTED
 void WiFiHelper::connectWiFi(int maxRetriesBeforeAP)
 {
     this->apMode = false;
@@ -113,3 +114,31 @@ NetworkInfo WiFiHelper::getCurrentNetwork() {
         WiFi.RSSI(),
     };
 }
+
+#else
+void WiFiHelper::connectWiFi(int maxRetriesBeforeAP) {
+}
+
+bool WiFiHelper::connectedWiFi() {
+    return false;
+}
+
+void WiFiHelper::setHostname(String name) {
+}
+
+void WiFiHelper::openAP(String name) {
+}
+
+void WiFiHelper::setCredentials(String ssid, String password, int maxRetriesBeforeAP) {
+}
+
+std::vector<NetworkInfo> WiFiHelper::getReachableNets() {
+    return {};
+}
+
+NetworkInfo WiFiHelper::getCurrentNetwork() {
+    return NetworkInfo{
+        "", 0
+    };
+}
+#endif

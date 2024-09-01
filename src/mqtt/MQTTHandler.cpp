@@ -6,6 +6,7 @@
 
 MQTTHandler::MQTTHandler() = default;
 
+#ifdef FEATURE_MQTT
 void MQTTHandler::setup(ClockConfig *config, TIDILE *tidile, String uri, int port, ClockTime currentTime)
 {
     this->config = config;
@@ -189,3 +190,35 @@ void MQTTHandler::subscribeTIDILETopics()
 
     subscribe(String(MQTT_TOPIC_TIDILE_CONFIG_NIGHT_BEGIN_NOW));
 }
+#else
+void MQTTHandler::setup(ClockConfig *config, TIDILE *tidile, String uri, int port, ClockTime currentTime) {
+}
+
+void MQTTHandler::callback(char *topic, byte *payload, unsigned int length) {
+}
+
+void MQTTHandler::subscribeTIDILETopics() {
+}
+
+void MQTTHandler::loop(ClockTime t) {
+}
+
+void MQTTHandler::subscribe(String topic) {
+}
+
+void MQTTHandler::publish(String topic, String payload) {
+}
+
+void MQTTHandler::reconnect() {
+}
+
+void MQTTHandler::subscribePrivate(String topic) {
+}
+
+void MQTTHandler::restore() {
+}
+
+bool MQTTHandler::handle(String topic, String payload) {
+    return true;
+}
+#endif

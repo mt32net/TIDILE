@@ -6,17 +6,14 @@
 // #define FASTLED_ESP32_I2S 1
 
 #include "esp_system.h"
-// #include "esp_wifi.h"
 #include "esp_event.h"
 #include "esp_log.h"
-#include "esp_heap_caps.h"
 #include "driver/gpio.h"
 #include "nvs_flash.h"
 #include "Arduino.h"
 #include <FastLED.h>
 #include "TIDILE.hpp"
 #include "WiFiHelper.hpp"
-#include "numbers.hpp"
 #include "config/config_includes.hpp"
 #include "LittleFS.h"
 #ifdef RUN_TESTS
@@ -32,7 +29,6 @@ Adafruit_BME280 bmp; // I2C
 CRGB *leds;
 
 TIDILE tidile;
-AsyncWebServer server(HTTP_ENDPOINT_PORT);
 WiFiHelper wifiHelper;
 
 #ifdef RUN_TESTS
@@ -81,7 +77,7 @@ void setup()
   FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, LED_COUNT);
   FastLED.setDither(DISABLE_DITHER);
 
-  tidile.setup(leds, LED_COUNT, &server, &wifiHelper);
+  tidile.setup(leds, LED_COUNT, &wifiHelper);
 #if defined(HUMIDITY_SENSOR) && defined(BME280)
   tidile.addBMP(&bmp);
 #endif

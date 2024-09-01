@@ -1,28 +1,20 @@
 #pragma once
 
+#include "config/compilation_varying.hpp"
+#ifdef FEATURE_PING
 #include <WiFi.h>
 #include <ESP32Ping.h>
+#endif
 #include <vector>
 #include "ClockConfig.hpp"
-#include <pthread.h>
-#include "mutex.hpp"
+
 
 struct PresenceDevice {
     String address;
     bool online;
 };
 
-class PingManager;
-
-struct PingThreadData {
-    PingManager* ping;
-    ClockConfig* config;
-    std::vector<PresenceDevice> devicesList;
-    bool anyOnline;
-};
-
 class PingManager {
-    
     //std::vector<PresenceDevice> devicesLastChecked;
     ClockConfig * config;
     int lastTimeChecked;
@@ -40,4 +32,3 @@ public:
     bool isAnyDeviceOnline();
     void registerPings(std::vector<PresenceDevice> *devices);
 };
-

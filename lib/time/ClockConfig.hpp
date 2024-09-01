@@ -1,6 +1,5 @@
 #pragma once
 #include "Arduino.h"
-#include <FastLED.h>
 #include <LittleFS.h>
 
 #include <color.hpp>
@@ -12,7 +11,7 @@
 #include "vectorSerialization.hpp"
 
 /**
- * @brief CHosen clock format
+ * @brief Chosen clock format
  */
 enum ClockFormat {
     Format_24H = 23,

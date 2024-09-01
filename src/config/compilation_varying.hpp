@@ -32,3 +32,9 @@
 // #pragma region used sensors
 //#define BME280
 // #pragma endregion
+
+#if SOC_WIFI_SUPPORTED
+#define FEATURE_PING
+#define FEATURE_WEB_SERVER
+#define FEATURE_MQTT
+#endif

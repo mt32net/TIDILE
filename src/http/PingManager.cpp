@@ -1,10 +1,20 @@
 #include "PingManager.hpp"
 #include "esp_task_wdt.h"
 #include "freertos/task.h"
+#include "../config/compilation_varying.hpp"
+
+#ifdef FEATURE_PING
+
+struct PingThreadData {
+    PingManager* ping{};
+    ClockConfig* config{};
+    std::vector<PresenceDevice> devicesList;
+    bool anyOnline{};
+};
 
 static PingThreadData threadData;
 
-static SemaphoreHandle_t xMutex = NULL;
+static SemaphoreHandle_t xMutex = nullptr;
 
 PingManager::PingManager(ClockConfig * config) {
     this->config = config;
@@ -90,3 +100,24 @@ void PingManager::registerPings(std::vector<PresenceDevice>* devices) {
 std::vector<PresenceDevice> PingManager::getDevices() {
     return threadData.devicesList;
 }
+
+#else
+PingManager::PingManager(ClockConfig * config) {
+    Serial.println("PingManager disabled.");
+}
+
+void PingManager::updateDevices() {
+    Serial.println("PingManager disabled.");
+}
+
+void PingManager::loop(int currentTimeHms) {}
+
+bool PingManager::isAnyDeviceOnline() { return true; }
+
+void PingManager::registerPings(std::vector<PresenceDevice>* devices) {}
+
+std::vector<PresenceDevice> PingManager::getDevices() {
+    return {};
+}
+
+#endif

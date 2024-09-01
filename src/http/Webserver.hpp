@@ -1,13 +1,17 @@
 #pragma once
 
 #include <Arduino.h>
-#include <ESPAsyncWebServer.h>
-#include "../topics/custom.hpp"
-
-
 #include "WiFiHelper.hpp"
 #include "ClockConfig.hpp"
 #include "http/PingManager.hpp"
+#include "../topics/custom.hpp"
+
+#ifdef FEATURE_WEB_SERVER
+#include <ESPAsyncWebServer.h>
+#else
+class AsyncWebServer;
+class AsyncWebServerRequest;
+#endif
 
 #define WEBSERVER_DEFAULT_DOC_SIZE 1024
 

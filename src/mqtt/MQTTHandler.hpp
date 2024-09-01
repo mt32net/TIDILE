@@ -2,11 +2,15 @@
 #include <Arduino.h>
 #include <WiFiClient.h>
 #include <vector>
-#include <PubSubClient.h>
-#include <Preferences.h>
-#include "../config/config_includes.hpp"
 #include "ClockConfig.hpp"
 #include "ClockInfo.hpp"
+#include "config/compilation_varying.hpp"
+
+#ifdef FEATURE_MQTT
+#include <PubSubClient.h>
+#else
+class PubSubClient;
+#endif
 
 class TIDILE;
 
@@ -28,7 +32,6 @@ private:
 
     bool handle(String topic, String payload);
 
-private:
     ClockConfig *config{};
     TIDILE *tidile{};
     String uri;

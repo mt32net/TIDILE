@@ -6,7 +6,9 @@
 #include "../topics/general.hpp"
 #include "../topics/colors.hpp"
 
-#include "vectorSerialization.hpp"
+#include "WiFiHelper.hpp"
+
+#ifdef FEATURE_WEB_SERVER
 
 void Webserver::setup(AsyncWebServer *server, ClockConfig *config, WiFiHelper *wifiHelper, Custom *custom,
                       PingManager *ping) {
@@ -256,3 +258,17 @@ bool Webserver::isRateLimited(AsyncWebServerRequest *request) {
     lastRequestMillis = millis();
     return limited;
 }
+
+#else
+void Webserver::setup(AsyncWebServer *server, ClockConfig *config, WiFiHelper *wifiHelper, Custom *custom,
+    PingManager *ping) {
+}
+
+void Webserver::initializeRoutes() {
+}
+
+bool Webserver::isRateLimited(AsyncWebServerRequest *request) {
+    return false;
+}
+#endif
+

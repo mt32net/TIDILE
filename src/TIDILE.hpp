@@ -35,7 +35,7 @@ public:
      * @param numberLEDS the number of LEDS within the array
      * @param configuration the pointer to thee configuration object where all settings are saved
      */
-    void setup(CRGB *leds, int numberLEDs, AsyncWebServer *server, WiFiHelper *wifiHelper);
+    void setup(CRGB *leds, int numberLEDs, WiFiHelper *wifiHelper);
 
     // void flushConfig();
 
