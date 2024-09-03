@@ -4,6 +4,7 @@
 #include <ArduinoJson.h>
 #include "ClockConfig.hpp"
 #include "time.hpp"
+#include "topic.hpp"
 
 enum ClockMode {
     NORMAL,
@@ -11,16 +12,23 @@ enum ClockMode {
     TIME,
 };
 
-struct Custom
+struct CustomTopic: public Topic
 {
+    void modifyLEDs(LEDController *ledController, int numberLEDs, ClockTime time, ClockEnv env) override {
+        ledController->setAll(color);
+    }
+
+    bool displayEnv() override {
+        return mode != NORMAL;
+    }
+
     ClockMode mode = NORMAL;
     long unixEnd = 0;
     Color color = Color(0, 0, 255);
     // in format HHMM, HH: 0 - 24
     ClockTime customTime = ClockTime();
 
-    void deserializeFromJSON(JsonDocument &doc)
-    {
+    void deserializeFromJSON(JsonDocument &doc) override {
         String modeString = doc[JSON_NAME_CUSTOM_MODE].as<String>();
         if (modeString.equals("TIME"))
             mode = TIME;
@@ -37,12 +45,19 @@ struct Custom
         };
     }
 
-
-    void serializeToJson(JsonDocument &doc) {
+    void serializeToJson(JsonDocument &doc) override {
         switch (mode) {
             case NORMAL: doc[JSON_NAME_CUSTOM_MODE] = "NORMAL"; break;
             case COLOR: doc[JSON_NAME_CUSTOM_MODE] = "COLOR"; break;
             case TIME: doc[JSON_NAME_CUSTOM_MODE] = "TIME"; break;
        }
+    }
+
+    void saveToConfig(ClockConfig *config) override {
+
+    }
+
+    void loadFromConfig(ClockConfig *config) override {
+
     }
 };

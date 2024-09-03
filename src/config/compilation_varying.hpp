@@ -33,8 +33,9 @@
 //#define BME280
 // #pragma endregion
 
-#if SOC_WIFI_SUPPORTED
+//#if SOC_WIFI_SUPPORTED
 #define FEATURE_PING
 #define FEATURE_WEB_SERVER
-#define FEATURE_MQTT
-#endif
+//#define FEATURE_MQTT
+#define FEATURE_HOMEKIT
+//#endif

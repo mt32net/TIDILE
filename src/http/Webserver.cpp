@@ -10,14 +10,7 @@
 
 #ifdef FEATURE_WEB_SERVER
 
-void Webserver::setup(AsyncWebServer *server, ClockConfig *config, WiFiHelper *wifiHelper, Custom *custom,
-                      PingManager *ping) {
-    this->config = config;
-    this->server = server;
-    this->wifiHelper = wifiHelper;
-    this->custom = custom;
-    this->pingManager = ping;
-
+void Webserver::setup(ClockTime time) {
     initializeRoutes();
 
     server->serveStatic("/css/", LittleFS, "/dist/css/");
@@ -31,6 +24,17 @@ void Webserver::setup(AsyncWebServer *server, ClockConfig *config, WiFiHelper *w
     Serial.println("HTTP server started");
 }
 
+void Webserver::loop(ClockTime time) {
+}
+
+Webserver* Webserver::setup(CustomTopic *custom,
+                      PingManager *ping) {
+    this->custom = custom;
+    this->pingManager = ping;
+    this->server = new AsyncWebServer(HTTP_ENDPOINT_PORT);
+    return this;
+}
+
 void Webserver::initializeRoutes() {
     // COLOR
     server->on(ENDPOINT_COLORS, HTTP_GET, [this](AsyncWebServerRequest *request) {
@@ -39,7 +43,7 @@ void Webserver::initializeRoutes() {
         // Serial.println(millis());
         AsyncResponseStream *response = request->beginResponseStream("application/json");
         JsonDocument json;
-        Colors colors;
+        ColorsTopic colors;
         colors.loadFromConfig(config);
         colors.serializeToJson(json);
         serializeJson(json, *response);
@@ -77,7 +81,7 @@ void Webserver::initializeRoutes() {
                                                          [this](AsyncWebServerRequest *request, JsonVariant &json) {
                                                              if (this->isRateLimited(request))
                                                                  return;
-                                                             Colors colors;
+                                                             ColorsTopic colors;
                                                              JsonDocument doc;
                                                              doc.set(json);
                                                              colors.deserializeFromJSON(doc);
@@ -94,7 +98,7 @@ void Webserver::initializeRoutes() {
                    // if (this->isRateLimited(request)) return;
                    AsyncResponseStream *response = request->beginResponseStream("application/json");
                    JsonDocument json;
-                   General general;
+                   GeneralTopic general;
                    general.loadFromConfig(config);
                    general.serializeToJson(json);
                    serializeJson(json, *response);
@@ -106,7 +110,7 @@ void Webserver::initializeRoutes() {
                                                            [this](AsyncWebServerRequest *request, JsonVariant &json) {
                                                                if (this->isRateLimited(request))
                                                                    return;
-                                                               General general;
+                                                               GeneralTopic general;
                                                                JsonDocument doc;
                                                                doc.set(json);
                                                                general.deserializeFromJSON(doc);
@@ -123,7 +127,7 @@ void Webserver::initializeRoutes() {
                    // if (this->isRateLimited(request)) return;
                    AsyncResponseStream *response = request->beginResponseStream("application/json");
                    JsonDocument json;
-                   NightTime nightTime;
+                   NightTimeTopic nightTime;
                    nightTime.loadFromConfig(config);
                    nightTime.serializeToJson(json);
                    serializeJson(json, *response);
@@ -134,7 +138,7 @@ void Webserver::initializeRoutes() {
     auto *handlerNightTIme = new AsyncCallbackJsonWebHandler(ENDPOINT_NIGHT_TIME,
                                                              [this](AsyncWebServerRequest *request, JsonVariant &json) {
                                                                  if (this->isRateLimited(request)) return;
-                                                                 NightTime nightTime;
+                                                                 NightTimeTopic nightTime;
                                                                  JsonDocument doc;
                                                                  doc.set(json);
                                                                  nightTime.deserializeFromJSON(doc);
@@ -152,7 +156,7 @@ void Webserver::initializeRoutes() {
                                                                    String ssid = json["ssid"];
                                                                    String password = json["password"];
                                                                    request->send(200);
-                                                                   this->wifiHelper->setCredentials(ssid, password);
+                                                                   WiFiHelper::getInstance()->setCredentials(ssid, password);
                                                                });
     server->addHandler(handlerCredentials);
 
@@ -162,14 +166,14 @@ void Webserver::initializeRoutes() {
                    // if (this->isRateLimited(request)) return;
                    AsyncResponseStream *response = request->beginResponseStream("application/json");
                    JsonDocument json;
-                   json["apMode"] = this->wifiHelper->isAPMode();
+                   json["apMode"] = WiFiHelper::getInstance()->isAPMode();
                    // int i = 0;
                    // for (auto net : this->wifiHelper->getReachableNets()) {
                    //     json["available"][i]["ssid"] = net.ssid;
                    //     json["available"][i]["rssi"] = net.rssi;
                    //     i++;
                    // }
-                   NetworkInfo current = this->wifiHelper->getCurrentNetwork();
+                   NetworkInfo current = WiFiHelper::getInstance()->getCurrentNetwork();
                    json["current"]["ssid"] = current.ssid;
                    json["current"]["rssi"] = current.rssi;
                    serializeJson(json, *response);
@@ -184,7 +188,7 @@ void Webserver::initializeRoutes() {
                    AsyncResponseStream *response = request->beginResponseStream("application/json");
                    JsonDocument json;
                    int i = 0;
-                   for (const auto &net: this->wifiHelper->getReachableNets()) {
+                   for (const auto &net: WiFiHelper::getInstance()->getReachableNets()) {
                        json["networks"][i]["ssid"] = net.ssid;
                        json["networks"][i]["rssi"] = net.rssi;
                        i++;

@@ -81,14 +81,3 @@ bool isNightTime(ClockConfig &config, ClockTime time, bool considerNightOverwrit
            config.nightTimeLight; */
 }
 
-void resetOverwriteNightTimeIfLegit(ClockConfig &config, ClockTime time) {
-    int currentTime = hmsToTimeInt(time);
-    // only check on different seconds value
-    if (currentTime == config.lastNightTimeOverwriteCheckTime) return;
-    // (*100 to accommodate different precisions)
-    if (currentTime >= config.nightTimeEnd * 100 && config.lastNightTimeOverwriteCheckTime - 2 < config.nightTimeEnd *
-        100) {
-        config.tempOverwriteNightTime = false;
-    }
-    config.lastNightTimeOverwriteCheckTime = currentTime;
-}

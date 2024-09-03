@@ -4,14 +4,9 @@
 #include <FastLED.h>
 #include "ClockInfo.hpp"
 #include "ClockConfig.hpp"
-#include "http/Webserver.hpp"
-#include "mqtt/MQTTHandler.hpp"
 #include "config/config_includes.hpp"
-#include "topics/topicsInclude.hpp"
-#include "WiFiHelper.hpp"
 #include "LEDController.hpp"
-#include "debounce.hpp"
-#include "http/PingManager.hpp"
+#include "plugins/TIDILE_Plugin.hpp"
 #if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
@@ -28,33 +23,19 @@ public:
     TIDILE();
     static TIDILE * instance;
 
+    /**
+     * @brief load the clock configuration from the file system
+     *
+     */
     void loadClockConfig();
-    /**
-     * @brief Setup function
-     *
-     * @param numberLEDS the number of LEDS within the array
-     * @param configuration the pointer to thee configuration object where all settings are saved
-     */
-    void setup(CRGB *leds, int numberLEDs, WiFiHelper *wifiHelper);
 
-    // void flushConfig();
-
-    void mqttCallback(char *topic, byte *payload, unsigned int length);
-
-#if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
     /**
-     * @brief add BME280 sensor to tidile
+     * @brief setup method, call this method to setup tidile
      *
-     * @param bmp
+     * @param leds the leds array
+     * @param numberLEDs the number of leds
      */
-    void addBMP(Adafruit_BME280 *bmp);
-    /**
-     * @brief Get the Env object
-     *
-     * @return ClockEnv
-     */
-    ClockEnv getEnv();
-#endif
+    void setup(CRGB *leds, int numberLEDs);
     /**
      * @brief update method, call this method to update tidile in the loop
      *
@@ -65,36 +46,27 @@ public:
      *
      * @param time current time
      */
-    void displayTime(ClockTime time);
+    void displayTime(const ClockTime &time);
+
     /**
-     * @brief displays information about your sorrounding such as temperature, humdity and pressure. IF the sensors are connected and defined in the config file
+     * @brief add a plugin to the tidile object
      *
-     * @param env
+     * @param plugin the plugin to add
      */
-    void displayEnv(ClockEnv env);
-    void handleNightButtonPress();
+    void addPlugin(TIDILE_Plugin* plugin);
+
     ClockConfig *getConfig();
     Color lmapColor = Color(255, 255, 255);
+    ClockEnv env;
 
 private:
     // FastLED Array
     CRGB *leds;
     ClockConfig configuration;
-    Webserver webserver;
-#ifdef TIDILE_MQTT
-    MQTTHandler mqtt;
-#endif
-    AsyncWebServer *server;
-    WiFiHelper *wifiHelper;
     LEDController ledController;
     short numberZones = NUMBER_ZONES;
-    Custom custom;
-    Debouncer* nightButton = nullptr;
-    PingManager pingManager;
-#if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
-    Adafruit_BME280 *bmp;
-#endif
     int numberLEDs;
+    std::vector<TIDILE_Plugin*> plugins;
     /**
      * @brief set all LEDs to black
      */
@@ -103,8 +75,9 @@ private:
      * @brief small startup animation to test leds connected
      *
      * @param delay the delay betwenn each LED operation in animation
+     * @param time the current time
      */
-    void startupLEDs(int delay);
+    void startupLEDs(int delay, ClockTime time) const;
 
     // Loop variables
     int lastSec = 0;

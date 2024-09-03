@@ -4,7 +4,7 @@
 #include "ClockConfig.hpp"
 #include "../config/config_includes.hpp"
 
-struct General
+struct GeneralTopic
 {
     bool showSeconds = true;
     bool format24H = true;

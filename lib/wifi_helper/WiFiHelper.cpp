@@ -115,6 +115,18 @@ NetworkInfo WiFiHelper::getCurrentNetwork() {
     };
 }
 
+WiFiHelper * WiFiHelper::instance = nullptr;
+
+WiFiHelper * WiFiHelper::getInstance() {
+    if (WiFiHelper::instance == nullptr) {
+        WiFiHelper::instance = new WiFiHelper();
+    }
+    return WiFiHelper::instance;
+}
+
+WiFiHelper::WiFiHelper() {
+}
+
 #else
 void WiFiHelper::connectWiFi(int maxRetriesBeforeAP) {
 }

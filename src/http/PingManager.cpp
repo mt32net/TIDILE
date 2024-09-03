@@ -1,4 +1,7 @@
 #include "PingManager.hpp"
+
+#include <time.hpp>
+
 #include "esp_task_wdt.h"
 #include "freertos/task.h"
 #include "../config/compilation_varying.hpp"
@@ -15,15 +18,6 @@ struct PingThreadData {
 static PingThreadData threadData;
 
 static SemaphoreHandle_t xMutex = nullptr;
-
-PingManager::PingManager(ClockConfig * config) {
-    this->config = config;
-    this->lastTimeChecked = 0;
-    this->intervalHms = DEFAULT_PRESENCE_INTERVAL;
-    this->anyOnline = true;
-    threadData = {this, this->config, {}, true};
-    xMutex = xSemaphoreCreateMutex();
-}
 
 void devicesPingThread(void* args) {
     Serial.println("THREAD: Starting thread...");
@@ -60,14 +54,6 @@ void PingManager::updateDevices() {
     //devicesPingThread(&this->threadData);
 }
 
-void PingManager::loop(int currentTimeHms) {
-    if (!config->presenceDetection) return;
-    if (currentTimeHms - lastTimeChecked < intervalHms) return;
-    //vTaskDelete(pingTask);
-    updateDevices();
-    lastTimeChecked = currentTimeHms;
-}
-
 bool PingManager::isAnyDeviceOnline() {
 /*     if (xSemaphoreTake(xMutex, portTICK_PERIOD_MS * 100) == pdTRUE) {
         for (auto device : threadData.devicesList) {
@@ -97,8 +83,26 @@ void PingManager::registerPings(std::vector<PresenceDevice>* devices) {
     //m.unlock();
 }
 
+void PingManager::setup(ClockTime time) {
+    threadData = {this, this->config, {}, true};
+    xMutex = xSemaphoreCreateMutex();
+}
+
+void PingManager::loop(ClockTime time) {
+    unsigned long currentTimeHms = hmsToTimeInt(time);
+    if (!config->presenceDetection) return;
+    if (currentTimeHms - lastTimeChecked < intervalHms) return;
+    //vTaskDelete(pingTask);
+    updateDevices();
+    lastTimeChecked = currentTimeHms;
+}
+
 std::vector<PresenceDevice> PingManager::getDevices() {
     return threadData.devicesList;
+}
+
+bool PingManager::displayAnything() {
+    return !config->presenceDetection || isAnyDeviceOnline();
 }
 
 #else

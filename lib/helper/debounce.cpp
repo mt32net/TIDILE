@@ -37,7 +37,7 @@ void debounce_handler(void *args)
 }
 
 
-Debouncer::Debouncer(int pin, void (*func)()){
+Debouncer::Debouncer(int pin, const std::function<void()> &func){
     this->pin = pin;
     this->func = func;
 
@@ -48,7 +48,7 @@ void Debouncer::prepare(){
     if (!queueCreated)
     {
         interruptQueue = xQueueCreate(20, sizeof(int));
-        xTaskCreate(debounce_handler, "DebounceHandler", 20248, NULL, 1, NULL);
+        xTaskCreate(debounce_handler, "DebounceHandler", 20248, nullptr, 1, nullptr);
         queueCreated = true;
     }
 

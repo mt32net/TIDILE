@@ -24,8 +24,10 @@ public:
     bool isAPMode() { return apMode; };
     std::vector<NetworkInfo> getReachableNets();
     NetworkInfo getCurrentNetwork();
-
+    static WiFiHelper *getInstance();
 private:
+    WiFiHelper();
+    static WiFiHelper *instance;
     IPAddress apIP = IPAddress(192, 168, 4, 1);
     DNSServer dnsServer;
     bool apMode = false;

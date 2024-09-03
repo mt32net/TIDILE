@@ -2,17 +2,22 @@
 #include "../TIDILE.hpp"
 //#define ARDUINOJSON_ENABLE_COMMENTS 1
 #include <ArduinoJson.h>
+
+#include <utility>
 #include "../topics/topicsInclude.hpp"
 
 MQTTHandler::MQTTHandler() = default;
 
 #ifdef FEATURE_MQTT
-void MQTTHandler::setup(ClockConfig *config, TIDILE *tidile, String uri, int port, ClockTime currentTime)
+
+MQTTHandler *MQTTHandler::setupInternal(String uri, int port)
 {
-    this->config = config;
-    this->tidile = tidile;
-    this->uri = uri;
+    this->uri = std::move(uri);
     this->port = port;
+    return this;
+}
+
+void MQTTHandler::setup(ClockTime currentTime) {
     this->client = new PubSubClient(wifiClient);
     ClockTime t = currentTime;
     this->startupMins = t.minutes;
@@ -37,6 +42,7 @@ void MQTTHandler::setup(ClockConfig *config, TIDILE *tidile, String uri, int por
     serializeJsonPretty(doc, registerStr);
     publish(MQTT_TOPIC_DEVICES_REGISTER, registerStr);
 }
+
 
 void MQTTHandler::reconnect()
 {
@@ -83,8 +89,14 @@ void MQTTHandler::callback(char *topic, byte *payload, unsigned int length)
     for (int i = 0; i < length; i++)
         payloadStr += String((char)payload[i]); */
     String payloadStr = String((char *)payload);
-    if (!handle(topic, String(payloadStr)))
-        tidile->mqttCallback(topic, payload, length);
+    if (!handle(topic, String(payloadStr))) {
+        Serial.println("-------new message from broker-----");
+        Serial.print("channel:");
+        Serial.println(topic);
+        Serial.print("data:");
+        Serial.write(payload, length);
+        Serial.println();
+    }
 }
 
 void MQTTHandler::loop(ClockTime t)
@@ -153,19 +165,19 @@ bool MQTTHandler::handle(String topic, String payload)
     deserializeJson(doc, payload.c_str());
     if (topic == String(MQTT_TOPIC_TIDILE_CONFIG_NIGHTTIME))
     {
-        NightTime night;
+        NightTimeTopic night;
         night.deserializeFromJSON(doc);
         night.saveToConfig(config);
     }
     else if (topic == String(MQTT_TOPIC_TIDILE_CONFIG_COLORS))
     {
-        Colors colors;
+        ColorsTopic colors;
         colors.deserializeFromJSON(doc);
         colors.saveToConfig(config);
     }
     else if (topic == String(MQTT_TOPIC_TIDILE_CONFIG_GENERAL))
     {
-        General gen;
+        GeneralTopic gen;
         gen.deserializeFromJSON(doc);
         gen.saveToConfig(config);
     }
@@ -191,7 +203,11 @@ void MQTTHandler::subscribeTIDILETopics()
     subscribe(String(MQTT_TOPIC_TIDILE_CONFIG_NIGHT_BEGIN_NOW));
 }
 #else
-void MQTTHandler::setup(ClockConfig *config, TIDILE *tidile, String uri, int port, ClockTime currentTime) {
+MQTTHandler * MQTTHandler::setupInternal(String uri, int port) {
+}
+
+void MQTTHandler::setup(ClockTime time) {
+    TIDILE_Plugin::setup(time);
 }
 
 void MQTTHandler::callback(char *topic, byte *payload, unsigned int length) {
@@ -200,7 +216,7 @@ void MQTTHandler::callback(char *topic, byte *payload, unsigned int length) {
 void MQTTHandler::subscribeTIDILETopics() {
 }
 
-void MQTTHandler::loop(ClockTime t) {
+void MQTTHandler::loop(ClockTime t) {;
 }
 
 void MQTTHandler::subscribe(String topic) {
@@ -219,6 +235,6 @@ void MQTTHandler::restore() {
 }
 
 bool MQTTHandler::handle(String topic, String payload) {
-    return true;
+    return false;
 }
 #endif

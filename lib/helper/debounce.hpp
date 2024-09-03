@@ -1,9 +1,9 @@
 #pragma once
-
+#include <functional>
 
 class Debouncer {
 public:
-    Debouncer(int pin, void (*func)());
+    Debouncer(int pin, const std::function<void()> &func);
 
     void setDebounceDelay(long delay);
 
@@ -13,7 +13,7 @@ public:
 
 private:
     void prepare();
-    void (*func)();
+    std::function<void()> func;
     long delay = 100;
     int pin;
 

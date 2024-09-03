@@ -29,19 +29,21 @@ class AsyncWebServerRequest;
  * @brief Webser class to initialize the WEbserver for configuration
  *
  */
-class Webserver
+class Webserver : public TIDILE_Plugin
 {
 public:
-    Webserver(){};
+    void setup(ClockTime time) override;
 
-    void setup(AsyncWebServer* server, ClockConfig* config, WiFiHelper* wifiHelper, Custom* custom, PingManager * ping);
+    void loop(ClockTime time) override;
+
+    Webserver() = default;
+
+    Webserver* setup(CustomTopic* custom, PingManager * ping);
 
 private:
-    AsyncWebServer* server;
-    ClockConfig* config;
-    WiFiHelper* wifiHelper;
-    Custom* custom;
-    PingManager * pingManager;
+    AsyncWebServer* server{};
+    CustomTopic* custom{};
+    PingManager * pingManager{};
 
     unsigned long lastRequestMillis = 0;
     void initializeRoutes();

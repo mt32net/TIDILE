@@ -2,6 +2,8 @@
 #include <Arduino.h>
 #include <WiFiClient.h>
 #include <vector>
+#include <plugins/TIDILE_Plugin.hpp>
+
 #include "ClockConfig.hpp"
 #include "ClockInfo.hpp"
 #include "config/compilation_varying.hpp"
@@ -14,16 +16,17 @@ class PubSubClient;
 
 class TIDILE;
 
-class MQTTHandler
+class MQTTHandler: public TIDILE_Plugin
 {
 public:
     MQTTHandler();
-    void setup(ClockConfig *config, TIDILE *tidile, String uri, int port, ClockTime currentTime);
+    MQTTHandler* setupInternal(String uri, int port);
+    void setup(ClockTime time) override;
     void callback(char *topic, byte *payload, unsigned int length);
 
 private:
     void subscribeTIDILETopics();
-    void loop(ClockTime t);
+    void loop(ClockTime t) override;
     void subscribe(String topic);
     void publish(String topic, String payload);
     void reconnect();
@@ -32,8 +35,6 @@ private:
 
     bool handle(String topic, String payload);
 
-    ClockConfig *config{};
-    TIDILE *tidile{};
     String uri;
     int port{};
     WiFiClient wifiClient;

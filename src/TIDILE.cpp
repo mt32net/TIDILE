@@ -1,6 +1,5 @@
 #include <LittleFS.h>
 #include <ArduinoJson.h>
-#include <StreamUtils.h>
 #include "TIDILE.hpp"
 #include "WiFiHelper.hpp"
 #include "time.hpp"
@@ -38,21 +37,11 @@ void TIDILE::loadClockConfig()
 long lastTime = 0;
 bool lastState = false;
 
-void TIDILE::setup(CRGB *leds, int numberLEDs, WiFiHelper *wifiHelper)
+void TIDILE::setup(CRGB *leds, int numberLEDs)
 {
     this->leds = leds;
     this->numberLEDs = numberLEDs;
-#ifdef FEATURE_WEB_SERVER
-    this->server = new AsyncWebServer(HTTP_ENDPOINT_PORT);
-#endif
-    this->wifiHelper = wifiHelper;
     this->ledController = LEDController(numberLEDs, leds, &configuration, numberZones);
-    this->pingManager = PingManager(&configuration);
-    
-    this->nightButton = new Debouncer((gpio_num_t) NIGHT_BUTTON_PIN, [](){
-        TIDILE::instance->handleNightButtonPress();
-    });
-
 
 #ifdef PRINT_DEFAULT_CONFIG
     Serial.println("-------------- Default Config -------------");
@@ -68,25 +57,27 @@ void TIDILE::setup(CRGB *leds, int numberLEDs, WiFiHelper *wifiHelper)
     loadClockConfig();
 
     configTime(3600, 3600, ntpServer);
-    ClockTime time;
+    ClockTime time{};
     getTime(&time);
 
-    webserver.setup(server, &configuration, wifiHelper, &custom, &pingManager);
     // Only start mqtt service when connected to a internet
-    if (!wifiHelper->isAPMode())
+    if (!WiFiHelper::getInstance()->isAPMode())
     {
-#ifdef TIDILE_MQTT
-        mqtt.setup(&configuration, this, MQTT_URI, MQTT_PORT, time);
+#ifdef FEATURE_MQTT
 #endif
     }
 
     FastLED.setBrightness(configuration.brightness);
 
-#ifndef FASTSTARTUP
-    startupLEDs(STARTUP_ANIMATION_DELAY);
+#ifdef FASTSTARTUP
+    // loop through all plugins and call setup
+    for (TIDILE_Plugin *plugin : plugins)
+    {
+        plugin->setup(time);
+    }
+#else
+    startupLEDs(STARTUP_ANIMATION_DELAY, time);
 #endif
-
-    pingManager.updateDevices();
 }
 
 void TIDILE::clear()
@@ -95,9 +86,10 @@ void TIDILE::clear()
         leds[i] = CRGB::Black;
 }
 
-void TIDILE::startupLEDs(int delayTime)
-{
+void TIDILE::startupLEDs(int delayTime, ClockTime time) const {
     Serial.print("Running startup animation");
+    int pluginCount = plugins.size();
+    int pluginIndex = 0;
     for (int i = 0; i < numberLEDs; i++)
     {
         leds[i] = CRGB::White;
@@ -105,6 +97,10 @@ void TIDILE::startupLEDs(int delayTime)
         delay(delayTime);
         if (i % 5 == 0)
             Serial.print(".");
+        if(pluginIndex < pluginCount) {
+            plugins[pluginIndex]->setup(time);
+            pluginIndex++;
+        }
     }
     for (int i = 0; i < numberLEDs; i++)
     {
@@ -113,6 +109,13 @@ void TIDILE::startupLEDs(int delayTime)
         delay(delayTime);
         if (i % 5 == 0)
             Serial.print(".");
+        if(pluginIndex < pluginCount) {
+            plugins[pluginIndex]->setup(time);
+            pluginIndex++;
+        }
+    }
+    for(int i = pluginIndex; i < pluginCount; i++) {
+        plugins[i]->setup(time);
     }
     Serial.println("  Finished");
 }
@@ -122,14 +125,11 @@ ClockConfig *TIDILE::getConfig()
     return &configuration;
 }
 
-void TIDILE::displayTime(ClockTime time)
+void TIDILE::displayTime(const ClockTime &time)
 {
     clear();
     resetOverwriteNightTimeIfLegit(configuration, time);
     if (isNightTime(configuration, time)) return;
-    if (configuration.presenceDetection) {
-        if (!pingManager.isAnyDeviceOnline()) return;
-    }
     // Minutes
     for (int i = 0; i < time.minutes; i++)
         ledController.setZone(i, configuration.colorMinutes);
@@ -149,41 +149,16 @@ void TIDILE::displayTime(ClockTime time)
     ledController.setZone(map(hours, 0, (long)configuration.format, 0, numberZones) - 1, configuration.colorHours);
 }
 
-void TIDILE::displayEnv(ClockEnv env)
-{
-    // clear();
-    // ClockTime time;
-    // getTime(&time);
-    // if (isNightTime(configuration, time))
-    // {
-    //     FastLED.show();
-    //     return;
-    // }
-    // for (int i = 0; i < mapToLEDs(env.temperature, 50); i++)
-    // {
-    //     this->leds[i] = configuration.colorTemperature.toCRGB();
-    // }
-    // FastLED.show();
-    // delay(ENV_DISPLAY_TIME);
-    // clear();
-    // for (int i = 0; i < mapToLEDs(env.pressure, 10000); i++)
-    // {
-    //     this->leds[i] = configuration.colorPressure.toCRGB();
-    // }
-    // FastLED.show();
-    // delay(ENV_DISPLAY_TIME);
-}
-
-void TIDILE::handleNightButtonPress()
-{
-    this->configuration.tempOverwriteNightTime = !this->configuration.tempOverwriteNightTime;
+void TIDILE::addPlugin(TIDILE_Plugin *plugin) {
+    this->plugins.push_back(plugin);
+    plugin->initialize(this, &configuration);
 }
 
 void TIDILE::update()
 {
     // AP MODE
 
-    if (wifiHelper->isAPMode()) {
+    if (WiFiHelper::getInstance()->isAPMode()) {
         for (int i = 0; i < NUMER_STATUS_LEDS; i++)
         {
             this->leds[i] = ((millis() / 1000) % 2 == 0) ? CRGB::White : CRGB::Black;
@@ -197,17 +172,39 @@ void TIDILE::update()
     ClockTime currentTime;
     getTime(&currentTime);
 
-    // Reset mode if time is over
-    if (currentTime.unixTime > custom.unixEnd)
-        custom.mode = NORMAL;
-
-    switch (custom.mode) {
-        case NORMAL: displayTime(currentTime); break;
-        case TIME: displayTime(custom.customTime); break;
-        case COLOR: ledController.setAll(custom.color); break;
+    // run through all plugins loop
+    //Serial.println("Running plugins::loop()");
+    for (TIDILE_Plugin *plugin : plugins)
+    {
+        plugin->loop(currentTime);
     }
 
-    // LIGHT SENSOR AND ENV STUFF
+    //Serial.println("Running plugins::displayAnything()");
+    bool displayAnything = std::ranges::all_of(plugins, [](TIDILE_Plugin *plugin) { return plugin->displayAnything(); });
+    //Serial.println("Running plugins::displayEnv()");
+    bool anyDisplayEnv = std::ranges::any_of(plugins, [](TIDILE_Plugin *plugin) { return plugin->displayEnv(); });
+
+    if(!displayAnything) {
+        //Serial.println("Display nothing");
+        clear();
+        FastLED.show();
+        return;
+    }
+    if(anyDisplayEnv) {
+        //Serial.println("Searching for plugin that displays env");
+        for (TIDILE_Plugin *plugin : plugins)
+        {
+            if (plugin->displayEnv())
+            {
+                //Serial.println("Displaying env");
+                plugin->modifyLEDs(&ledController, numberLEDs, currentTime, env);
+                break;
+            }
+        }
+    }else {
+        //Serial.println("Display time");
+        displayTime(currentTime);
+    }
 
     // Will remain 1, if light sensor not defined
     double factor = 1;
@@ -241,37 +238,7 @@ void TIDILE::update()
 
     // LOOPING STUFF
     FastLED.setBrightness(getConfig()->brightness * factor);
-#ifdef TIDILE_MQTT
-    mqtt.loop(currentTime);
-#endif
+
     FastLED.show();
-    if (configuration.presenceDetection) pingManager.loop(hmsToTimeInt(currentTime));
     loopI++;
-}
-
-#if defined(TEMPERATURE_SENSOR) || defined(HUMIDITY_SENSOR) || defined(PRESSURE_SENSOR)
-void TIDILE::addBMP(Adafruit_BME280 *bmp)
-{
-    this->bmp = bmp;
-}
-
-ClockEnv TIDILE::getEnv()
-{
-    return ClockEnv{
-#ifdef BME280
-        temperature : bmp->readTemperature(),
-        pressure : bmp->readPressure() / 100
-#endif
-    };
-}
-#endif
-
-void TIDILE::mqttCallback(char *topic, byte *payload, unsigned int length)
-{
-    Serial.println("-------new message from broker-----");
-    Serial.print("channel:");
-    Serial.println(topic);
-    Serial.print("data:");
-    Serial.write(payload, length);
-    Serial.println();
 }
