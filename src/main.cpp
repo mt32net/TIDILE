@@ -5,27 +5,32 @@
 // #define FASTLED_RMT_BUILTIN_DRIVER 1
 // #define FASTLED_ESP32_I2S 1
 
+#include "config/config_includes.hpp"
+#include "main.hpp"
+#include "tidileError.hpp"
 #include "esp_system.h"
 #include "esp_event.h"
 #include "esp_log.h"
 #include "driver/gpio.h"
-#include "nvs_flash.h"
 #include "Arduino.h"
-#include <FastLED.h>
+#include <platforms/esp/32/led_strip/led_strip.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include <http/PingManager.hpp>
 #include <http/Webserver.hpp>
 #include <mqtt/MQTTHandler.hpp>
+#include <FastLED.h>
 
 #include "TIDILE.hpp"
 #include "WiFiHelper.hpp"
-#include "config/config_includes.hpp"
 #include "LittleFS.h"
 #ifdef RUN_TESTS
 #include "tests/tests.hpp"
 #endif
 
-CRGB *leds;
-
+CRGB* leds;
 TIDILE tidile;
 
 #ifdef RUN_TESTS
@@ -34,31 +39,25 @@ void tests();
 
 void setup()
 {
-
   Serial.begin(115200);
 
-  WiFiHelper::getInstance()->connectWiFi(WIFI_NUMBER_TRIES_BEFORE_AP);
+  leds = new CRGB[LED_COUNT];
+  CFastLED::addLeds<NEOPIXEL, LED_PIN>(leds, LED_COUNT);
+  FastLED.setDither(DISABLE_DITHER);
+
+  if (!LittleFS.begin())
+  {
+    FILESYSTEM_INIT_ERROR;
+  }
+
+  WiFiHelper::getInstance()->connectWiFi(WIFI_SSID, WIFI_PWD, WIFI_NUMBER_TRIES_BEFORE_AP);
 
   esp_log_level_set("wifi", ESP_LOG_ERROR);
   esp_log_level_set("task_wdt", ESP_LOG_ERROR);
 
-  if (!LittleFS.begin())
-  {
-    Serial.println("Error starting SPIFFS.");
-  }
-
-
 #ifdef RUN_TESTS
   runTests();
 #endif
-
-  leds = new CRGB[LED_COUNT];
-
-#ifdef ESP32
-  FastPin<LED_PIN>::lo();
-#endif
-  FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, LED_COUNT);
-  FastLED.setDither(DISABLE_DITHER);
 
 #ifdef FEATURE_MQTT
   tidile.addPlugin((new MQTTHandler())->setupInternal(MQTT_URI, MQTT_PORT));
@@ -76,4 +75,18 @@ void loop()
 {
   tidile.update();
   // heap_caps_print_heap_info(0);
+}
+
+void tidile_error(int errorCode, const char *message) {
+  for (int i = 0; i < LED_COUNT; i++)
+    leds[i] = CRGB::Black;
+  Serial.println(message);
+  while(true) {
+    leds[errorCode] = CRGB::Red;
+    FastLED.show();
+    delay(1000);
+    leds[errorCode] = CRGB::Black;
+    FastLED.show();
+    delay(1000);
+  }
 }

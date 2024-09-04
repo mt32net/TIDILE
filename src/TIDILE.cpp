@@ -60,13 +60,6 @@ void TIDILE::setup(CRGB *leds, int numberLEDs)
     ClockTime time{};
     getTime(&time);
 
-    // Only start mqtt service when connected to a internet
-    if (!WiFiHelper::getInstance()->isAPMode())
-    {
-#ifdef FEATURE_MQTT
-#endif
-    }
-
     FastLED.setBrightness(configuration.brightness);
 
 #ifdef FASTSTARTUP

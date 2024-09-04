@@ -2,7 +2,7 @@
 #include <WiFi.h>
 
 #if SOC_WIFI_SUPPORTED
-void WiFiHelper::connectWiFi(int maxRetriesBeforeAP)
+void WiFiHelper::connectWiFi(const char* ssid, const char* passwd, int maxRetriesBeforeAP)
 {
     this->apMode = false;
     Serial.println("Initialising WiFi...");
@@ -13,12 +13,12 @@ void WiFiHelper::connectWiFi(int maxRetriesBeforeAP)
     // WiFi.enableLongRange(true);
     delay(500);
 
-#ifndef WIFI_SSID
-    // WiFi.beginSmartConfig();
-#else
-    Serial.println("Setting credentials");
-    WiFi.begin(WIFI_SSID, WIFI_PWD);
-#endif
+    if(ssid == nullptr)
+    WiFi.beginSmartConfig();
+    else {
+        Serial.println("Setting credentials");
+        WiFi.begin(ssid, passwd);
+    }
 
     Serial.println("Waiting for connection");
     int tries = 0;

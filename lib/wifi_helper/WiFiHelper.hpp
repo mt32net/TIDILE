@@ -15,7 +15,7 @@ struct NetworkInfo {
 class WiFiHelper
 {
 public:
-    void connectWiFi(int maxRetriesBeforeAP = 10);
+    void connectWiFi(const char* ssid = nullptr, const char* passwd = nullptr, int maxRetriesBeforeAP = 10);
     bool connectedWiFi();
     void setHostname(String name);
     void openAP(String name);
