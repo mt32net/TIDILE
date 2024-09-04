@@ -84,7 +84,10 @@ void PingManager::registerPings(std::vector<PresenceDevice>* devices) {
 }
 
 void PingManager::setup(ClockTime time) {
-    threadData = {this, this->config, {}, true};
+    threadData.ping = this;
+    threadData.config = this->config;
+    threadData.devicesList = {};
+    threadData.anyOnline = true;
     xMutex = xSemaphoreCreateMutex();
 }
 

@@ -180,9 +180,9 @@ void TIDILE::update()
     }
 
     //Serial.println("Running plugins::displayAnything()");
-    bool displayAnything = std::ranges::all_of(plugins, [](TIDILE_Plugin *plugin) { return plugin->displayAnything(); });
+    bool displayAnything = std::all_of(plugins.begin(), plugins.end(), [](TIDILE_Plugin *plugin) { return plugin->displayAnything(); });
     //Serial.println("Running plugins::displayEnv()");
-    bool anyDisplayEnv = std::ranges::any_of(plugins, [](TIDILE_Plugin *plugin) { return plugin->displayEnv(); });
+    bool anyDisplayEnv = std::any_of(plugins.begin(), plugins.end(), [](TIDILE_Plugin *plugin) { return plugin->displayEnv(); });
 
     if(!displayAnything) {
         //Serial.println("Display nothing");

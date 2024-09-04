@@ -13,8 +13,7 @@
 void Webserver::setup(ClockTime time) {
     initializeRoutes();
 
-    server->serveStatic("/css/", LittleFS, "/dist/css/");
-    server->serveStatic("/js/", LittleFS, "/dist/js/");
+    server->serveStatic("/", LittleFS, "/dist/");
     server->on("/", HTTP_GET, [=](AsyncWebServerRequest *request) {
         request->send(LittleFS, "/dist/index.html", "text/html");
     });

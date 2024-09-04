@@ -1,5 +1,4 @@
 #include "WiFiHelper.hpp"
-#include "esp_wifi.h"
 #include <WiFi.h>
 
 #if SOC_WIFI_SUPPORTED
@@ -7,7 +6,7 @@ void WiFiHelper::connectWiFi(int maxRetriesBeforeAP)
 {
     this->apMode = false;
     Serial.println("Initialising WiFi...");
-    WiFi.enableIPv6();
+    WiFi.enableIpV6();
     // WiFi.disconnect();
     WiFi.setAutoReconnect(true);
     WiFi.begin();
