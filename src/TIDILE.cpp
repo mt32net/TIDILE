@@ -7,12 +7,12 @@
 #include <Arduino.h>
 #include "config/compilation_varying.hpp"
 
-TIDILE::TIDILE() {
+TIDILE::TIDILE()
+{
     TIDILE::instance = this;
 }
 
-TIDILE * TIDILE::instance = nullptr;
-
+TIDILE *TIDILE::instance = nullptr;
 
 void TIDILE::loadClockConfig()
 {
@@ -31,7 +31,7 @@ void TIDILE::loadClockConfig()
     configuration.deserialize(&obj);
     Serial.println("Config loaded");
     configuration.toSerial();
-    //jsonConfig.garbageCollect();
+    // jsonConfig.garbageCollect();
 }
 
 long lastTime = 0;
@@ -79,7 +79,8 @@ void TIDILE::clear()
         leds[i] = CRGB::Black;
 }
 
-void TIDILE::startupLEDs(int delayTime, ClockTime time) const {
+void TIDILE::startupLEDs(int delayTime, ClockTime time) const
+{
     Serial.print("Running startup animation");
     int pluginCount = plugins.size();
     int pluginIndex = 0;
@@ -90,7 +91,8 @@ void TIDILE::startupLEDs(int delayTime, ClockTime time) const {
         delay(delayTime);
         if (i % 5 == 0)
             Serial.print(".");
-        if(pluginIndex < pluginCount) {
+        if (pluginIndex < pluginCount)
+        {
             plugins[pluginIndex]->setup(time);
             pluginIndex++;
         }
@@ -102,12 +104,14 @@ void TIDILE::startupLEDs(int delayTime, ClockTime time) const {
         delay(delayTime);
         if (i % 5 == 0)
             Serial.print(".");
-        if(pluginIndex < pluginCount) {
+        if (pluginIndex < pluginCount)
+        {
             plugins[pluginIndex]->setup(time);
             pluginIndex++;
         }
     }
-    for(int i = pluginIndex; i < pluginCount; i++) {
+    for (int i = pluginIndex; i < pluginCount; i++)
+    {
         plugins[i]->setup(time);
     }
     Serial.println("  Finished");
@@ -122,7 +126,8 @@ void TIDILE::displayTime(const ClockTime &time)
 {
     clear();
     resetOverwriteNightTimeIfLegit(configuration, time);
-    if (isNightTime(configuration, time)) return;
+    if (isNightTime(configuration, time))
+        return;
     // Minutes
     for (int i = 0; i < time.minutes; i++)
         ledController.setZone(i, configuration.colorMinutes);
@@ -138,11 +143,13 @@ void TIDILE::displayTime(const ClockTime &time)
     }
     // Hours
     int hours = time.hours;
-    if (configuration.format == ClockFormat::Format_12H) hours = time.hours % 12;
+    if (configuration.format == ClockFormat::Format_12H)
+        hours = time.hours % 12;
     ledController.setZone(map(hours, 0, (long)configuration.format, 0, numberZones) - 1, configuration.colorHours);
 }
 
-void TIDILE::addPlugin(TIDILE_Plugin *plugin) {
+void TIDILE::addPlugin(TIDILE_Plugin *plugin)
+{
     this->plugins.push_back(plugin);
     plugin->initialize(this, &configuration);
 }
@@ -151,7 +158,8 @@ void TIDILE::update()
 {
     // AP MODE
 
-    if (WiFiHelper::getInstance()->isAPMode()) {
+    if (WiFiHelper::getInstance()->isAPMode())
+    {
         for (int i = 0; i < NUMER_STATUS_LEDS; i++)
         {
             this->leds[i] = ((millis() / 1000) % 2 == 0) ? CRGB::White : CRGB::Black;
@@ -166,37 +174,25 @@ void TIDILE::update()
     getTime(&currentTime);
 
     // run through all plugins loop
-    //Serial.println("Running plugins::loop()");
+    // Serial.println("Running plugins::loop()");
     for (TIDILE_Plugin *plugin : plugins)
     {
         plugin->loop(currentTime);
     }
 
-    //Serial.println("Running plugins::displayAnything()");
-    bool displayAnything = std::all_of(plugins.begin(), plugins.end(), [](TIDILE_Plugin *plugin) { return plugin->displayAnything(); });
-    //Serial.println("Running plugins::displayEnv()");
-    bool anyDisplayEnv = std::any_of(plugins.begin(), plugins.end(), [](TIDILE_Plugin *plugin) { return plugin->displayEnv(); });
-
-    if(!displayAnything) {
-        //Serial.println("Display nothing");
+    if (!active)
+    {
+        // Serial.println("Display nothing");
         clear();
         FastLED.show();
         return;
     }
-    if(anyDisplayEnv) {
-        //Serial.println("Searching for plugin that displays env");
-        for (TIDILE_Plugin *plugin : plugins)
-        {
-            if (plugin->displayEnv())
-            {
-                //Serial.println("Displaying env");
-                plugin->modifyLEDs(&ledController, numberLEDs, currentTime, env);
-                break;
-            }
-        }
-    }else {
-        //Serial.println("Display time");
-        displayTime(currentTime);
+    displayTime(currentTime);
+
+    for (TIDILE_Plugin *plugin : plugins)
+    {
+        // Serial.println("Displaying env");
+        plugin->modifyLEDs(&ledController, numberLEDs, currentTime, env);
     }
 
     // Will remain 1, if light sensor not defined

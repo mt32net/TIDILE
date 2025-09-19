@@ -56,7 +56,8 @@
         "typeinfo": "cpp",
         "valarray": "cpp",
         "mutex": "cpp",
-        "condition_variable": "cpp"
+        "condition_variable": "cpp",
+        "span": "cpp"
     },
     "cSpell.words": [
         "leds",

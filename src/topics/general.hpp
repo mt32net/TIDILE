@@ -15,15 +15,16 @@ struct GeneralTopic
 
     void deserializeFromJSON(JsonDocument &doc)
     {
-        showSeconds = doc[JSON_NAME_SHOW_SECONDS] | true;
-        format24H = doc[JSON_NAME_24H_FORMAT] | true;
-        brightness = doc[JSON_NAME_BRIGHTNESS] | 10;
-        lightSensorInfluence = doc[JSON_NAME_LIGHT_SENSOR_INFLUENCE] | 50;
-        reverseDirection = doc[JSON_NAME_REVERSE_DIRECTION] | false;
+        showSeconds = doc[JSON_NAME_SHOW_SECONDS];
+        format24H = doc[JSON_NAME_24H_FORMAT];
+        brightness = doc[JSON_NAME_BRIGHTNESS];
+        lightSensorInfluence = doc[JSON_NAME_LIGHT_SENSOR_INFLUENCE];
+        reverseDirection = doc[JSON_NAME_REVERSE_DIRECTION];
         // ledCount = doc[JSON_NAME_LED_COUNT].as<int>();
     }
 
-    void serializeToJson(JsonDocument &doc) {
+    void serializeToJson(JsonDocument &doc)
+    {
         doc[JSON_NAME_SHOW_SECONDS] = showSeconds;
         doc[JSON_NAME_24H_FORMAT] = format24H;
         doc[JSON_NAME_BRIGHTNESS] = brightness;

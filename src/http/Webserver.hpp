@@ -6,12 +6,8 @@
 #include "http/PingManager.hpp"
 #include "../topics/custom.hpp"
 
-#ifdef FEATURE_WEB_SERVER
-#include <ESPAsyncWebServer.h>
-#else
 class AsyncWebServer;
 class AsyncWebServerRequest;
-#endif
 
 #define WEBSERVER_DEFAULT_DOC_SIZE 1024
 
@@ -24,9 +20,8 @@ class AsyncWebServerRequest;
 #define ENDPOINT_CUSTOM "/custom"
 #define ENDPOINT_PRESENCE "/presence"
 
-
 /**
- * @brief Webser class to initialize the WEbserver for configuration
+ * @brief Webserver class to initialize the WEbserver for configuration
  *
  */
 class Webserver : public TIDILE_Plugin
@@ -38,14 +33,14 @@ public:
 
     Webserver() = default;
 
-    Webserver* setup(CustomTopic* custom, PingManager * ping);
+    Webserver *setup(CustomTopic *custom, PingManager *ping);
 
 private:
-    AsyncWebServer* server{};
-    CustomTopic* custom{};
-    PingManager * pingManager{};
+    AsyncWebServer *server{};
+    CustomTopic *custom{};
+    PingManager *pingManager{};
 
     unsigned long lastRequestMillis = 0;
     void initializeRoutes();
-    bool isRateLimited(AsyncWebServerRequest* request);
+    bool isRateLimited(AsyncWebServerRequest *request);
 };

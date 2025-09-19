@@ -10,20 +10,10 @@
 
 class TIDILE;
 
-class TIDILE_Plugin {
+class TIDILE_Plugin
+{
 public:
     virtual ~TIDILE_Plugin() = default;
-
-    /**
-     *
-     * @return returns true if the leds should be on
-     */
-    virtual bool displayAnything() { return true; }
-    /**
-     *
-     * @return returns true if the modifyLEDs function should be called of the plugin
-     */
-    virtual bool displayEnv() { return false; }
 
     /**
      * @brief modify the leds
@@ -33,7 +23,8 @@ public:
      * @param time the current time
      * @param env the current environment
      */
-    virtual void modifyLEDs(LEDController *ledController, int numberLEDs, ClockTime time, ClockEnv env) {
+    virtual void modifyLEDs(LEDController *ledController, int numberLEDs, ClockTime time, ClockEnv env)
+    {
     }
 
     /**
@@ -41,7 +32,8 @@ public:
      *
      * @param time the current time
      */
-    virtual void setup(ClockTime time) {
+    virtual void setup(ClockTime time)
+    {
     }
 
     /**
@@ -49,7 +41,8 @@ public:
      *
      * @param time the current time
      */
-    virtual void loop(ClockTime time) {
+    virtual void loop(ClockTime time)
+    {
     }
 
     /**
@@ -68,7 +61,8 @@ private:
      * @param tidile the tidile object
      * @param config the config object
      */
-    void initialize(TIDILE *tidile, ClockConfig *config) {
+    void initialize(TIDILE *tidile, ClockConfig *config)
+    {
         this->tidile = tidile;
         this->config = config;
     }

@@ -21,7 +21,7 @@ class TIDILE
 {
 public:
     TIDILE();
-    static TIDILE * instance;
+    static TIDILE *instance;
 
     /**
      * @brief load the clock configuration from the file system
@@ -53,7 +53,12 @@ public:
      *
      * @param plugin the plugin to add
      */
-    void addPlugin(TIDILE_Plugin* plugin);
+    void addPlugin(TIDILE_Plugin *plugin);
+
+    void setActive(bool active)
+    {
+        this->active = active;
+    }
 
     ClockConfig *getConfig();
     Color lmapColor = Color(255, 255, 255);
@@ -66,7 +71,8 @@ private:
     LEDController ledController;
     short numberZones = NUMBER_ZONES;
     int numberLEDs;
-    std::vector<TIDILE_Plugin*> plugins;
+    std::vector<TIDILE_Plugin *> plugins;
+    bool active = true;
     /**
      * @brief set all LEDs to black
      */

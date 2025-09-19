@@ -10,25 +10,23 @@
 #include <plugins/TIDILE_Plugin.hpp>
 #include "ClockConfig.hpp"
 
-
-struct PresenceDevice {
+struct PresenceDevice
+{
     String address;
     bool online;
 };
 
-class PingManager: public TIDILE_Plugin {
-public:
-    bool displayAnything() override;
+class PingManager : public TIDILE_Plugin
+{
 
 private:
-    //std::vector<PresenceDevice> devicesLastChecked;
+    // std::vector<PresenceDevice> devicesLastChecked;
     unsigned long lastTimeChecked = 0;
     unsigned long intervalHms = DEFAULT_PRESENCE_INTERVAL;
     pthread_t pingThreadID{};
     bool anyOnline{};
-    //Mutex m;
+    // Mutex m;
 public:
-
     PingManager() = default;
     void updateDevices();
     std::vector<PresenceDevice> getDevices();

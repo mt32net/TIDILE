@@ -13,7 +13,6 @@
 #include "esp_log.h"
 #include "driver/gpio.h"
 #include "Arduino.h"
-#include <platforms/esp/32/led_strip/led_strip.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/FreeRTOS.h"
@@ -30,7 +29,7 @@
 #include "tests/tests.hpp"
 #endif
 
-CRGB* leds;
+CRGB *leds;
 TIDILE tidile;
 
 #ifdef RUN_TESTS
@@ -77,11 +76,13 @@ void loop()
   // heap_caps_print_heap_info(0);
 }
 
-void tidile_error(int errorCode, const char *message) {
+void tidile_error(int errorCode, const char *message)
+{
   for (int i = 0; i < LED_COUNT; i++)
     leds[i] = CRGB::Black;
   Serial.println(message);
-  while(true) {
+  while (true)
+  {
     leds[errorCode] = CRGB::Red;
     FastLED.show();
     delay(1000);
